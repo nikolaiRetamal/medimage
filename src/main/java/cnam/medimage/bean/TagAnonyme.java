@@ -1,5 +1,6 @@
 package cnam.medimage.bean;
 
-public class TagAnonyme {
+public class TagAnonyme extends Tag{
 
+	
 }
