@@ -1,4 +1,4 @@
-Npackage cnam.medimage.controller.controleurAjax;
+package cnam.medimage.controller.controleurAjax;
 
 public class AjxRechercheMesh {
 
