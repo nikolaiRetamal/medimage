@@ -15,4 +15,8 @@ public class HomeController {
 	public ModelAndView test(HttpServletResponse response) throws IOException{
 		return new ModelAndView("home");
 	}
+	@RequestMapping(value="/cacahouetes")
+	public String cacahouetes(HttpServletResponse response) throws IOException{
+		return "redirect:/aide";
+	}
 }
