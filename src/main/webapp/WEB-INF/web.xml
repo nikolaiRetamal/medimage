@@ -3,12 +3,20 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<display-name>medimage</display-name>
+	
 	<context-param>
 		<param-name>contextClass</param-name>
 		<param-value>
 			org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 		</param-value>
 	</context-param>
+	
+	<!-- Paramètres applicatifs -->
+     <context-param>
+		<param-name>MESH_FILEPATH</param-name>
+		<param-value>/mesh/fredesc2014.xml</param-value>
+    </context-param>
+	
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
