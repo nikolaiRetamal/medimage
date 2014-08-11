@@ -26,25 +26,43 @@ public class AccueilImportContr implements Controller{
 		
 		ServletContext context = request.getSession().getServletContext();
 		String pathFile = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0001.dcm");
+		String pathFile2 = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0002.dcm");
 		DicomObject dcmObj;
 		DicomInputStream din = null;
-		try {
-		    din = new DicomInputStream(new File(pathFile));
+
+		FileInputStream file = new FileInputStream(pathFile);
+		System.out.println("file = " + file);
+		/*try {
+			File file2 = new File(pathFile2);
+			System.out.println("file2 = " + file2);
+		    din = new DicomInputStream(file2);
+		    System.out.println("din456 = " + din);
 		    dcmObj = din.readDicomObject();
+		    System.out.println("din = " + din);
 		    String uid = dcmObj.getString(Tag.ReferencedSOPInstanceUID);
 		    System.out.println("UID= " + uid);
 		}
 		catch (IOException e) {
 		    e.printStackTrace();
-		    return null;
+		    //return null;
 		}
 		finally {
 		    try {
+		    	//System.out.println("dinFirst = " + din);
 		        din.close();
+		        //System.out.println("dinLast = " + din);
 		    }
 		    catch (IOException ignore) {
 		    }
+		}*/
+		try {
+			din = new DicomInputStream(file);
+			dcmObj = din.readDicomObject();
+		} catch (IOException e) {
+			System.out.println(e.getClass().getName() + " " + e.getMessage());
 		}
+
+
 		return new ModelAndView("home");
 	}
 
