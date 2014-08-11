@@ -58,8 +58,9 @@ public class AccueilImportContr implements Controller{
 		try {
 			din = new DicomInputStream(file);
 			dcmObj = din.readDicomObject();
+			din.close();
 		} catch (IOException e) {
-			System.out.println(e.getClass().getName() + " " + e.getMessage());
+			System.out.println(e.getClass().getName() + "/////////// " + e.getMessage());
 		}
 
 
