@@ -1,17 +1,19 @@
 package cnam.medimage.controller.controleur;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.dcm4che2.data.DicomObject;
+import org.dcm4che2.data.Tag;
+import org.dcm4che2.io.DicomInputStream;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
-import com.archimed.dicom.DDict;
-import com.archimed.dicom.DicomObject;
-import com.archimed.dicom.DicomReader;
 
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
@@ -24,12 +26,25 @@ public class AccueilImportContr implements Controller{
 		
 		ServletContext context = request.getSession().getServletContext();
 		String pathFile = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0001.dcm");
-		FileInputStream file = new FileInputStream(pathFile);
-		DicomReader dcmReader = new DicomReader();
-		DicomObject dcm = dcmReader.read(file);
-		DicomObject metadata = dcm.getFileMetaInformation();
-		String patientId = (String) metadata.get(DDict.dPatientID);
-		System.out.println("patient ID = " + patientId);
+		DicomObject dcmObj;
+		DicomInputStream din = null;
+		try {
+		    din = new DicomInputStream(new File(pathFile));
+		    dcmObj = din.readDicomObject();
+		    String uid = dcmObj.getString(Tag.ReferencedSOPInstanceUID);
+		    System.out.println("UID= " + uid);
+		}
+		catch (IOException e) {
+		    e.printStackTrace();
+		    return null;
+		}
+		finally {
+		    try {
+		        din.close();
+		    }
+		    catch (IOException ignore) {
+		    }
+		}
 		return new ModelAndView("home");
 	}
 
