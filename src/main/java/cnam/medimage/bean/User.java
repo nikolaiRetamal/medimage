@@ -1,3 +1,4 @@
+
 package cnam.medimage.bean;
 
 import java.util.Date;
@@ -56,3 +57,4 @@ public class User {
 	
 	
 }
+

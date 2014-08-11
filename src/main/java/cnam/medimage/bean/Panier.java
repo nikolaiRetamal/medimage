@@ -1,3 +1,4 @@
+
 package cnam.medimage.bean;
 
 import java.util.Map;
