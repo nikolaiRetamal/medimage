@@ -67,6 +67,13 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.archimed</groupId>
+			<artifactId>jdt-dicom</artifactId>
+			<version>2.6</version>
+			<scope>system</scope>
+    		<systemPath>${project.basedir}/lib/jdt-dicom-2.6.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<repositories>
