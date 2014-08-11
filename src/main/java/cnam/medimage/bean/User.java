@@ -3,6 +3,7 @@ package cnam.medimage.bean;
 import java.util.Date;
 
 public class User {
+	private Long idUser;
 	private String nom;
 	private String prenom;
 	private Date creation;
@@ -12,8 +13,9 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public User(String nom, String prenom, String entite) {
+	public User(Long idUser, String nom, String prenom, String entite) {
 		super();
+		this.idUser = idUser;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.entite = entite;
@@ -42,6 +44,14 @@ public class User {
 	}
 	public void setEntite(String entite) {
 		this.entite = entite;
+	}
+
+	public Long getIdUser() {
+		return idUser;
+	}
+
+	public void setIdUser(Long idUser) {
+		this.idUser = idUser;
 	}
 	
 	

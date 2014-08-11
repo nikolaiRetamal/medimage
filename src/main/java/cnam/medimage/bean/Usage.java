@@ -1,14 +1,14 @@
 package cnam.medimage.bean;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Usage {
 
 	private Long idUsage;
 	private String nom;
-	private List<User> users;
-	private List<Dicom> dicoms;
+	private Map<Long, User> users;
+	private Map<Long, Dicom> dicoms;
 	
 	public Usage() {
 		// TODO Auto-generated constructor stub
@@ -20,16 +20,16 @@ public class Usage {
 		super();
 		this.idUsage = idUsage;
 		this.nom = nom;
-		this.users = new ArrayList<>();
-		this.dicoms = new ArrayList<>();
+		this.users = new HashMap<>();
+		this.dicoms = new HashMap<>();
 	}
 
 	public void ajouterUser(User user){
-		this.users.add(user);
+		this.users.put(user.getIdUser(),user);
 	}
 	
 	public void supprimerUser(Long id){
-
+		this.users.remove(id);
 	}
 
 	public Long getIdUsage() {
@@ -44,16 +44,16 @@ public class Usage {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-	public List<User> getUsers() {
+	public Map<Long, User> getUsers() {
 		return users;
 	}
-	public void setUsers(List<User> users) {
+	public void setUsers(Map<Long, User> users) {
 		this.users = users;
 	}
-	public List<Dicom> getDicoms() {
+	public Map<Long, Dicom> getDicoms() {
 		return dicoms;
 	}
-	public void setDicoms(List<Dicom> dicoms) {
+	public void setDicoms(Map<Long, Dicom> dicoms) {
 		this.dicoms = dicoms;
 	}
 	

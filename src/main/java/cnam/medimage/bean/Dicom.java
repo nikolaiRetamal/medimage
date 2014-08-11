@@ -1,8 +1,8 @@
 package cnam.medimage.bean;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Dicom {
 	
@@ -11,8 +11,8 @@ public class Dicom {
 	private Boolean publique;
 	private Date dateImport;
 	private String nom;
-	private List<Tag> tags;
-	private List<MetaData> metadatas;
+	private Map<String, Tag> tags;
+	private Map<String, MetaData> metadatas;
 	
 	public Dicom() {
 		// TODO Auto-generated constructor stub
@@ -26,8 +26,8 @@ public class Dicom {
 		this.publique = publique;
 		this.dateImport = dateImport;
 		this.nom = nom;
-		this.tags = new ArrayList<>();
-		this.metadatas = new ArrayList<>();
+		this.tags = new HashMap<>();
+		this.metadatas = new HashMap<>();
 	}
 
 	public Long getIdDicom() {
@@ -70,19 +70,19 @@ public class Dicom {
 		this.nom = nom;
 	}
 
-	public List<Tag> getTags() {
+	public Map<String, Tag> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<Tag> tags) {
+	public void setTags(Map<String, Tag> tags) {
 		this.tags = tags;
 	}
 
-	public List<MetaData> getMetadatas() {
+	public Map<String, MetaData> getMetadatas() {
 		return metadatas;
 	}
 
-	public void setMetadatas(List<MetaData> metadatas) {
+	public void setMetadatas(Map<String, MetaData> metadatas) {
 		this.metadatas = metadatas;
 	}
 }

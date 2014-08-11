@@ -12,7 +12,7 @@
 	</context-param>
 	
 	<!-- Paramètres applicatifs -->
-     <context-param>
+    <context-param>
 		<param-name>MESH_FILEPATH</param-name>
 		<param-value>/mesh/fredesc2014.xml</param-value>
     </context-param>
