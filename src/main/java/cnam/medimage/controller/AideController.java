@@ -1,7 +1,5 @@
 package cnam.medimage.controller;
 
-import java.io.File;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +19,7 @@ public class AideController implements Controller{
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {	
 		
-		System.out.println("Je suis dans le contrôleur de l'aide");
+		System.out.println("Je suis dans le contrÃ´leur de l'aide");
 		
 		HttpSession session =  request.getSession(false);
 		ServletContext context = session.getServletContext();
@@ -36,7 +34,7 @@ public class AideController implements Controller{
 				
 		ModelAndView mav = new ModelAndView();
         mav.setViewName("aide");
-        mav.addObject("message", "Bienvenue Nikolaï");
+        mav.addObject("message", "Bienvenue NikolaÃ¯");
 		return mav;
 	}
 }
