@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cnam.medimage.model.service;
+package cnam.medimage.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +19,7 @@ public class ServiceMeshCrawler extends Service {
 	
 	/**
 	* Attribut singleton qui permet de n'avoir qu'une seule instance de la classe Service
-	* grâce à un appel unique du constructeur
+	* grï¿½ce ï¿½ un appel unique du constructeur
 	* 
 	*/
 	protected static ServiceMeshCrawler singleton;	
@@ -36,8 +36,8 @@ public class ServiceMeshCrawler extends Service {
 	
 	/**
 	 * Le XMLInputFactory qui permettra de parser le fichier Mesh
-	 * Il est statique est protégé afin d'assurer l'ouverture du fichier Mesh une fois pour toute
-	 * et de s'assurer de sa disponibilité.
+	 * Il est statique est protï¿½gï¿½ afin d'assurer l'ouverture du fichier Mesh une fois pour toute
+	 * et de s'assurer de sa disponibilitï¿½.
 	 */
 	protected static XMLInputFactory xmlif;
 	
@@ -53,7 +53,7 @@ public class ServiceMeshCrawler extends Service {
 	
 	
 	/**
-	* Méthode permettant d'accéder à l'unique instance de la classe Service
+	* Mï¿½thode permettant d'accï¿½der ï¿½ l'unique instance de la classe Service
 	* 
 	* @return l'instance de la classe Service
 	*/
@@ -65,7 +65,7 @@ public class ServiceMeshCrawler extends Service {
 
 	/**
 	 * 
-	 * Crée la Factory et lui donne le fichier MeSH 2014 à digérer
+	 * Crï¿½e la Factory et lui donne le fichier MeSH 2014 ï¿½ digï¿½rer
 	 * 
 	 */
 	public ServiceMeshCrawler() throws XMLStreamException, FileNotFoundException {
@@ -80,7 +80,7 @@ public class ServiceMeshCrawler extends Service {
 			xmlif.setProperty("javax.xml.stream.isReplacingEntityReferences", Boolean.TRUE);
 		}
 
-		//Si le streamReader n'a pas encore été ouvert vers le fichier Mesh
+		//Si le streamReader n'a pas encore ï¿½tï¿½ ouvert vers le fichier Mesh
 		if(xmlsr == null){			
 			xmlsr = xmlif.createXMLStreamReader(new FileReader(mesh));
 		}

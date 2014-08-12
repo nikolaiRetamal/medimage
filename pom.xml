@@ -11,7 +11,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 		<spring.version>3.1.0.RELEASE</spring.version>
 		<cglib.version>2.2.2</cglib.version>
 	</properties>
@@ -69,32 +69,24 @@
 		</dependency>
 
 		<dependency>
-			<groupId>dcm4che</groupId>
+			<groupId>org.dcm4che2</groupId>
 			<artifactId>core</artifactId>
 			<version>2.0.26</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\dcm4che-core-2.0.26.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>dcm4che</groupId>
+			<groupId>org.dcm4che2</groupId>
 			<artifactId>net</artifactId>
 			<version>2.0.26</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\dcm4che-net-2.0.26.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>dcm4che</groupId>
+			<groupId>org.dcm4che2</groupId>
 			<artifactId>iod</artifactId>
 			<version>2.0.26</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\dcm4che-iod-2.0.26.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>dcm4che</groupId>
-			<artifactId>imageio</artifactId>
+			<groupId>org.dcm4che2</groupId>
+			<artifactId>image</artifactId>
 			<version>2.0.26</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\dcm4che-imageio-rle-2.0.26.jar</systemPath>
 		</dependency>
 	</dependencies>
 

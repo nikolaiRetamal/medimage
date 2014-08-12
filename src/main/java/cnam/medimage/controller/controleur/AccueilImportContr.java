@@ -30,8 +30,8 @@ public class AccueilImportContr implements Controller{
 		DicomObject dcmObj;
 		DicomInputStream din = null;
 
-		FileInputStream file = new FileInputStream(pathFile);
-		System.out.println("file = " + file);
+		//FileInputStream file = new FileInputStream(pathFile);
+		//System.out.println("file = " + file);
 		/*try {
 			File file2 = new File(pathFile2);
 			System.out.println("file2 = " + file2);
@@ -56,7 +56,7 @@ public class AccueilImportContr implements Controller{
 		    }
 		}*/
 		try {
-			din = new DicomInputStream(file);
+			din = new DicomInputStream(new FileInputStream(pathFile));
 			dcmObj = din.readDicomObject();
 			din.close();
 		} catch (IOException e) {
