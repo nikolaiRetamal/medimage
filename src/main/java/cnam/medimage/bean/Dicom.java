@@ -26,8 +26,8 @@ public class Dicom {
 		this.publique = publique;
 		this.dateImport = dateImport;
 		this.nom = nom;
-		this.tags = new HashMap<>();
-		this.metadatas = new HashMap<>();
+		this.tags = new HashMap<String, Tag>();
+		this.metadatas = new HashMap<String, MetaData>();
 	}
 
 	public Long getIdDicom() {

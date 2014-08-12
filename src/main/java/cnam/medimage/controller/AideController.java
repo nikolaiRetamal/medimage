@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import cnam.medimage.model.service.ServiceMeshCrawler;
+import cnam.medimage.service.ServiceMeshCrawler;
 
 @org.springframework.stereotype.Controller
 public class AideController implements Controller{

@@ -22,8 +22,8 @@ public class Usage {
 		super();
 		this.idUsage = idUsage;
 		this.nom = nom;
-		this.users = new HashMap<>();
-		this.dicoms = new HashMap<>();
+		this.users = new HashMap<Long, User>();
+		this.dicoms = new HashMap<Long, Dicom>();
 	}
 
 	public void ajouterUser(User user){
