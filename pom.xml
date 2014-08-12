@@ -72,29 +72,21 @@
 			<groupId>org.dcm4che2</groupId>
 			<artifactId>core</artifactId>
 			<version>2.0.26</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\dcm4che-core-2.0.26.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.dcm4che2</groupId>
 			<artifactId>net</artifactId>
 			<version>2.0.26</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\dcm4che-net-2.0.26.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.dcm4che2</groupId>
 			<artifactId>iod</artifactId>
 			<version>2.0.26</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\dcm4che-iod-2.0.26.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.dcm4che2</groupId>
 			<artifactId>image</artifactId>
 			<version>2.0.26</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\dcm4che-imageio-rle-2.0.26.jar</systemPath>
 		</dependency>
 	</dependencies>
 
