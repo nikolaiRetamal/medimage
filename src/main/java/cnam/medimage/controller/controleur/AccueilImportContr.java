@@ -50,7 +50,7 @@ public class AccueilImportContr implements Controller{
 		    }
 		}
 
-		return new ModelAndView("home");
+		return new ModelAndView("accueilImport");
 	}
 	
 	public void listMetaInfo(DicomObject object) {
