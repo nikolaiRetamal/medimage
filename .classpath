@@ -23,8 +23,5 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="lib" path="slf4j-log4j12-1.6.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
