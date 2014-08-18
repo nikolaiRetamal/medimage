@@ -22,7 +22,7 @@
 			<form:form  method="POST" action="${pageContext.request.contextPath}/import" role="form"
 			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 				<div class="form-group">
-					<label for="usage">Usage</label>
+					<label for="usage">Usage sdfsd</label>
 					<input type="text" class="form-control" id="usage" placeholder="Entrez un usage">
 				</div>
 				<div class="form-group">
