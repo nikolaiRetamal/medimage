@@ -6,4 +6,10 @@ mvn deploy:deploy-file -Durl=file:///home/nikolai/workspace/medimage/lib/ -Dfile
 	        <name>project</name>
 	        <url>file:${project.basedir}/lib</url>
     	</repository>
+    	
+		<dependency>
+			<groupId>com.ximpleware</groupId>
+			<artifactId>vtd-wml</artifactId>
+			<version>1.0</version>
+		</dependency>    	
 
