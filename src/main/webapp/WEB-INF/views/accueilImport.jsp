@@ -19,8 +19,8 @@
 	</div>
 	<div id="contenu" style="width:100%">
 		<div class="row">
-			<form:form  method="POST" action="${pageContext.request.contextPath}/import" role="form" id="dropzone-form"
-			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 dropzone">
+			<form:form  method="POST" action="${pageContext.request.contextPath}/import" role="form"
+			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 				<div class="form-group">
 					<label for="usage">Usage</label>
 					<input type="text" class="form-control" id="usage" placeholder="Entrez un usage">
@@ -29,9 +29,15 @@
 					<label for="examen">Examen</label>
 					<input type="text" class="form-control" id="examen" placeholder="Entrez le nom de l'examen">
 				</div>
-				<div class="dropzone-previews"></div> <!-- this is were the previews should be shown. -->
 				<button type="submit" class="btn btn-default">Envoyer</button>
-				
+			</form:form>
+			
+			<form:form action="${pageContext.request.contextPath}/import" id="dropzone-form"
+			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 dropzone">
+				<div class="fallback">
+			    	<input name="file" type="file" multiple />
+				</div>
+				<div class="dropzone-previews"></div> <!-- this is were the previews should be shown. -->
 			</form:form>
 		</div>
 	</div>
