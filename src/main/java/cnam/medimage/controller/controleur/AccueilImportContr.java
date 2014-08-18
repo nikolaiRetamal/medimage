@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Host;
+import com.datastax.driver.core.Metadata;
+
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
 
@@ -49,7 +53,18 @@ public class AccueilImportContr implements Controller{
 		    catch (IOException ignore) {
 		    }
 		}
-
+		System.out.println("/////////////////" + 
+	   			  "TEST CASSANDRA" + 
+	   			  "/////////////////");
+		
+		Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
+		Metadata metadata = cluster.getMetadata();
+		System.out.printf("Connected to cluster: %s\n", 
+		metadata.getClusterName());
+		for ( Host host : metadata.getAllHosts() ) {
+			System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
+			host.getDatacenter(), host.getAddress(), host.getRack());
+		}
 		return new ModelAndView("accueilImport");
 	}
 	
