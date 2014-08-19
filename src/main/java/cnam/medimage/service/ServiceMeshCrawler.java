@@ -3,31 +3,26 @@
  */
 package cnam.medimage.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Stack;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
 
 import cnam.medimage.bean.TagMesh;
-import cnam.medimage.service.xmlEvent.StartDescriptorFilter;
+
+import com.ximpleware.AutoPilot;
+import com.ximpleware.NavException;
+import com.ximpleware.VTDGen;
+import com.ximpleware.VTDNav;
+import com.ximpleware.XPathEvalException;
+import com.ximpleware.XPathParseException;
 
 /**
  * @author Jullien
@@ -46,23 +41,17 @@ public class ServiceMeshCrawler extends Service {
 			singleton = new ServiceMeshCrawler();		
 	}
 	
-	
-	/**
-	 * Le XMLInputFactory qui permettra de parser le fichier Mesh
-	 * Il est statique est protégéafin d'assurer l'ouverture du fichier Mesh une fois pour toute
-	 * et de s'assurer de sa disponibilité.
-	 */
-	private static XMLInputFactory xmlif;
-	
-	/**
-	 * Le Event Reader ouvert sur le fichier Mesh
-	 */
-	private static XMLEventReader  xmler;
+
 
 	/**
 	 * Fichier Mesh ouvert
 	 */
 	private static File mesh;
+	
+	/**
+	 * Chemin du fichier mesh
+	 */
+	private String meshPath;
 	
 	
 	/**
@@ -92,23 +81,14 @@ public class ServiceMeshCrawler extends Service {
 			
 			String meshFilePath = context.getInitParameter("MESH_FILEPATH");
 			meshFilePath = context.getRealPath(meshFilePath);
+			
+			meshPath = meshFilePath;
 					
 			mesh = new File(meshFilePath);
 			
 		}
 		
-		//Si l'input Factory est null on l'instancie
-		if(xmlif == null || force){		
-			xmlif = XMLInputFactory.newInstance();
-			xmlif.setProperty("javax.xml.stream.isCoalescing",Boolean.TRUE);
-			xmlif.setProperty("javax.xml.stream.isReplacingEntityReferences", Boolean.TRUE);
-			
-		}
-
-		//Si le streamReader n'a pas encore été ouvert vers le fichier Mesh
-		if(xmler == null || force){				
-			xmler = xmlif.createXMLEventReader(new FileInputStream(mesh),"UTF-8");
-		}
+	
 		
 		if(isInit()){
 			System.out.println("Initialisation ServiceMeshCrawler() OK !");
@@ -126,7 +106,7 @@ public class ServiceMeshCrawler extends Service {
 	 * @return
 	 */
 	private boolean isInit() {
-		return mesh != null && xmlif != null && xmler != null;
+		return mesh != null;
 	}
 	
 	
@@ -136,38 +116,58 @@ public class ServiceMeshCrawler extends Service {
 	
 	
 	
-	public List<TagMesh> getMotClef(String saisie) throws XMLStreamException, FileNotFoundException{
+	public TagMesh getDescriptorUI(String saisie) throws XPathParseException, XPathEvalException, NavException{
 		
 		System.out.println("Entrée dans le Crawler");
 		
-		List<TagMesh> tags = new ArrayList<TagMesh>() ;
-		xmler = xmlif.createXMLEventReader(new FileInputStream(mesh),"UTF-8");
+		TagMesh tag = null;
+		String idTag = null;
+		String tagName = null;
 		
-		XMLEventReader reader = xmlif.createFilteredReader(xmler, new StartDescriptorFilter());
-		
-		int compteur = 0;
-		
-		StartElement event;
-		Stack<XMLEvent> tagStack = new Stack();
-		
-		while (reader.hasNext() && compteur < 2000) {
+		VTDGen vg = new VTDGen();
+	    AutoPilot ap = new AutoPilot();
+	    int i;
+	
+	    ap.selectXPath("DescriptorRecord[DescriptorUI = '"+saisie+"']");
+	      
+          if (vg.parseFile(meshPath, true)  ){
+        	  
+              VTDNav vn = vg.getNav();
+              
+              ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+              // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+              while((i=ap.evalXPath())!=-1){                     	
+                  
+                  //on descend au prochain DescriptorUI
+                  if (vn.toElement(VTDNav.FIRST_CHILD, "DescriptorUI"))
+                  {
+                      int j = vn.getText();
+                      if (j != -1) idTag = vn.toString(j);
+                      vn.toElement(VTDNav.PARENT);
+                  }    
+                  //on descend au prochain DescriptorName
+                  if (vn.toElement(VTDNav.FIRST_CHILD, "DescriptorName"))
+                  {                	  
+                	  if (vn.toElement(VTDNav.FIRST_CHILD, "String"))
+                      {
+                          int j = vn.getText();
+                          if (j != -1) tagName = vn.toString(j);
+                          vn.toElement(VTDNav.PARENT);
+                      }
+                      vn.toElement(VTDNav.PARENT);
+                  }
+                  
+              }
+          }
 
-			event = (StartElement)reader.nextEvent();	
-			
-			
-			if (event.isCharacters()) {						
-				if (!event.asCharacters().isWhiteSpace()) {
-					System.out.println("\t>" + event.asCharacters().getData());
-				}					
-			}
-		    
-		    compteur++;
-		    
-		}
+         tag = new TagMesh(idTag, tagName);
+         
+         System.out.println(idTag+"/"+tagName);
+          
+  		System.out.println("Sortie du Crawler");
+  		
+		return tag;
 		
-		System.out.println("Parcours du fichier fini "+compteur);
-		
-		return null;
 		
 	}
 	
