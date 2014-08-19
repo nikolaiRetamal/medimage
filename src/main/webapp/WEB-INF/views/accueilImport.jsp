@@ -19,10 +19,10 @@
 	</div>
 	<div id="contenu" style="width:100%">
 		<div class="row">
-			<form:form  method="POST" action="${pageContext.request.contextPath}/import" role="form"
+			<form:form  method="POST" action="${pageContext.request.contextPath}/upload" role="form"
 			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 				<div class="form-group">
-					<label for="usage">Usage sdfsd</label>
+					<label for="usage">Usage</label>
 					<input type="text" class="form-control" id="usage" placeholder="Entrez un usage">
 				</div>
 				<div class="form-group">
@@ -33,7 +33,8 @@
 			</form:form>
 			
 			<form:form action="${pageContext.request.contextPath}/import" id="dropzone-form"
-			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 dropzone">
+			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"
+			style="background:yellow;height:100px;">
 				<div class="fallback">
 			    	<input name="file" type="file" multiple />
 				</div>

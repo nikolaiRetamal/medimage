@@ -1,0 +1,11 @@
+CREATE KEYSPACE medimage WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+DROP KEYSPACE cassandra_defautl_sample;
+
+CREATE TABLE medimage.dicom (
+    id_dicom int,
+    date_import timestamp,
+    nom text,
+    id_user int,
+    id_usage int,
+    PRIMARY KEY (id_dicom)
+);
