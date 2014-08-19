@@ -37,115 +37,14 @@ import com.datastax.driver.core.Metadata;
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
 	
-	@RequestMapping(value="/import")
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		System.out.println("Je suis dans le contrôleur de l'import");
-		
-		ServletContext context = request.getSession().getServletContext();
-		String pathFile = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0001.dcm");
-		DicomInputStream din = null;
-
-		FileInputStream file = new FileInputStream(pathFile);
-		System.out.println("file = " + file);
-		try {
-
-		    din = new DicomInputStream(file);
-		    listMetaInfo(din.readFileMetaInformation());
-		    listHeader(din.readDicomObject());
-		}
-		catch (IOException e) {
-		    e.printStackTrace();
-		}
-		finally {
-		    try {
-		        din.close();
-		    }
-		    catch (IOException ignore) {
-		    }
-		}
-		System.out.println("/////////////////" + 
-	   			  "TEST CASSANDRA" + 
-	   			  "/////////////////");
-		CassandraConnection.getInstance();
-		Metadata metadata = CassandraConnection.getCluster().getMetadata();
-		System.out.printf("Connected to cluster: %s\n", 
-		metadata.getClusterName());
-		for ( Host host : metadata.getAllHosts() ) {
-			System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
-			host.getDatacenter(), host.getAddress(), host.getRack());
-		}
-		return new ModelAndView("accueilImport");
-	}
-	
-	public void listMetaInfo(DicomObject object) {
-	   System.out.println("/////////////////" + 
-			   			  "META INFORMATION" + 
-			   			  "/////////////////");
-	   Iterator<DicomElement> iter = object.fileMetaInfoIterator();
-	   while(iter.hasNext()) {
-	      DicomElement element = (DicomElement) iter.next();
-	      int tag = element.tag();
-	      try {
-	         String tagName = object.nameOf(tag);
-	         String tagAddr = TagUtils.toString(tag);
-	         System.out.println("addr = " + tagAddr);
-	         String tagVR = object.vrOf(tag).toString();
-	         if (tagVR.equals("SQ")) {
-	            if (element.hasItems()) {
-	               System.out.println(tagAddr +" ["+  tagVR +"] "+ tagName);
-	               listMetaInfo(element.getDicomObject());
-	               continue;
-	            }
-	         }    
-	         String tagValue = object.getString(tag);
-	         System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	      }
-	   }  
-	}
-	
-	public void listHeader(DicomObject object) {
-		   System.out.println("/////////////////" + 
-		   			  "DATASET" + 
-		   			  "/////////////////");
-		   Iterator<DicomElement> iter = object.datasetIterator();
-		   while(iter.hasNext()) {
-		      DicomElement element = (DicomElement) iter.next();
-		      int tag = element.tag();
-		      if(tag == Tag.PixelData)
-		    	  break;
-		      try {
-		         String tagName = object.nameOf(tag);
-		         String tagAddr = TagUtils.toString(tag);
-		         String tagVR = object.vrOf(tag).toString();
-		         if (tagVR.equals("SQ")) {
-		            if (element.hasItems()) {
-		               System.out.println(tagAddr +" ["+  tagVR +"] "+ tagName);
-		               listHeader(element.getDicomObject());
-		               continue;
-		            }
-		         }       	 
-		         String tagValue = object.getString(tag);
-		         System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
-		      } catch (Exception e) {
-		         e.printStackTrace();
-		      }
-		   }  
-		}
-	
-	
-/**********************************************************************/
-	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public @ResponseBody
-	List<UploadedFile> upload(MultipartHttpServletRequest request,
+	List<UploadedFile> upload(HttpServletRequest request,
 	HttpServletResponse response) throws IOException {
-	
+		System.out.println("je vais traiter les fichiers");
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		// Getting uploaded files from the request object
-		Map<String, MultipartFile> fileMap = request.getFileMap();
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 		
 		// Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
@@ -167,6 +66,111 @@ public class AccueilImportContr implements Controller{
 		   			  "/////////////////");
 		return uploadedFiles;
 	}
+	
+	@RequestMapping(value="/import")
+	public ModelAndView handleRequest(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		System.out.println("Je suis dans le contrôleur de l'import");
+		
+		ServletContext context = request.getSession().getServletContext();
+		String pathFile = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0001.dcm");
+		System.out.println(pathFile);
+		DicomInputStream din = null;
+
+		FileInputStream file = new FileInputStream(pathFile);
+		System.out.println("file = " + file);
+		try {
+
+		    din = new DicomInputStream(file);
+		    listMetaInfo(din.readFileMetaInformation());
+		    listHeader(din.readDicomObject());
+		}
+		catch (IOException e) {
+		    e.printStackTrace();
+		}
+		finally {
+		    try {
+		        din.close();
+		    }
+		    catch (IOException ignore) {
+		    }
+		}
+		/*System.out.println("/////////////////" + 
+	   			  "TEST CASSANDRA" + 
+	   			  "/////////////////");*/
+		CassandraConnection.getInstance();
+		Metadata metadata = CassandraConnection.getCluster().getMetadata();
+		System.out.printf("Connected to cluster: %s\n", 
+		metadata.getClusterName());
+		for ( Host host : metadata.getAllHosts() ) {
+			System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
+			host.getDatacenter(), host.getAddress(), host.getRack());
+		}
+		return new ModelAndView("accueilImport");
+	}
+	
+	public void listMetaInfo(DicomObject object) {
+	   /*System.out.println("/////////////////" + 
+			   			  "META INFORMATION" + 
+			   			  "/////////////////");*/
+	   Iterator<DicomElement> iter = object.fileMetaInfoIterator();
+	   while(iter.hasNext()) {
+	      DicomElement element = (DicomElement) iter.next();
+	      int tag = element.tag();
+	      try {
+	         String tagName = object.nameOf(tag);
+	         String tagAddr = TagUtils.toString(tag);
+	         //System.out.println("addr = " + tagAddr);
+	         String tagVR = object.vrOf(tag).toString();
+	         if (tagVR.equals("SQ")) {
+	            if (element.hasItems()) {
+	               //System.out.println(tagAddr +" ["+  tagVR +"] "+ tagName);
+	               listMetaInfo(element.getDicomObject());
+	               continue;
+	            }
+	         }    
+	         String tagValue = object.getString(tag);
+	         //System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+	   }  
+	}
+	
+	public void listHeader(DicomObject object) {
+		   /*System.out.println("/////////////////" + 
+		   			  "DATASET" + 
+		   			  "/////////////////");*/
+		   Iterator<DicomElement> iter = object.datasetIterator();
+		   while(iter.hasNext()) {
+		      DicomElement element = (DicomElement) iter.next();
+		      int tag = element.tag();
+		      if(tag == Tag.PixelData)
+		    	  break;
+		      try {
+		         String tagName = object.nameOf(tag);
+		         String tagAddr = TagUtils.toString(tag);
+		         String tagVR = object.vrOf(tag).toString();
+		         if (tagVR.equals("SQ")) {
+		            if (element.hasItems()) {
+		               //System.out.println(tagAddr +" ["+  tagVR +"] "+ tagName);
+		               listHeader(element.getDicomObject());
+		               continue;
+		            }
+		         }       	 
+		         String tagValue = object.getString(tag);
+		         //System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
+		      } catch (Exception e) {
+		         e.printStackTrace();
+		      }
+		   }  
+		}
+	
+	
+/**********************************************************************/
+	
+
 	
 	/*@RequestMapping(value = { "/list" })
 	public String listBooks(Map<String, Object> map) {
@@ -221,6 +225,7 @@ public class AccueilImportContr implements Controller{
 		fileInfo.setSize(multipartFile.getSize());
 		fileInfo.setType(multipartFile.getContentType());
 		fileInfo.setLocation(getDestinationLocation());
+		System.out.println("coucou");
 		
 		return fileInfo;
 	}

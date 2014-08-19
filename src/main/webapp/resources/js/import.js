@@ -2,9 +2,9 @@ window.onload = function() {
 	
 
 	
-	$("#dropzone-form").dropzone({
+	/*$("#dropzone-form").dropzone({
 		  // The configuration we've talked about above
-		  url:"/medimage/import",
+		  url:"/medimage/aide",
 		  autoProcessQueue: false,
 		  autoDiscover: false,
 		  uploadMultiple: true,
@@ -32,19 +32,40 @@ window.onload = function() {
 				// Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
 				// of the sending event because uploadMultiple is set to true.
 				this.on("sendingmultiple", function() {
-				  // Gets triggered when the form is actually being sent.
-				  // Hide the success button or the complete form.
+					console.log("sendingmultiple");
 				});
 				this.on("successmultiple", function(files, response) {
-				  // Gets triggered when the files have successfully been sent.
-				  // Redirect user or notify of success.
+					console.log("successmultiple");
 				});
 				this.on("errormultiple", function(files, response) {
-				  // Gets triggered when there was an error sending the files.
-				  // Maybe show form again, and notify user of error
+					console.log("error");
 				});
 		  	}
-	});
-
-	Dropzone.autoDiscover = false;
+	});*/
+    $('#fileupload').fileupload({
+        dataType: 'json',
+        done: function (e, data) {
+            $("tr:has(td)").remove();
+            $.each(data.result, function (index, file) {
+ 
+                $("#uploaded-files").append(
+                        $('<tr/>')
+                        .append($('<td/>').text(file.fileName))
+                        .append($('<td/>').text(file.fileSize))
+                        .append($('<td/>').text(file.fileType))
+                        .append($('<td/>').html("<a href='medimage/get/"+index+"'>Click</a>"))
+                        )//end $("#uploaded-files").append()
+            });
+        },
+ 
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progress .bar').css(
+                'width',
+                progress + '%'
+            );
+        },
+ 
+        dropZone: $('#dropzone')
+    });
 }
