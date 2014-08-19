@@ -55,6 +55,7 @@ public class AccueilImportContr implements Controller{
 			saveFileToLocalDisk(multipartFile);
 			UploadedFile fileInfo = getUploadedFileInfo(multipartFile);
 			
+			
 			// Save the file info to database
 			//fileInfo = saveFileToDatabase(fileInfo);
 			
