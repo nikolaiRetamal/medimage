@@ -2,7 +2,7 @@ window.onload = function() {
 	
 
 	
-	/*$("#dropzone-form").dropzone({
+	$("#dropzone-form").dropzone({
 		  // The configuration we've talked about above
 		  url:"/medimage/aide",
 		  autoProcessQueue: false,
@@ -41,7 +41,7 @@ window.onload = function() {
 					console.log("error");
 				});
 		  	}
-	});*/
+	});
     /*$('#fileupload').fileupload({
         dataType: 'json',
         done: function (e, data) {

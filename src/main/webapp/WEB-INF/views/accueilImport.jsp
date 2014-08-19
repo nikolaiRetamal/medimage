@@ -9,6 +9,7 @@
 		<link href="resources/bootstrap/css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="resources/css/dropzone.css">
 	<link rel="stylesheet" href="resources/css/basic.css">
 	<title>Home</title>
 </head>
@@ -29,25 +30,26 @@
 					<input type="text" class="form-control" id="examen" placeholder="Entrez le nom de l'examen">
 				</div>
 				<button type="submit" class="btn btn-default">Envoyer</button>
-			</form:form>
+			</form:form>-->
 			
 			<form:form action="${pageContext.request.contextPath}/upload" id="dropzone-form"
-			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"
+			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 dropzone"
 			style="background:yellow;height:100px;"
-			method="POST">
+			method="POST" enctype="multipart/form-data">
 				<div class="fallback">
 			    	<input name="file" type="file" multiple />
 				</div>
 				<div class="dropzone-previews"></div>
 				<button type="submit" class="btn btn-default">Envoyer</button>
-			</form:form>-->
-			<form:form action="${pageContext.request.contextPath}/upload" 
+			</form:form>
+			
+			<!--<form:form action="${pageContext.request.contextPath}/upload" 
 			style="width:500px;padding:20px" enctype="multipart/form-data">
  
 			    <input id="fileupload" type="file" name="files[]"  multiple>
 				<button type="submit" class="btn btn-default">Envoyer</button>
 			 
-			</form:form>
+			</form:form>-->
 		</div>
 	</div>
 
@@ -55,8 +57,9 @@
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
-<script src="resources/js/jquery.ui.widget.js"></script>
+<script src="resources/js/dropzone.js"></script>
+<!--<script src="resources/js/jquery.ui.widget.js"></script>
 <script src="resources/js/jquery.iframe-transport.js"></script>
-<script src="resources/js/jquery.fileupload.js"></script>
+<script src="resources/js/jquery.fileupload.js"></script>-->
 <script src="resources/js/import.js"></script>
 </html>

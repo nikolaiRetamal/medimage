@@ -39,7 +39,7 @@ public class AccueilImportContr implements Controller{
 	
 	private String contextPath;
 	
-	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers="Accept=application/json")
 	public @ResponseBody
 	List<UploadedFile> upload(MultipartHttpServletRequest request,
 	HttpServletResponse response) throws IOException {
