@@ -37,21 +37,25 @@ import com.datastax.driver.core.Metadata;
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
 	
+	private String contextPath;
+	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public @ResponseBody
-	List<UploadedFile> upload(HttpServletRequest request,
+	List<UploadedFile> upload(MultipartHttpServletRequest request,
 	HttpServletResponse response) throws IOException {
 		System.out.println("je vais traiter les fichiers");
-		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		// Getting uploaded files from the request object
-		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+		Map<String, MultipartFile> fileMap = request.getFileMap();
 		
 		// Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
-		
+		System.out.println("Coucou");
 		// Iterate through the map
+		int i = 0;
 		for (MultipartFile multipartFile : fileMap.values()) {
 			// Save the file to local disk
+			System.out.println("Coucou n° " + i++);
+			contextPath = request.getSession().getServletContext().getRealPath("/");
 			saveFileToLocalDisk(multipartFile);
 			UploadedFile fileInfo = getUploadedFileInfo(multipartFile);
 			
@@ -204,8 +208,10 @@ public class AccueilImportContr implements Controller{
 	throws IOException, FileNotFoundException {
 	
 		String outputFileName = getOutputFilename(multipartFile);
+		System.out.println("Je vais copier!");
 		
 		FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(outputFileName));
+		System.out.println("J'ai fini de copier!");
 	}
 	
 	/*private UploadedFile saveFileToDatabase(UploadedFile uploadedFile) {
@@ -216,7 +222,7 @@ public class AccueilImportContr implements Controller{
 	
 	private String getOutputFilename(MultipartFile multipartFile) {
 	
-		return getDestinationLocation() + multipartFile.getOriginalFilename();
+		return contextPath + "fichiers/"+ multipartFile.getOriginalFilename();
 	}
 	
 	private UploadedFile getUploadedFileInfo(MultipartFile multipartFile)throws IOException {
@@ -225,14 +231,10 @@ public class AccueilImportContr implements Controller{
 		fileInfo.setName(multipartFile.getOriginalFilename());
 		fileInfo.setSize(multipartFile.getSize());
 		fileInfo.setType(multipartFile.getContentType());
-		fileInfo.setLocation(getDestinationLocation());
+		fileInfo.setLocation(contextPath + "fichiers/");
 		System.out.println("coucou");
 		
 		return fileInfo;
-	}
-	
-	private String getDestinationLocation() {
-		return "/resources/files/";
 	}
 }
 

@@ -42,7 +42,7 @@ window.onload = function() {
 				});
 		  	}
 	});*/
-    $('#fileupload').fileupload({
+    /*$('#fileupload').fileupload({
         dataType: 'json',
         done: function (e, data) {
             $("tr:has(td)").remove();
@@ -67,5 +67,5 @@ window.onload = function() {
         },
  
         dropZone: $('#dropzone')
-    });
+    });*/
 }

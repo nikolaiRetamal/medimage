@@ -41,26 +41,13 @@
 				<div class="dropzone-previews"></div>
 				<button type="submit" class="btn btn-default">Envoyer</button>
 			</form:form>-->
-			<div style="width:500px;padding:20px">
+			<form:form action="${pageContext.request.contextPath}/upload" 
+			style="width:500px;padding:20px" enctype="multipart/form-data">
  
-			    <input id="fileupload" type="file" name="files[]" data-url="/medimage/upload" multiple>
+			    <input id="fileupload" type="file" name="files[]"  multiple>
+				<button type="submit" class="btn btn-default">Envoyer</button>
 			 
-			    <div id="dropzone">Drop files here</div>
-			 
-			    <div id="progress">
-			        <div style="width: 0%;"></div>
-			    </div>
-			 
-			    <table id="uploaded-files">
-			        <tr>
-			            <th>File Name</th>
-			            <th>File Size</th>
-			            <th>File Type</th>
-			            <th>Download</th>
-			        </tr>
-			    </table>
-			 
-			</div>
+			</form:form>
 		</div>
 	</div>
 
