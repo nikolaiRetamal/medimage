@@ -1,5 +1,6 @@
 package cnam.medimage.controller.controleur;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -18,7 +19,6 @@ import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.Tag;
 import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.util.TagUtils;
-
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,28 +37,44 @@ import com.datastax.driver.core.Metadata;
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
 	
-	private String contextPath;
+	private String dest_Path;
+	private String dir_name;
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers="Accept=application/json")
 	public @ResponseBody
 	List<UploadedFile> upload(MultipartHttpServletRequest request,
 	HttpServletResponse response) throws IOException {
-		System.out.println("je vais traiter les fichiers");
+		//on enregistre le contexte pour enregistrer plus loin les fichiers
+		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
 		// Getting uploaded files from the request object
 		Map<String, MultipartFile> fileMap = request.getFileMap();
+		String user = "user011";
+		String usage = (String) request.getParameter("usage");
+		String examen = (String) request.getParameter("examen");
+		if(fileMap.size() > 1){
+			this.dir_name = user + "_" + usage + "_" + examen;
+			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
+			if (!success) {
+				System.out.println("Erreur création dossier");
+			    
+			}else{
+				System.out.println("Nouveau dossier = " + this.dir_name);
+				//A coder Exception
+			}
+			this.dir_name = "/" + this.dir_name + "/";
+		}else
+			this.dir_name = "/" + user + "_" + usage + "_" + examen + "_";
+		System.out.println("usage : " + usage);
+		System.out.println("examen : " + examen);
 		
 		// Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
-		System.out.println("Coucou");
 		// Iterate through the map
-		int i = 0;
 		for (MultipartFile multipartFile : fileMap.values()) {
 			// Save the file to local disk
-			System.out.println("Coucou n° " + i++);
-			contextPath = request.getSession().getServletContext().getRealPath("/");
-			saveFileToLocalDisk(multipartFile);
-			UploadedFile fileInfo = getUploadedFileInfo(multipartFile);
 			
+			sauvegardeFichier(multipartFile);
+			UploadedFile fileInfo = getUploadedFileInfo(multipartFile);
 			
 			// Save the file info to database
 			//fileInfo = saveFileToDatabase(fileInfo);
@@ -80,7 +96,6 @@ public class AccueilImportContr implements Controller{
 		
 		ServletContext context = request.getSession().getServletContext();
 		String pathFile = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0001.dcm");
-		System.out.println(pathFile);
 		DicomInputStream din = null;
 
 		FileInputStream file = new FileInputStream(pathFile);
@@ -204,14 +219,11 @@ public class AccueilImportContr implements Controller{
 		}
 	}*/
 	
-	private void saveFileToLocalDisk(MultipartFile multipartFile)
+	private void sauvegardeFichier(MultipartFile multipartFile)
 	throws IOException, FileNotFoundException {
 	
 		String outputFileName = getOutputFilename(multipartFile);
-		System.out.println("Je vais copier!");
-		
 		FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(outputFileName));
-		System.out.println("J'ai fini de copier!");
 	}
 	
 	/*private UploadedFile saveFileToDatabase(UploadedFile uploadedFile) {
@@ -222,7 +234,7 @@ public class AccueilImportContr implements Controller{
 	
 	private String getOutputFilename(MultipartFile multipartFile) {
 	
-		return contextPath + "fichiers/"+ multipartFile.getOriginalFilename();
+		return this.dest_Path + this.dir_name +multipartFile.getOriginalFilename();
 	}
 	
 	private UploadedFile getUploadedFileInfo(MultipartFile multipartFile)throws IOException {
@@ -231,9 +243,7 @@ public class AccueilImportContr implements Controller{
 		fileInfo.setName(multipartFile.getOriginalFilename());
 		fileInfo.setSize(multipartFile.getSize());
 		fileInfo.setType(multipartFile.getContentType());
-		fileInfo.setLocation(contextPath + "fichiers/");
-		System.out.println("coucou");
-		
+		fileInfo.setLocation(this.dest_Path);
 		return fileInfo;
 	}
 }

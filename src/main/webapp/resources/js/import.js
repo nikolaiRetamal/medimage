@@ -1,16 +1,14 @@
 window.onload = function() {
-	
 
-	
 	$("#dropzone-form").dropzone({
 		  // The configuration we've talked about above
-		  url:"/medimage/aide",
+		  url:"/medimage/upload",
 		  autoProcessQueue: false,
 		  autoDiscover: false,
 		  uploadMultiple: true,
-		  parallelUploads: 100,
+		  parallelUploads: 1000,
 		  previewsContainer: ".dropzone-previews",
-		  maxFiles: 100,
+		  maxFiles: 2000,
 		
 		  // The setting up of the dropzone
 		  	init: function() {
@@ -22,11 +20,7 @@ window.onload = function() {
 					e.preventDefault();
 					e.stopPropagation();
 					console.log("Je lance l'upload");
-					setTimeout(function(){
-						console.log("effective!");
-						myDropzone.processQueue();
-					}, 1500);
-					
+					myDropzone.processQueue();
 				});
 		
 				// Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
@@ -42,30 +36,4 @@ window.onload = function() {
 				});
 		  	}
 	});
-    /*$('#fileupload').fileupload({
-        dataType: 'json',
-        done: function (e, data) {
-            $("tr:has(td)").remove();
-            $.each(data.result, function (index, file) {
- 
-                $("#uploaded-files").append(
-                        $('<tr/>')
-                        .append($('<td/>').text(file.fileName))
-                        .append($('<td/>').text(file.fileSize))
-                        .append($('<td/>').text(file.fileType))
-                        .append($('<td/>').html("<a href='medimage/get/"+index+"'>Click</a>"))
-                        )//end $("#uploaded-files").append()
-            });
-        },
- 
-        progressall: function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .bar').css(
-                'width',
-                progress + '%'
-            );
-        },
- 
-        dropZone: $('#dropzone')
-    });*/
 }
