@@ -2,13 +2,14 @@
 package cnam.medimage.bean;
 
 import java.util.Map;
+import java.util.UUID;
 
 public class Panier {
 	
 	private Long idPanier;
 	private User user;
 	private String zipPath;
-	private Map<Long, Dicom> contenu;
+	private Map<UUID, Dicom> contenu;
 	private Boolean publique;
 	
 	public Panier() {
@@ -18,7 +19,7 @@ public class Panier {
 	
 	
 	public Panier(Long idPanier, User user, String zipPath,
-			Map<Long, Dicom> contenu, Boolean publique) {
+			Map<UUID, Dicom> contenu, Boolean publique) {
 		super();
 		this.idPanier = idPanier;
 		this.user = user;
@@ -31,7 +32,7 @@ public class Panier {
 		this.contenu.put(dicom.getIdDicom(), dicom);
 	}
 
-	public void supprimerDicom(Long id){
+	public void supprimerDicom(UUID id){
 		this.contenu.remove(id);
 	}
 	
@@ -53,10 +54,10 @@ public class Panier {
 	public void setZipPath(String zipPath) {
 		this.zipPath = zipPath;
 	}
-	public Map<Long, Dicom> getContenu() {
+	public Map<UUID, Dicom> getContenu() {
 		return contenu;
 	}
-	public void setContenu(Map<Long, Dicom> contenu) {
+	public void setContenu(Map<UUID, Dicom> contenu) {
 		this.contenu = contenu;
 	}
 	public Boolean getPublique() {

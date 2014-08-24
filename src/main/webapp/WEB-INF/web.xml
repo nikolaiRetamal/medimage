@@ -16,9 +16,20 @@
 		<param-name>MESH_FILEPATH</param-name>
 		<param-value>/mesh/fredesc2014.xml</param-value>
 	</context-param>
+	
+	<!-- Fichier de context XML
+		contient : 
+			- Connecteurs CASSANDRA -->
+	<context-param>
+	    <param-name>contextConfigLocation</param-name>
+	    <param-value>/WEB-INF/applicationcontext.xml</param-value>
+	</context-param>
+	
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	
 
 	<servlet>
 		<servlet-name>SpringDispatcher</servlet-name>
