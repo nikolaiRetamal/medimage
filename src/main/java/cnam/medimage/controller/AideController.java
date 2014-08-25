@@ -32,11 +32,7 @@ public class AideController implements Controller{
 		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance();
 		serviceMeshCrawler.init(request, true);
 		
-		serviceMeshCrawler.getDescriptorUI("D001444");
-		serviceMeshCrawler.getDescriptorUI("D003462");
-		serviceMeshCrawler.getDescriptorUI("D018646");
-		serviceMeshCrawler.getDescriptorUI("D009742");
-		serviceMeshCrawler.getDescriptorUI("D000379");
+		serviceMeshCrawler.getDescriptorUI("D000355");
 				
 		ModelAndView mav = new ModelAndView();
         mav.setViewName("aide");
