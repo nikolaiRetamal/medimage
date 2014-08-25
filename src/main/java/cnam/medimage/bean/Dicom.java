@@ -35,8 +35,10 @@ public class Dicom implements Serializable{
 	@Column(name = "nom")
 	private String nom;
 	
+	@Column(name = "tags")
 	private Map<String, Tag> tags;
 	
+	@Column(name = "metadatas")
 	private Map<String, MetaData> metadatas;
 	
 	public Dicom() {
