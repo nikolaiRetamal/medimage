@@ -138,60 +138,32 @@ public class ServiceMeshCrawler extends Service {
               ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
               // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
               while((i=ap.evalXPath())!=-1){                	  
-//            	  tag = tagBuilder(vn);           	       
-//            	  
-//            	}          	 
-//            	
-//          }
-//
-//         
-//          if(tag != null){
-//        	  System.out.println("Tag : "+tag.getIdTag()+" / "+tag.getNom());
-//        	  if(tag.getSynonymes() != null){
-//        		  for(String s : tag.getSynonymes())System.out.println(s);
-//        	  }else{
-//            	  System.out.println("Synonymes null...");        		  
-//        	  }
-//        		  
-//          }else{
-//        	  System.out.println("Tag est null...");
-//          }
-//          
-//          
-//  		System.out.println("Sortie du Crawler");
-//  		
-//		return tag;
-//		
+            	  tag = tagBuilder(vn);           	       
             	  
-                  //on descend au prochain DescriptorUI
-                  if (vn.toElement(VTDNav.FIRST_CHILD, "DescriptorUI"))
-                  {
-                      int j = vn.getText();
-                      if (j != -1) idTag = vn.toString(j);
-                      vn.toElement(VTDNav.PARENT);
-                  }    
-                  //on descend au prochain DescriptorName
-                  if (vn.toElement(VTDNav.FIRST_CHILD, "DescriptorName"))
-                  {                	  
-                	  if (vn.toElement(VTDNav.FIRST_CHILD, "String"))
-                      {
-                          int j = vn.getText();
-                          if (j != -1) tagName = vn.toString(j);
-                          vn.toElement(VTDNav.PARENT);
-                      }
-                      vn.toElement(VTDNav.PARENT);
-                  }
-                  
-              }
+            	}          	 
+            	
           }
 
-         tag = new TagMesh(idTag, tagName);
          
-         System.out.println(idTag+"/"+tagName);
+          if(tag != null){
+        	  System.out.println("Tag : "+tag.getIdTag()+" / "+tag.getNom());
+        	  if(tag.getSynonymes() != null){
+        		  for(String s : tag.getSynonymes())System.out.println(s);
+        	  }else{
+            	  System.out.println("Synonymes null...");        		  
+        	  }
+        		  
+          }else{
+        	  System.out.println("Tag est null...");
+          }
+          
           
   		System.out.println("Sortie du Crawler");
   		
 		return tag;
+		
+           
+                  
 		
 	}
 	
@@ -214,11 +186,11 @@ public class ServiceMeshCrawler extends Service {
 		
 
 		//Xpath du DescriptorUI
-	    AutoPilot ap = new AutoPilot();
-        ap.selectXPath("DescriptorUI");
+	    //AutoPilot ap = new AutoPilot();
+        //ap.selectXPath("DescriptorUI");
 		//Xpath du DescriptorName
-	    AutoPilot ap2 = new AutoPilot();
-        ap2.selectXPath("DescriptorName");
+	   // AutoPilot ap2 = new AutoPilot();
+       // ap2.selectXPath("DescriptorName");
 		//Xpath de détection de la liste des termes/synonymes
 	    AutoPilot ap3 = new AutoPilot();
         ap3.selectXPath("ConceptList/Concept/TermList/Term/String");
@@ -227,37 +199,25 @@ public class ServiceMeshCrawler extends Service {
         //On remonte au DescriptorRecord
         if(vnClone.toElement(VTDNav.PARENT,"Descriptor")){ 
         	
-        	System.out.println("on entre...");
-        	
-        	j = vnClone.getText();
-    		if (j != -1) System.out.println(vnClone.toString(j));
-
-    		j = vnClone.getText();
-    		if (j != -1) System.out.println(vnClone.toString(j));
-		        //on descend au prochain DescriptorUI
-        		ap.bind(vnClone);
-        		while((i=ap.evalXPath())!=-1){ 
-
-		            j = vnClone.getText();
-		            if (j != -1) idTag = vnClone.toString(j); 
-	        		vnClone.toElement(VTDNav.PARENT);                     
-		            
-		        }    
-		        //on descend au prochain DescriptorName
-        		ap2.bind(vnClone);
-        		while ((i=ap2.evalXPath())!=-1)
-		        {                	  
-		      	  if (vnClone.toElement(VTDNav.FIRST_CHILD, "String"))
-		            {
-		                j = vnClone.getText();
-		                if (j != -1) tagName = vnClone.toString(j);    
-		        		vnClone.toElement(VTDNav.PARENT);                     
-		            }
- 
-		      	  //TODO gestion des TERMS   
-			      vnClone.toElement(VTDNav.PARENT);           
-		
-		        }       	  
+       	  
+            //on descend au prochain DescriptorUI
+            if (vnClone.toElement(VTDNav.FIRST_CHILD, "DescriptorUI"))
+            {
+                j = vnClone.getText();
+                if (j != -1) idTag = vnClone.toString(j);
+                vnClone.toElement(VTDNav.PARENT);
+            }    
+            //on descend au prochain DescriptorName
+            if (vnClone.toElement(VTDNav.FIRST_CHILD, "DescriptorName"))
+            {                	  
+          	  if (vnClone.toElement(VTDNav.FIRST_CHILD, "String"))
+                {
+                    j = vnClone.getText();
+                    if (j != -1) tagName = vnClone.toString(j);
+                    vnClone.toElement(VTDNav.PARENT);
+                }
+          	vnClone.toElement(VTDNav.PARENT);
+            }  
 		        
 		        //Récupération des synonymes
 		        ap3.bind(vnClone);
