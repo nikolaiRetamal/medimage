@@ -1,9 +1,10 @@
 package cnam.medimage.bean;
 
 import java.io.Serializable;
-import java.util.Date;
-
+import java.security.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,31 +16,32 @@ import javax.persistence.Id;
 @Entity(name = "dicom") 
 public class Dicom implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3L;
 	
 
 	@Id
 	@Column(name = "id_dicom")
 	private UUID idDicom;
 	
-	private User user;
+	@Column(name = "id_user")
+	private UUID idUser;
 	
 	@Column(name = "public")
 	private Boolean publique;
 	
 
 	@Column(name = "date_import")
-	private Date dateImport;
+	private Timestamp dateImport;
 	
 
 	@Column(name = "nom")
 	private String nom;
 	
 	@Column(name = "tags")
-	private Map<String, Tag> tags;
+	private List<String> tags;
 	
 	@Column(name = "metadatas")
-	private Map<String, MetaData> metadatas;
+	private Map<String, String> metadatas;
 	
 	public Dicom() {
 		// TODO Auto-generated constructor stub
@@ -61,11 +63,11 @@ public class Dicom implements Serializable{
 		this.publique = publique;
 	}
 
-	public Date getDateImport() {
+	public Timestamp getDateImport() {
 		return dateImport;
 	}
 
-	public void setDateImport(Date dateImport) {
+	public void setDateImport(Timestamp dateImport) {
 		this.dateImport = dateImport;
 	}
 
@@ -78,40 +80,41 @@ public class Dicom implements Serializable{
 	}
 	
 
-	public User getUser() {
-		return user;
-	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Map<String, Tag> getTags() {
+	public List<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(Map<String, Tag> tags) {
+	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
 
-	public Map<String, MetaData> getMetadatas() {
+	public Map<String, String> getMetadatas() {
 		return metadatas;
 	}
 
-	public void setMetadatas(Map<String, MetaData> metadatas) {
+	public void setMetadatas(Map<String, String> metadatas) {
 		this.metadatas = metadatas;
 	}
 	
-	public Dicom(UUID idDicom, User user, Boolean publique, Date dateImport,
+	public Dicom(UUID idDicom, UUID idUser, Boolean publique, Timestamp dateImport,
 			String nom) {
 		super();
 		this.idDicom = idDicom;
-		this.user = user;
+		this.idUser = idUser;
 		this.publique = publique;
 		this.dateImport = dateImport;
 		this.nom = nom;
-		this.tags = new HashMap<String, Tag>();
-		this.metadatas = new HashMap<String, MetaData>();
+		this.tags = new ArrayList<String>();
+		this.metadatas = new HashMap<>();
+	}
+
+	public UUID getIdUser() {
+		return idUser;
+	}
+
+	public void setIdUser(UUID idUser) {
+		this.idUser = idUser;
 	}
 
 

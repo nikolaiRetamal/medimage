@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons-core</artifactId>
-			<version>1.4.1.RELEASE</version>
+			<version>1.6.2.RELEASE</version>
 		</dependency>
 				
 
@@ -120,6 +120,22 @@
 			<artifactId>cassandra-driver-core</artifactId>
 			<version>2.0.1</version>
 		</dependency>
+		
+	    <dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-cassandra</artifactId>
+	        <version>1.0.2.RELEASE</version>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.springframework.data</groupId>
+		    <artifactId>spring-data-jpa</artifactId>
+		    <version>1.6.2.RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-aop</artifactId>
+		    <version>4.0.6.RELEASE</version>
+		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty</artifactId>
@@ -155,7 +171,7 @@
 		<dependency>
 			<groupId>org.easycassandra</groupId>
 			<artifactId>EasyCassandra</artifactId>
-			<version>2.0.1</version>
+			<version>2.0.2</version>
 		</dependency>
 		
 	</dependencies>

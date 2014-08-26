@@ -12,4 +12,3 @@ mvn deploy:deploy-file -Durl=file:///home/nikolai/workspace/medimage/lib/ -Dfile
 			<artifactId>vtd-wml</artifactId>
 			<version>1.0</version>
 		</dependency>    	
-

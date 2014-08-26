@@ -2,9 +2,13 @@ package cnam.medimage.config;
 
 import java.util.ArrayList;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.easycassandra.persistence.cassandra.CassandraFactory;
 import org.easycassandra.persistence.cassandra.ClusterInformation;
+import org.easycassandra.persistence.cassandra.EasyCassandraManager;
 import org.easycassandra.persistence.cassandra.spring.CassandraFactoryAnnotation;
+import org.easycassandra.persistence.cassandra.spring.SimpleCassandraTemplateImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -45,24 +49,40 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
     }
     
     @Bean
+    public SimpleCassandraTemplateImpl cassandraTemplate(){
+    	System.out.println("Je vais créer cassandraTemplate");
+    	CassandraFactoryAnnotation cassandraFactory = cassandraFactory();
+    	System.out.println("cassandraFactory = " + cassandraFactory);
+    	SimpleCassandraTemplateImpl cassandraTemplate = new SimpleCassandraTemplateImpl(cassandraFactory);
+    	System.out.println("Je retourne cassandraTemplate");
+    	return cassandraTemplate;
+    }
+	
+    @Bean
     public ClusterInformation clusterInformation(){
+    	System.out.println("Je crée ClusterInformation");
     	ClusterInformation clusterInformation = new ClusterInformation();
     	clusterInformation.setKeySpace("medimage");
     	clusterInformation.setPort(9042);
     	ArrayList<String> hosts = new ArrayList<>();
     	hosts.add("localhost");
     	clusterInformation.setHosts(hosts);
+    	System.out.println("Je retourne ClusterInformation");
     	return clusterInformation;
     }
     
     @Bean 
     public CassandraFactoryAnnotation cassandraFactory(){
+    	System.out.println("Je vais créer le cassandra factory");
     	CassandraFactoryAnnotation cassandraFactory = new CassandraFactoryAnnotation(clusterInformation());
+    	System.out.println("J'ai créé le cassandra factory");
     	ArrayList<Class<?>> annotatedClasses = new ArrayList<>();
-    	annotatedClasses.add(Dicom.class);
+    	annotatedClasses.add(cnam.medimage.bean.Dicom.class);
     	cassandraFactory.setAnnotatedClasses(annotatedClasses);
+    	System.out.println("keySpace: " + cassandraFactory.getKeySpace());
+    	System.out.println("Je retourne cassandraFactory");
     	return cassandraFactory;
     }
+    
 
-	
 }

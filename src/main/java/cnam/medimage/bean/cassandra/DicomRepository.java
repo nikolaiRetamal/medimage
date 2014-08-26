@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import cnam.medimage.bean.Dicom;
 
-@Repository("dicomRepository")
+@Repository("DicomRepository")
 public class DicomRepository extends CassandraRepository<Dicom, UUID>{
 
 	
