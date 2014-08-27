@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons-core</artifactId>
-			<version>1.6.2.RELEASE</version>
+			<version>1.4.1.RELEASE</version>
 		</dependency>
 				
 
@@ -177,11 +177,11 @@
 	</dependencies>
 
 	<repositories>
-		<repository>
+		<!--  <repository>
 			<id>springsource-milestones</id>
 			<name>SpringSource Milestones Proxy</name>
 			<url>https://oss.sonatype.org/content/repositories/springsource-milestones</url>
-		</repository>
+		</repository>-->
     <!--other repositories if any-->
     	<repository>
 	        <id>project.local</id>

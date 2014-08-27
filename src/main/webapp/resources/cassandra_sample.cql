@@ -7,12 +7,16 @@ CREATE COLUMNFAMILY medimage.dicom (
     id_dicom uuid,
     date_import timestamp,
     nom text,
+    public boolean,
     id_user uuid,
-    tag list<text>,
-    metadata map<text,text>,
+    tags list<text>,
+    metadatas map<text,text>,
     PRIMARY KEY (id_dicom)
 );
 
+INSERT INTO medimage.dicom (id_dicom, date_import, nom, id_user, tags, metadatas)
+  VALUES(51eea361-2db2-11e4-8c21-0800200c9a66, 1409120421, 'Baggins', 51ee7c50-2db2-11e4-8c21-0800200c9a66,['pied', 'jambe'], {'calcul':'renal', 'tumeur':'sein'});
+  
 //DROP COLUMNFAMILY medimage.tag;
 CREATE COLUMNFAMILY medimage.tag (
     id_dicom uuid,
@@ -83,4 +87,12 @@ CREATE TABLE medimage.examen_joint (
     PRIMARY KEY (id_examen, id_dicom)
 );
 
+
+CREATE COLUMNFAMILY medimage.livre (
+    num int,
+	nom string,
+    PRIMARY KEY (num)
+);
+
+insert INTO medimage.livre (num, nom ) VALUES ( 15, 'JeanLuc');
 

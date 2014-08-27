@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cassandra.cli.CliParser.newColumnFamily_return;
 import org.dcm4che2.data.DicomElement;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.Tag;
@@ -28,7 +30,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import cnam.medimage.bean.Dicom;
+import cnam.medimage.bean.Livre;
 import cnam.medimage.bean.UploadedFile;
+import cnam.medimage.repository.DicomRepository;
+import cnam.medimage.repository.LivreRepository;
 import cnam.medimage.service.CassandraConnection;
 
 import com.datastax.driver.core.Host;
@@ -97,14 +103,22 @@ public class AccueilImportContr implements Controller{
 		ServletContext context = request.getSession().getServletContext();
 		String pathFile = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0001.dcm");
 		DicomInputStream din = null;
-
+		LivreRepository livreRepo = new LivreRepository();
+		Livre livre = livreRepo.findOne(12);
+		System.out.println(livre.getNom() + " = " + livre.getNum());
 		FileInputStream file = new FileInputStream(pathFile);
 		System.out.println("file = " + file);
 		try {
-
 		    din = new DicomInputStream(file);
-		    listMetaInfo(din.readFileMetaInformation());
+		    Dicom dicom = new Dicom();
+		    dicom.setIdDicom(UUID.randomUUID());
+		    listMetaInfo(din.readFileMetaInformation(), dicom);
 		    listHeader(din.readDicomObject());
+		    Iterator it = dicom.getMetadatas().entrySet().iterator();
+		    while (it.hasNext()) {
+		        Map.Entry pairs = (Map.Entry)it.next();
+		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		    }
 		}
 		catch (IOException e) {
 		    e.printStackTrace();
@@ -130,7 +144,7 @@ public class AccueilImportContr implements Controller{
 		return new ModelAndView("accueilImport");
 	}
 	
-	public void listMetaInfo(DicomObject object) {
+	public void listMetaInfo(DicomObject object, Dicom dicom) {
 	   /*System.out.println("/////////////////" + 
 			   			  "META INFORMATION" + 
 			   			  "/////////////////");*/
@@ -141,17 +155,18 @@ public class AccueilImportContr implements Controller{
 	      try {
 	         String tagName = object.nameOf(tag);
 	         String tagAddr = TagUtils.toString(tag);
-	         //System.out.println("addr = " + tagAddr);
+	         System.out.println("addr = " + tagAddr);
 	         String tagVR = object.vrOf(tag).toString();
 	         if (tagVR.equals("SQ")) {
 	            if (element.hasItems()) {
-	               //System.out.println(tagAddr +" ["+  tagVR +"] "+ tagName);
-	               listMetaInfo(element.getDicomObject());
+	               System.out.println(tagAddr +" ["+  tagVR +"] "+ tagName);
+	               listMetaInfo(element.getDicomObject(), dicom);
 	               continue;
 	            }
 	         }    
 	         String tagValue = object.getString(tag);
-	         //System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
+	         System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
+	         dicom.getMetadatas().put(tagAddr, tagValue);
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }

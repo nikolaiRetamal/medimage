@@ -4,13 +4,21 @@ import java.io.Serializable;
 import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+
+
+
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
+import org.easycassandra.Index;
 
 
 @Entity(name = "dicom") 
@@ -33,7 +41,7 @@ public class Dicom implements Serializable{
 	@Column(name = "date_import")
 	private Timestamp dateImport;
 	
-
+	@Index
 	@Column(name = "nom")
 	private String nom;
 	
@@ -44,7 +52,8 @@ public class Dicom implements Serializable{
 	private Map<String, String> metadatas;
 	
 	public Dicom() {
-		// TODO Auto-generated constructor stub
+		this.tags = new LinkedList<>();
+		this.metadatas = new HashMap<>();
 	}
 
 	public UUID getIdDicom() {
