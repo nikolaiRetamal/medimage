@@ -3,6 +3,7 @@ package cnam.medimage.bean;
 import java.io.Serializable;
 import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +15,10 @@ import java.util.UUID;
 
 
 
+
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -39,15 +43,17 @@ public class Dicom implements Serializable{
 	
 
 	@Column(name = "date_import")
-	private Timestamp dateImport;
+	private Date dateImport;
 	
 	@Index
 	@Column(name = "nom")
 	private String nom;
 	
+	@ElementCollection
 	@Column(name = "tags")
 	private List<String> tags;
 	
+	@ElementCollection
 	@Column(name = "metadatas")
 	private Map<String, String> metadatas;
 	
@@ -72,11 +78,11 @@ public class Dicom implements Serializable{
 		this.publique = publique;
 	}
 
-	public Timestamp getDateImport() {
+	public Date getDateImport() {
 		return dateImport;
 	}
 
-	public void setDateImport(Timestamp dateImport) {
+	public void setDateImport(Date dateImport) {
 		this.dateImport = dateImport;
 	}
 
@@ -106,7 +112,7 @@ public class Dicom implements Serializable{
 		this.metadatas = metadatas;
 	}
 	
-	public Dicom(UUID idDicom, UUID idUser, Boolean publique, Timestamp dateImport,
+	public Dicom(UUID idDicom, UUID idUser, Boolean publique, Date dateImport,
 			String nom) {
 		super();
 		this.idDicom = idDicom;

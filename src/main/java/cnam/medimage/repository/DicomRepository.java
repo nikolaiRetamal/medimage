@@ -29,5 +29,4 @@ public class DicomRepository {
 	public Dicom findOne(UUID uuid) {
 		return persistence.findByKey(uuid, Dicom.class);
 	}
-	
 }

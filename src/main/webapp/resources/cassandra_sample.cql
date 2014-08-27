@@ -87,12 +87,15 @@ CREATE TABLE medimage.examen_joint (
     PRIMARY KEY (id_examen, id_dicom)
 );
 
-
+drop table medimage.livre;
 CREATE COLUMNFAMILY medimage.livre (
-    num int,
-	nom string,
+    num uuid,
+	nom text,
+	public boolean,
+	date_import timestamp,
+	tags list<text>,
     PRIMARY KEY (num)
 );
 
-insert INTO medimage.livre (num, nom ) VALUES ( 15, 'JeanLuc');
+insert INTO medimage.livre (num, nom, public, date_import, tags) VALUES ( 5ee52fc0-2de0-11e4-8c21-0800200c9a66, 'JeanLuc', false, 1409138627, ['coucou', 'kiki']);
 

@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.cassandra.cli.CliParser.newColumnFamily_return;
 import org.dcm4che2.data.DicomElement;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.Tag;
@@ -104,21 +105,30 @@ public class AccueilImportContr implements Controller{
 		String pathFile = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0001.dcm");
 		DicomInputStream din = null;
 		LivreRepository livreRepo = new LivreRepository();
-		Livre livre = livreRepo.findOne(12);
-		System.out.println(livre.getNom() + " = " + livre.getNum());
+		DicomRepository dicoRepo = new DicomRepository();
+		List<Dicom> dicom = dicoRepo.findByIndex("Baggins");
+		System.out.println("Nom = " + dicom.get(0).getNom());
+		Livre livre = livreRepo.findOne(UUID.fromString("5ee52fc0-2de0-11e4-8c21-0800200c9a66"));
+		System.out.println(livre.getNom() + " = " + livre.getNum() + ", publique = " + livre.getPublique() + 
+				", date : " + livre.getDateImport());
+		for(String s : livre.getTags())
+			System.out.println("- " + s);
+		
 		FileInputStream file = new FileInputStream(pathFile);
 		System.out.println("file = " + file);
 		try {
 		    din = new DicomInputStream(file);
-		    Dicom dicom = new Dicom();
-		    dicom.setIdDicom(UUID.randomUUID());
-		    listMetaInfo(din.readFileMetaInformation(), dicom);
+		    Dicom dicom2 = new Dicom();
+		    dicom2.setIdDicom(UUID.randomUUID());
+		    dicom2.setDateImport(new Date());
+		    listMetaInfo(din.readFileMetaInformation(), dicom2);
 		    listHeader(din.readDicomObject());
-		    Iterator it = dicom.getMetadatas().entrySet().iterator();
+		    Iterator it = dicom2.getMetadatas().entrySet().iterator();
 		    while (it.hasNext()) {
 		        Map.Entry pairs = (Map.Entry)it.next();
 		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
 		    }
+		    dicoRepo.save(dicom2);
 		}
 		catch (IOException e) {
 		    e.printStackTrace();
@@ -165,8 +175,8 @@ public class AccueilImportContr implements Controller{
 	            }
 	         }    
 	         String tagValue = object.getString(tag);
-	         System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
 	         dicom.getMetadatas().put(tagAddr, tagValue);
+	         System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }

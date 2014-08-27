@@ -27,7 +27,7 @@ public class LivreRepository {
 	}
 
 
-	public Livre findOne(int num) {
+	public Livre findOne(UUID num) {
 		return persistence.findByKey(num, Livre.class);
 	}
 	
