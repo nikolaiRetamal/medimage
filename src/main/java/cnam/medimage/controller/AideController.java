@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import cnam.medimage.bean.TagMesh;
+import cnam.medimage.repository.DicomRepository;
+import cnam.medimage.repository.TagMeshRepository;
 import cnam.medimage.service.ServiceMeshCrawler;
 
 @org.springframework.stereotype.Controller
@@ -26,13 +29,15 @@ public class AideController implements Controller{
 		
 		String meshFilePath = context.getInitParameter("MESH_FILEPATH");
 		meshFilePath = context.getRealPath(meshFilePath);
-				
-		System.out.println("Mesh : "+meshFilePath);
-		
+						
 		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance();
 		serviceMeshCrawler.init(request, true);
+
+		TagMeshRepository meshRepo = new TagMeshRepository();
 		
-		serviceMeshCrawler.getDescriptorUI("D000355");
+		TagMesh tag = serviceMeshCrawler.getDescriptorUI("D000355");
+		
+		meshRepo.save(tag);
 				
 		ModelAndView mav = new ModelAndView();
         mav.setViewName("aide");

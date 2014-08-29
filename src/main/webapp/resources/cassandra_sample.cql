@@ -91,3 +91,13 @@ CREATE TABLE medimage.examen_joint (
     PRIMARY KEY (id_examen, id_dicom)
 );
 
+
+//drop table medimage.tagmesh;
+CREATE COLUMNFAMILY medimage.tagmesh (
+    id_tag text,
+	nom text,
+	synonymes list<text>,
+	categories list<text>,
+    PRIMARY KEY (id_tag)
+);
+

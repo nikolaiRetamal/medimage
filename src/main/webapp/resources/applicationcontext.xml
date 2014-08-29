@@ -24,6 +24,7 @@
 	<property name="annotatedClasses">
 		<list>
 			<value>cnam.medimage.bean.Dicom</value>
+			<value>cnam.medimage.bean.TagMesh</value>
 		</list>
 	</property>
 </bean>	
