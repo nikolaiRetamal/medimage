@@ -1,36 +1,45 @@
 package cnam.medimage.bean;
 
-public class MetaData {
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity(name = "metadata")
+public class MetaData implements Serializable{
 	
-	private String idMetadata;
-	private String description;
-	private String valeur;
+	private static final long serialVersionUID = 3L;
+	@Id
+	@Column
+	private String id_dicom;
+	@Id
+	@Column
+	private String key;
+	@Id
+	@Column
+	private String value;
 	
-	public MetaData(String idMetadata, String description, String valeur) {
-		super();
-		this.idMetadata = idMetadata;
-		this.description = description;
-		this.valeur = valeur;
+	
+	public String getId_dicom() {
+		return id_dicom;
+	}
+	public void setId_dicom(String id_dicom) {
+		this.id_dicom = id_dicom;
+	}
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
-	public String getIdMetadata() {
-		return idMetadata;
-	}
-	public void setIdMetadata(String idMetadata) {
-		this.idMetadata = idMetadata;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public String getValeur() {
-		return valeur;
-	}
-	public void setValeur(String valeur) {
-		this.valeur = valeur;
-	}
 	
 	
 	
