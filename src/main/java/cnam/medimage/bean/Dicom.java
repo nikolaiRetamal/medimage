@@ -32,18 +32,18 @@ public class Dicom implements Serializable{
 	
 
 	@Id
-	@Column(name = "id_dicom")
-	private UUID idDicom;
+	@Column
+	private UUID id_dicom;
 	
-	@Column(name = "id_user")
-	private UUID idUser;
+	@Column
+	private UUID id_user;
 	
 	@Column(name = "public")
 	private Boolean publique;
 	
 
-	@Column(name = "date_import")
-	private Date dateImport;
+	@Column
+	private Date date_import;
 	
 	@Index
 	@Column(name = "nom")
@@ -54,7 +54,7 @@ public class Dicom implements Serializable{
 	private List<String> tags;
 	
 	@ElementCollection
-	@Column(name = "metadatas")
+	@Column
 	private Map<String, String> metadatas;
 	
 	public Dicom() {
@@ -62,12 +62,20 @@ public class Dicom implements Serializable{
 		this.metadatas = new HashMap<>();
 	}
 
-	public UUID getIdDicom() {
-		return idDicom;
+	public UUID getId_dicom() {
+		return id_dicom;
 	}
 
-	public void setIdDicom(UUID idDicom) {
-		this.idDicom = idDicom;
+	public void setId_dicom(UUID id_dicom) {
+		this.id_dicom = id_dicom;
+	}
+
+	public UUID getId_user() {
+		return id_user;
+	}
+
+	public void setId_user(UUID id_user) {
+		this.id_user = id_user;
 	}
 
 	public Boolean getPublique() {
@@ -78,12 +86,12 @@ public class Dicom implements Serializable{
 		this.publique = publique;
 	}
 
-	public Date getDateImport() {
-		return dateImport;
+	public Date getDate_import() {
+		return date_import;
 	}
 
-	public void setDateImport(Date dateImport) {
-		this.dateImport = dateImport;
+	public void setDate_import(Date date_import) {
+		this.date_import = date_import;
 	}
 
 	public String getNom() {
@@ -93,8 +101,6 @@ public class Dicom implements Serializable{
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-	
-
 
 	public List<String> getTags() {
 		return tags;
@@ -111,30 +117,4 @@ public class Dicom implements Serializable{
 	public void setMetadatas(Map<String, String> metadatas) {
 		this.metadatas = metadatas;
 	}
-	
-	public Dicom(UUID idDicom, UUID idUser, Boolean publique, Date dateImport,
-			String nom) {
-		super();
-		this.idDicom = idDicom;
-		this.idUser = idUser;
-		this.publique = publique;
-		this.dateImport = dateImport;
-		this.nom = nom;
-		this.tags = new ArrayList<String>();
-		this.metadatas = new HashMap<>();
-	}
-
-	public UUID getIdUser() {
-		return idUser;
-	}
-
-	public void setIdUser(UUID idUser) {
-		this.idUser = idUser;
-	}
-
-
-	
-	
-	
-	
 }

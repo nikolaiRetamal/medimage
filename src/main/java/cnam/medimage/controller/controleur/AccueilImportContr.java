@@ -1,11 +1,9 @@
 package cnam.medimage.controller.controleur;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,20 +29,17 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import cnam.medimage.bean.Dicom;
-import cnam.medimage.bean.Livre;
 import cnam.medimage.bean.UploadedFile;
 import cnam.medimage.repository.DicomRepository;
-import cnam.medimage.repository.LivreRepository;
-import cnam.medimage.service.CassandraConnection;
-
-import com.datastax.driver.core.Host;
-import com.datastax.driver.core.Metadata;
 
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
 	
 	private String dest_Path;
 	private String dir_name;
+	private String current_filename;
+	private String usage;
+	private String examen;
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers="Accept=application/json")
 	public @ResponseBody
@@ -56,35 +50,32 @@ public class AccueilImportContr implements Controller{
 		// Getting uploaded files from the request object
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		String user = "user011";
-		String usage = (String) request.getParameter("usage");
-		String examen = (String) request.getParameter("examen");
+		this.usage = (String) request.getParameter("usage");
+		this.examen = (String) request.getParameter("examen");
 		if(fileMap.size() > 1){
 			this.dir_name = user + "_" + usage + "_" + examen;
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
 			if (!success) {
 				System.out.println("Erreur création dossier");
-			    
-			}else{
-				System.out.println("Nouveau dossier = " + this.dir_name);
-				//A coder Exception
+				//A coder Exception   
 			}
 			this.dir_name = "/" + this.dir_name + "/";
 		}else
 			this.dir_name = "/" + user + "_" + usage + "_" + examen + "_";
-		System.out.println("usage : " + usage);
-		System.out.println("examen : " + examen);
+		System.out.println("usage : " + this.usage);
+		System.out.println("examen : " + this.examen);
 		
-		// Maintain a list to send back the files info. to the client side
+		//Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
-		// Iterate through the map
+		
 		for (MultipartFile multipartFile : fileMap.values()) {
 			// Save the file to local disk
-			
+			this.current_filename = multipartFile.getOriginalFilename();
 			sauvegardeFichier(multipartFile);
 			UploadedFile fileInfo = getUploadedFileInfo(multipartFile);
 			
 			// Save the file info to database
-			//fileInfo = saveFileToDatabase(fileInfo);
+			fileInfo = saveFileToDatabase(fileInfo);
 			
 			// adding the file info to the list
 			uploadedFiles.add(fileInfo);
@@ -98,59 +89,8 @@ public class AccueilImportContr implements Controller{
 	@RequestMapping(value="/import")
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-
 		System.out.println("Je suis dans le contrôleur de l'import");
-		
-		ServletContext context = request.getSession().getServletContext();
-		String pathFile = context.getRealPath("/resources/dcmSamples/DEF_VEINEUX_107205/IM-0001-0001.dcm");
-		DicomInputStream din = null;
-		LivreRepository livreRepo = new LivreRepository();
-		DicomRepository dicoRepo = new DicomRepository();
-		List<Dicom> dicom = dicoRepo.findByIndex("Baggins");
-		System.out.println("Nom = " + dicom.get(0).getNom());
-		Livre livre = livreRepo.findOne(UUID.fromString("5ee52fc0-2de0-11e4-8c21-0800200c9a66"));
-		System.out.println(livre.getNom() + " = " + livre.getNum() + ", publique = " + livre.getPublique() + 
-				", date : " + livre.getDateImport());
-		for(String s : livre.getTags())
-			System.out.println("- " + s);
-		
-		FileInputStream file = new FileInputStream(pathFile);
-		System.out.println("file = " + file);
-		try {
-		    din = new DicomInputStream(file);
-		    Dicom dicom2 = new Dicom();
-		    dicom2.setIdDicom(UUID.randomUUID());
-		    dicom2.setDateImport(new Date());
-		    listMetaInfo(din.readFileMetaInformation(), dicom2);
-		    listHeader(din.readDicomObject());
-		    Iterator it = dicom2.getMetadatas().entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry pairs = (Map.Entry)it.next();
-		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-		    }
-		    dicoRepo.save(dicom2);
-		}
-		catch (IOException e) {
-		    e.printStackTrace();
-		}
-		finally {
-		    try {
-		        din.close();
-		    }
-		    catch (IOException ignore) {
-		    }
-		}
-		/*System.out.println("/////////////////" + 
-	   			  "TEST CASSANDRA" + 
-	   			  "/////////////////");*/
-		CassandraConnection.getInstance();
-		Metadata metadata = CassandraConnection.getCluster().getMetadata();
-		System.out.printf("Connected to cluster: %s\n", 
-		metadata.getClusterName());
-		for ( Host host : metadata.getAllHosts() ) {
-			System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
-			host.getDatacenter(), host.getAddress(), host.getRack());
-		}
+		System.out.println(request.getSession().getServletContext().getRealPath("/"));
 		return new ModelAndView("accueilImport");
 	}
 	
@@ -163,30 +103,24 @@ public class AccueilImportContr implements Controller{
 	      DicomElement element = (DicomElement) iter.next();
 	      int tag = element.tag();
 	      try {
-	         String tagName = object.nameOf(tag);
 	         String tagAddr = TagUtils.toString(tag);
 	         System.out.println("addr = " + tagAddr);
 	         String tagVR = object.vrOf(tag).toString();
 	         if (tagVR.equals("SQ")) {
 	            if (element.hasItems()) {
-	               System.out.println(tagAddr +" ["+  tagVR +"] "+ tagName);
 	               listMetaInfo(element.getDicomObject(), dicom);
 	               continue;
 	            }
 	         }    
 	         String tagValue = object.getString(tag);
 	         dicom.getMetadatas().put(tagAddr, tagValue);
-	         System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
 	   }  
 	}
 	
-	public void listHeader(DicomObject object) {
-		   /*System.out.println("/////////////////" + 
-		   			  "DATASET" + 
-		   			  "/////////////////");*/
+	public void listHeader(DicomObject object, Dicom dicom) {
 		   Iterator<DicomElement> iter = object.datasetIterator();
 		   while(iter.hasNext()) {
 		      DicomElement element = (DicomElement) iter.next();
@@ -194,18 +128,16 @@ public class AccueilImportContr implements Controller{
 		      if(tag == Tag.PixelData)
 		    	  break;
 		      try {
-		         String tagName = object.nameOf(tag);
 		         String tagAddr = TagUtils.toString(tag);
 		         String tagVR = object.vrOf(tag).toString();
 		         if (tagVR.equals("SQ")) {
 		            if (element.hasItems()) {
-		               //System.out.println(tagAddr +" ["+  tagVR +"] "+ tagName);
-		               listHeader(element.getDicomObject());
+		               listHeader(element.getDicomObject(), dicom);
 		               continue;
 		            }
 		         }       	 
 		         String tagValue = object.getString(tag);
-		         //System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
+		         dicom.getMetadatas().put(tagAddr, tagValue);
 		      } catch (Exception e) {
 		         e.printStackTrace();
 		      }
@@ -217,49 +149,47 @@ public class AccueilImportContr implements Controller{
 	
 
 	
-	/*@RequestMapping(value = { "/list" })
-	public String listBooks(Map<String, Object> map) {
-	map.put("fileList", uploadService.listFiles());
-	
-	// will be resolved to /views/listFiles.jsp
-	return "/listFiles";
-	}*/
-	
-	/*@RequestMapping(value = "/get/{fileId}", method = RequestMethod.GET)
-	public void getFile(HttpServletResponse response, @PathVariable Long fileId) {
-	
-		UploadedFile dataFile = uploadService.getFile(fileId);
-		
-		File file = new File(dataFile.getLocation(), dataFile.getName());
-		
-		try {
-		response.setContentType(dataFile.getType());
-		response.setHeader("Content-disposition", "attachment; filename=\""
-		                           + dataFile.getName() + "\"");
-		
-		FileCopyUtils.copy(FileUtils.readFileToByteArray(file),response.getOutputStream());
-		
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}*/
 	
 	private void sauvegardeFichier(MultipartFile multipartFile)
 	throws IOException, FileNotFoundException {
-	
-		String outputFileName = getOutputFilename(multipartFile);
-		FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(outputFileName));
+		FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(getOutputFilename()));
 	}
 	
-	/*private UploadedFile saveFileToDatabase(UploadedFile uploadedFile) {
+	private UploadedFile saveFileToDatabase(UploadedFile uploadedFile) {
+		
+		DicomInputStream dicomInput = null;
+		File fichierDicom = new File(getOutputFilename());
+		DicomRepository dicoRepo = new DicomRepository();
+		try {
+		    dicomInput = new DicomInputStream(fichierDicom);
+		    Dicom dicom = new Dicom();
+		    dicom.setId_dicom(UUID.randomUUID());
+		    dicom.setDate_import(new Date());
+		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
+		    listHeader(dicomInput.readDicomObject(), dicom);
+		    Iterator it = dicom.getMetadatas().entrySet().iterator();
+		    while (it.hasNext()) {
+		        Map.Entry pairs = (Map.Entry)it.next();
+		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		    }
+		    dicoRepo.save(dicom);
+		}
+		catch (IOException e) {
+		    e.printStackTrace();
+		}
+		finally {
+		    try {
+		    	dicomInput.close();
+		    }
+		    catch (IOException ignore) {
+		    }
+		}
+		return null;
 	
-	return uploadService.saveFile(uploadedFile);
+	}
 	
-	}*/
-	
-	private String getOutputFilename(MultipartFile multipartFile) {
-	
-		return this.dest_Path + this.dir_name +multipartFile.getOriginalFilename();
+	private String getOutputFilename() {
+		return this.dest_Path + this.dir_name + this.current_filename;
 	}
 	
 	private UploadedFile getUploadedFileInfo(MultipartFile multipartFile)throws IOException {

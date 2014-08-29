@@ -40,44 +40,10 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 	}
 	
-
     @Bean
     public MultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
         multipartResolver.setMaxUploadSize(838860800);
         return multipartResolver;
     }
-	
-    
-    /*public ClusterInformation clusterInformation(){
-    	//System.out.println("Je crée ClusterInformation");
-    	ClusterInformation clusterInformation = new ClusterInformation();
-    	clusterInformation.setKeySpace("medimage");
-    	clusterInformation.setPort(9042);
-    	ArrayList<String> hosts = new ArrayList<>();
-    	hosts.add("localhost");
-    	clusterInformation.setHosts(hosts);
-    	//System.out.println("Je retourne ClusterInformation");
-    	return clusterInformation;
-    }
-    
-     
-    public CassandraFactoryAnnotation cassandraFactory(){
-    	CassandraFactoryAnnotation cassandraFactory = new CassandraFactoryAnnotation(clusterInformation());
-    	ArrayList<Class<?>> annotatedClasses = new ArrayList<Class<?>>();
-    	annotatedClasses.add(cnam.medimage.bean.Dicom.class);
-    	cassandraFactory.setAnnotatedClasses(annotatedClasses);
-    	//System.out.println("keySpace: " + cassandraFactory.getKeySpace());
-    	//System.out.println("annotated class: " + cassandraFactory.getPersistence().count(Dicom.class));
-    	return cassandraFactory;
-    }
-    
-    @Bean
-    public SimpleCassandraTemplateImpl cassandraTemplate(){
-    	//System.out.println("Je vais créer cassandraTemplate");
-    	CassandraFactoryAnnotation cassandraFactory = cassandraFactory();
-    	SimpleCassandraTemplateImpl cassandraTemplate = new SimpleCassandraTemplateImpl(cassandraFactory);
-    	//System.out.println("Je retourne cassandraTemplate");
-    	return cassandraTemplate;
-    }*/
 }

@@ -5,7 +5,6 @@ import org.easycassandra.persistence.cassandra.EasyCassandraManager;
 import org.easycassandra.persistence.cassandra.Persistence;
 
 import cnam.medimage.bean.Dicom;
-import cnam.medimage.bean.Livre;
 
 public enum CassandraManager {
 	INSTANCE;
@@ -13,7 +12,7 @@ public enum CassandraManager {
 	private Persistence persistence;
 	{
 		easyCassandraManager = new EasyCassandraManager(ClusterInformation.create().addHost("localhost").withKeySpace("medimage"));
-		easyCassandraManager.addFamilyObject(Livre.class);
+		easyCassandraManager.addFamilyObject(Dicom.class);
 		persistence = easyCassandraManager.getPersistence();
 	}
 	
