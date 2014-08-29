@@ -1,6 +1,7 @@
 package cnam.medimage.bean;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ public class MetaData implements Serializable{
 	private static final long serialVersionUID = 3L;
 	@Id
 	@Column
-	private String id_dicom;
+	private UUID id_dicom;
 	@Id
 	@Column
 	private String key;
@@ -20,11 +21,17 @@ public class MetaData implements Serializable{
 	@Column
 	private String value;
 	
+	public MetaData(UUID id_dicom, String key, String value) {
+		super();
+		this.id_dicom = id_dicom;
+		this.key = key;
+		this.value = value;
+	}
 	
-	public String getId_dicom() {
+	public UUID getId_dicom() {
 		return id_dicom;
 	}
-	public void setId_dicom(String id_dicom) {
+	public void setId_dicom(UUID id_dicom) {
 		this.id_dicom = id_dicom;
 	}
 	public String getKey() {

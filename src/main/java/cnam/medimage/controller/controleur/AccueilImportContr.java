@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,8 +31,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import cnam.medimage.bean.Dicom;
+import cnam.medimage.bean.Examen;
+import cnam.medimage.bean.MetaData;
 import cnam.medimage.bean.UploadedFile;
 import cnam.medimage.repository.DicomRepository;
+import cnam.medimage.repository.ExamenRepository;
+import cnam.medimage.repository.MetadataRepository;
+import cnam.medimage.repository.UsageRepository;
 
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
@@ -39,7 +46,8 @@ public class AccueilImportContr implements Controller{
 	private String dir_name;
 	private String current_filename;
 	private String usage;
-	private String examen;
+	private UUID id_user;
+	private Examen examen;
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers="Accept=application/json")
 	public @ResponseBody
@@ -49,9 +57,14 @@ public class AccueilImportContr implements Controller{
 		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
 		// Getting uploaded files from the request object
 		Map<String, MultipartFile> fileMap = request.getFileMap();
+		
+		examen = new Examen();
 		String user = "user011";
+		id_user = UUID.randomUUID();
 		this.usage = (String) request.getParameter("usage");
-		this.examen = (String) request.getParameter("examen");
+		examen.setNom((String) request.getParameter("examen"));
+		examen.setId_examen(UUID.randomUUID());
+		examen.setId_user(id_user);
 		if(fileMap.size() > 1){
 			this.dir_name = user + "_" + usage + "_" + examen;
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
@@ -62,27 +75,26 @@ public class AccueilImportContr implements Controller{
 			this.dir_name = "/" + this.dir_name + "/";
 		}else
 			this.dir_name = "/" + user + "_" + usage + "_" + examen + "_";
-		System.out.println("usage : " + this.usage);
-		System.out.println("examen : " + this.examen);
+
 		
 		//Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
 		
 		for (MultipartFile multipartFile : fileMap.values()) {
-			// Save the file to local disk
+			// Sauvegarde physique
 			this.current_filename = multipartFile.getOriginalFilename();
 			sauvegardeFichier(multipartFile);
 			UploadedFile fileInfo = getUploadedFileInfo(multipartFile);
 			
-			// Save the file info to database
-			fileInfo = saveFileToDatabase(fileInfo);
+			// Sauvegarde en base
+			fileInfo = sauvegardeEnBase(fileInfo);
 			
 			// adding the file info to the list
 			uploadedFiles.add(fileInfo);
 		}
-	   System.out.println("/////////////////" + 
-		   			  "Chargééés!" + 
-		   			  "/////////////////");
+		
+		ExamenRepository examRepo = new ExamenRepository();
+		examRepo.save(examen);
 		return uploadedFiles;
 	}
 	
@@ -95,9 +107,6 @@ public class AccueilImportContr implements Controller{
 	}
 	
 	public void listMetaInfo(DicomObject object, Dicom dicom) {
-	   /*System.out.println("/////////////////" + 
-			   			  "META INFORMATION" + 
-			   			  "/////////////////");*/
 	   Iterator<DicomElement> iter = object.fileMetaInfoIterator();
 	   while(iter.hasNext()) {
 	      DicomElement element = (DicomElement) iter.next();
@@ -144,33 +153,35 @@ public class AccueilImportContr implements Controller{
 		   }  
 		}
 	
-	
-/**********************************************************************/
-	
-
-	
-	
 	private void sauvegardeFichier(MultipartFile multipartFile)
 	throws IOException, FileNotFoundException {
 		FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(getOutputFilename()));
 	}
 	
-	private UploadedFile saveFileToDatabase(UploadedFile uploadedFile) {
+	private UploadedFile sauvegardeEnBase(UploadedFile uploadedFile) {
 		
 		DicomInputStream dicomInput = null;
 		File fichierDicom = new File(getOutputFilename());
 		DicomRepository dicoRepo = new DicomRepository();
+		//UsageRepository usageRepo = new UsageRepository();
+		MetadataRepository metaRepo = new MetadataRepository();
+		
 		try {
 		    dicomInput = new DicomInputStream(fichierDicom);
 		    Dicom dicom = new Dicom();
 		    dicom.setId_dicom(UUID.randomUUID());
 		    dicom.setDate_import(new Date());
+		    dicom.setId_user(this.id_user);
+		    dicom.setId_examen(examen.getId_examen());
+		    dicom.setNom_examen(examen.getNom());
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);
 		    Iterator it = dicom.getMetadatas().entrySet().iterator();
 		    while (it.hasNext()) {
-		        Map.Entry pairs = (Map.Entry)it.next();
-		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		        Map.Entry metadata = (Map.Entry)it.next();
+		        System.out.println(metadata.getKey() + " = " + metadata.getValue());
+		        metaRepo.save(new MetaData(dicom.getId_dicom(),
+		        		(String) metadata.getKey(),(String) metadata.getValue()));
 		    }
 		    dicoRepo.save(dicom);
 		}
@@ -185,7 +196,6 @@ public class AccueilImportContr implements Controller{
 		    }
 		}
 		return null;
-	
 	}
 	
 	private String getOutputFilename() {
@@ -193,7 +203,6 @@ public class AccueilImportContr implements Controller{
 	}
 	
 	private UploadedFile getUploadedFileInfo(MultipartFile multipartFile)throws IOException {
-	
 		UploadedFile fileInfo = new UploadedFile();
 		fileInfo.setName(multipartFile.getOriginalFilename());
 		fileInfo.setSize(multipartFile.getSize());

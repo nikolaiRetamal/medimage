@@ -29,7 +29,7 @@ public class Panier {
 	}
 
 	public void ajouterDicom(Dicom dicom){
-		this.contenu.put(dicom.getIdDicom(), dicom);
+		this.contenu.put(dicom.getId_dicom(), dicom);
 	}
 
 	public void supprimerDicom(UUID id){

@@ -8,40 +8,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
-
-
-
-
-
-
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.easycassandra.Index;
-
-
-@Entity(name = "dicom") 
-public class Dicom implements Serializable{
+@Entity(name = "examen") 
+public class Examen implements Serializable{
 	
 	private static final long serialVersionUID = 3L;
 	
 	@Id
 	@Column
-	private UUID id_dicom;
-	@Column
-	private UUID id_user;
-	@Column
 	private UUID id_examen;
 	@Column
-	private String nom_examen;
-	@Column(name = "public")
-	private Boolean publique;
-	@Column
 	private Date date_import;
-	@Index
+	@Column
+	private UUID id_user;
 	@Column
 	private String nom;
 	@ElementCollection
@@ -51,33 +34,29 @@ public class Dicom implements Serializable{
 	@Column
 	private Map<String, String> metadatas;
 	
-	public Dicom() {
+	public Examen() {
 		this.tags = new LinkedList<>();
 		this.metadatas = new HashMap<>();
 	}
 
-	public UUID getId_dicom() {
-		return id_dicom;
-	}
-
-	public void setId_dicom(UUID id_dicom) {
-		this.id_dicom = id_dicom;
-	}
-
-	public UUID getId_user() {
-		return id_user;
-	}
-
-	public void setId_user(UUID id_user) {
+	public Examen(UUID id_examen, Date date_import, UUID id_user, String nom,
+			List<String> tags, Map<String, String> metadatas) {
+		super();
+		this.id_examen = id_examen;
+		this.date_import = date_import;
 		this.id_user = id_user;
+		this.nom = nom;
+		this.tags = tags;
+		this.metadatas = metadatas;
 	}
 
-	public Boolean getPublique() {
-		return publique;
+
+	public UUID getId_examen() {
+		return id_examen;
 	}
 
-	public void setPublique(Boolean publique) {
-		this.publique = publique;
+	public void setId_examen(UUID id_examen) {
+		this.id_examen = id_examen;
 	}
 
 	public Date getDate_import() {
@@ -86,6 +65,14 @@ public class Dicom implements Serializable{
 
 	public void setDate_import(Date date_import) {
 		this.date_import = date_import;
+	}
+
+	public UUID getId_user() {
+		return id_user;
+	}
+
+	public void setId_user(UUID id_user) {
+		this.id_user = id_user;
 	}
 
 	public String getNom() {
@@ -111,21 +98,4 @@ public class Dicom implements Serializable{
 	public void setMetadatas(Map<String, String> metadatas) {
 		this.metadatas = metadatas;
 	}
-
-	public UUID getId_examen() {
-		return id_examen;
-	}
-
-	public void setId_examen(UUID id_examen) {
-		this.id_examen = id_examen;
-	}
-
-	public String getNom_examen() {
-		return nom_examen;
-	}
-
-	public void setNom_examen(String nom_examen) {
-		this.nom_examen = nom_examen;
-	}
-	
 }

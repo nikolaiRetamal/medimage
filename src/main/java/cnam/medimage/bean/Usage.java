@@ -1,63 +1,80 @@
 
 package cnam.medimage.bean;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-public class Usage {
+@Entity(name = "usage") 
+public class Usage implements Serializable{
 
-	private Long idUsage;
+	private static final long serialVersionUID = 3L;
+	
+	@Id
+	@Column
+	private UUID id_usage;
+	@Column
+	private Date date_creat;
+	@Column
 	private String nom;
-	private Map<Long, User> users;
-	private Map<Long, Dicom> dicoms;
+	@ElementCollection
+	@Column
+	private List<UUID> dicoms;
+	@ElementCollection
+	@Column
+	private Map<UUID, String> users;
 	
 	public Usage() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	
-	
-	public Usage(Long idUsage, String nom) {
-		super();
-		this.idUsage = idUsage;
-		this.nom = nom;
-		this.users = new HashMap<Long, User>();
-		this.dicoms = new HashMap<Long, Dicom>();
+		this.dicoms = new LinkedList<>();
+		this.users = new HashMap<>();
 	}
 
-	public void ajouterUser(User user){
-		this.users.put(user.getIdUser(),user);
-	}
-	
-	public void supprimerUser(Long id){
-		this.users.remove(id);
+	public UUID getId_usage() {
+		return id_usage;
 	}
 
-	public Long getIdUsage() {
-		return idUsage;
+	public void setId_usage(UUID id_usage) {
+		this.id_usage = id_usage;
 	}
-	public void setIdUsage(Long idUsage) {
-		this.idUsage = idUsage;
+
+	public Date getDate_creat() {
+		return date_creat;
 	}
+
+	public void setDate_creat(Date date_creat) {
+		this.date_creat = date_creat;
+	}
+
 	public String getNom() {
 		return nom;
 	}
+
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-	public Map<Long, User> getUsers() {
-		return users;
-	}
-	public void setUsers(Map<Long, User> users) {
-		this.users = users;
-	}
-	public Map<Long, Dicom> getDicoms() {
+
+	public List<UUID> getDicoms() {
 		return dicoms;
 	}
-	public void setDicoms(Map<Long, Dicom> dicoms) {
+
+	public void setDicoms(List<UUID> dicoms) {
 		this.dicoms = dicoms;
 	}
-	
-	
+
+	public Map<UUID, String> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Map<UUID, String> users) {
+		this.users = users;
+	}
 }

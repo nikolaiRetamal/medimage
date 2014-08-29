@@ -12,7 +12,6 @@ public enum CassandraManager {
 	private Persistence persistence;
 	{
 		easyCassandraManager = new EasyCassandraManager(ClusterInformation.create().addHost("localhost").withKeySpace("medimage"));
-		easyCassandraManager.addFamilyObject(Dicom.class);
 		persistence = easyCassandraManager.getPersistence();
 	}
 	
