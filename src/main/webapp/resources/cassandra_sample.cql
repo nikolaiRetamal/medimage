@@ -1,4 +1,4 @@
-//DROP KEYSPACE medimage;
+DROP KEYSPACE medimage;
 CREATE KEYSPACE medimage WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 
 
@@ -87,7 +87,7 @@ CREATE TABLE medimage.examen_joint (
     PRIMARY KEY (id_examen, id_dicom)
 );
 
-drop table medimage.livre;
+//drop table medimage.livre;
 CREATE COLUMNFAMILY medimage.livre (
     num uuid,
 	nom text,
@@ -98,4 +98,14 @@ CREATE COLUMNFAMILY medimage.livre (
 );
 
 insert INTO medimage.livre (num, nom, public, date_import, tags) VALUES ( 5ee52fc0-2de0-11e4-8c21-0800200c9a66, 'JeanLuc', false, 1409138627, ['coucou', 'kiki']);
+
+
+//drop table medimage.tagmesh;
+CREATE COLUMNFAMILY medimage.tagmesh (
+    id_tag text,
+	nom text,
+	synonymes list<text>,
+	categories list<text>,
+    PRIMARY KEY (id_tag)
+);
 
