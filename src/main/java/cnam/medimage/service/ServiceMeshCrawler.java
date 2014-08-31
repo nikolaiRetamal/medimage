@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +56,11 @@ public class ServiceMeshCrawler extends Service {
 	 */
 	private String meshPath;
 	
+	/**
+	 * Le VTDGen en train de parser le fichier
+	 */
+	private VTDGen vg;
+	
 	
 	/**
 	* Méthode permettant d'accéder à l'unique instance de la classe Service
@@ -73,29 +80,27 @@ public class ServiceMeshCrawler extends Service {
 	 */
 	public void init(HttpServletRequest request, boolean force) throws XMLStreamException, FileNotFoundException {
 				
-		
-		//On va chercher le fichier Mesh
-		if(mesh == null || force){		
+
+		if(!isInit() || force){		
 
 			HttpSession session =  request.getSession(false);
 			ServletContext context = session.getServletContext();
-			
+
+			//On va chercher le fichier Mesh
 			String meshFilePath = context.getInitParameter("MESH_FILEPATH");
 			meshFilePath = context.getRealPath(meshFilePath);
 			
-			meshPath = meshFilePath;
-					
+			//Sauvegarde du chemin et du fichier Mesh
+			meshPath = meshFilePath;					
 			mesh = new File(meshFilePath);
+			
+			//Initialisation du parser
+			vg = new VTDGen();
+			vg.parseFile(meshPath, true) ;
 			
 		}
 		
 	
-		
-		if(isInit()){
-			System.out.println("Initialisation ServiceMeshCrawler() OK !");
-		}else{
-			System.out.println("Initialisation ServiceMeshCrawler() NOK !");
-		}
 		
 	}
 	
@@ -131,8 +136,6 @@ public class ServiceMeshCrawler extends Service {
 		System.out.println("Entrée dans le Crawler");
 		
 		TagMesh tag = null;
-		String tagName = null;
-		String idTag = null;
 		VTDGen vg = new VTDGen();
 	    AutoPilot ap = new AutoPilot();
 	    int i;
@@ -192,40 +195,64 @@ public class ServiceMeshCrawler extends Service {
 		
 		 ArrayList<TagMesh> listeMesh = new ArrayList<TagMesh>();
 		 
-		 TagMesh tag = null;
-		 String tagName = null;
-		 String idTag = null;
-		 VTDGen vg = new VTDGen();
 	     AutoPilot ap = new AutoPilot();
 	     int i;
 	
 	    //Xpath de détection de tous les DescriptorRecord
 	    ap.selectXPath("DescriptorRecord");
-	      
-          if (vg.parseFile(meshPath, true)  ){
+	   
         	  
-              VTDNav vn = vg.getNav();
-              
-              ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
-              // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
-              while((i=ap.evalXPath())!=-1){  
-            		try{
-                  	  listeMesh.add(tagBuilder(vn,i)); 
-        			}catch(Exception e){
-        				System.out.println("Erreur de parsing...");
-        			}  
-            	}     
-              
-          } 
-              
-	 
-		 
-		 
-		 
+	      VTDNav vn = vg.getNav();
+	      
+	      ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+	      // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+	      while((i=ap.evalXPath())!=-1){  
+	    		try{
+	          	  listeMesh.add(tagBuilder(vn,i)); 
+				}catch(Exception e){
+					System.out.println("Erreur de parsing...");
+				}  
+	    	}     
 		 
 		 return listeMesh;
 		
 	}
+	
+	
+	
+	public ArrayList<String> getListTagJson(String query) throws XPathParseException, XPathEvalException, NavException   {
+		
+		System.out.println("Entrée dans getListTagJson()");
+	
+		ArrayList<String> reponseList = new ArrayList<String> ();
+		
+	    AutoPilot ap = new AutoPilot();
+	    int i,j;
+	
+	    //Xpath de détection d'un DescriptorUI précis
+	    ap.selectXPath("DescriptorRecord/DescriptorName[starts-with(String,'"+query+"')]");
+	    
+	    VTDNav vn = vg.getNav();
+        
+        ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+        while((i=ap.evalXPath())!=-1){          
+        	
+        	System.out.println(vn.toString(i));
+        	
+        	TagMesh tag = tagBuilder(vn, i);
+        	reponseList.add(tag.getNom());
+            
+        }     
+        
+
+		System.out.println("Sortie de getListTagJson()");
+	      
+		return reponseList;
+		
+		
+	}
+	
 	
 	/**
 	 * @throws NavException 
