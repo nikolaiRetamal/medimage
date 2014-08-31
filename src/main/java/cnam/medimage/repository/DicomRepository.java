@@ -1,11 +1,14 @@
 package cnam.medimage.repository;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.easycassandra.persistence.cassandra.Persistence;
 
 import cnam.medimage.bean.Dicom;
+import cnam.medimage.bean.MetaData;
 
 public class DicomRepository {
 
@@ -22,6 +25,13 @@ public class DicomRepository {
 
 
 	public void save(Dicom dicom) {
+		MetadataRepository metaRepo = new MetadataRepository();
+	    Iterator it = dicom.getMetadatas().entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry metadata = (Map.Entry)it.next();
+	        metaRepo.save(new MetaData(dicom.getId_dicom(),
+	        		(String) metadata.getKey(),(String) metadata.getValue()));
+	    }
 		persistence.insert(dicom);
 	}
 

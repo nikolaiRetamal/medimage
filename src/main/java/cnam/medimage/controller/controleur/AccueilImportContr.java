@@ -55,7 +55,7 @@ public class AccueilImportContr implements Controller{
 	HttpServletResponse response) throws IOException {
 		//on enregistre le contexte pour enregistrer plus loin les fichiers
 		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
-		// Getting uploaded files from the request object
+		//on récupère les fichiers soumis pour les enregistrer
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		
 		examen = new Examen();
@@ -75,7 +75,6 @@ public class AccueilImportContr implements Controller{
 			this.dir_name = "/" + this.dir_name + "/";
 		}else
 			this.dir_name = "/" + user + "_" + usage + "_" + examen + "_";
-
 		
 		//Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
@@ -87,7 +86,7 @@ public class AccueilImportContr implements Controller{
 			UploadedFile fileInfo = getUploadedFileInfo(multipartFile);
 			
 			// Sauvegarde en base
-			fileInfo = sauvegardeEnBase(fileInfo);
+			sauvegardeEnBase();
 			
 			// adding the file info to the list
 			uploadedFiles.add(fileInfo);
@@ -134,6 +133,8 @@ public class AccueilImportContr implements Controller{
 		   while(iter.hasNext()) {
 		      DicomElement element = (DicomElement) iter.next();
 		      int tag = element.tag();
+		      //Si on a terminé de lire l'en tête en qu'on
+		      //passe à la partie binaire du fichier
 		      if(tag == Tag.PixelData)
 		    	  break;
 		      try {
@@ -158,31 +159,24 @@ public class AccueilImportContr implements Controller{
 		FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(getOutputFilename()));
 	}
 	
-	private UploadedFile sauvegardeEnBase(UploadedFile uploadedFile) {
+	private void sauvegardeEnBase() {
 		
 		DicomInputStream dicomInput = null;
 		File fichierDicom = new File(getOutputFilename());
-		DicomRepository dicoRepo = new DicomRepository();
-		//UsageRepository usageRepo = new UsageRepository();
-		MetadataRepository metaRepo = new MetadataRepository();
-		
+		DicomRepository dicoRepo = new DicomRepository();		
 		try {
 		    dicomInput = new DicomInputStream(fichierDicom);
 		    Dicom dicom = new Dicom();
+		    //Données de base
 		    dicom.setId_dicom(UUID.randomUUID());
 		    dicom.setDate_import(new Date());
+		    dicom.setFile_path(this.dir_name + this.current_filename);
 		    dicom.setId_user(this.id_user);
 		    dicom.setId_examen(examen.getId_examen());
 		    dicom.setNom_examen(examen.getNom());
+		    //récupération des métadonnées
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);
-		    Iterator it = dicom.getMetadatas().entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry metadata = (Map.Entry)it.next();
-		        System.out.println(metadata.getKey() + " = " + metadata.getValue());
-		        metaRepo.save(new MetaData(dicom.getId_dicom(),
-		        		(String) metadata.getKey(),(String) metadata.getValue()));
-		    }
 		    dicoRepo.save(dicom);
 		}
 		catch (IOException e) {
@@ -195,7 +189,6 @@ public class AccueilImportContr implements Controller{
 		    catch (IOException ignore) {
 		    }
 		}
-		return null;
 	}
 	
 	private String getOutputFilename() {

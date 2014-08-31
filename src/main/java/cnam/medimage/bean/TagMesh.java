@@ -1,5 +1,6 @@
 package cnam.medimage.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,10 @@ import org.easycassandra.Index;
 
 
 @Entity(name = "tagmesh") 
-public class TagMesh {
-
+public class TagMesh implements Serializable{
+	
+	private static final long serialVersionUID = 3L;
+	
 	@Id
 	@Index
 	@Column(name = "id_tag")
