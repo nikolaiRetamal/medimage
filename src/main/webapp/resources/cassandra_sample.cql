@@ -24,7 +24,7 @@ VALUES(51eea361-2db2-11e4-8c21-0800200c9a66, 1409120421, 'Baggins', 51ee7c50-2db
 //DROP COLUMNFAMILY medimage.tag;
 CREATE COLUMNFAMILY medimage.tag (
     id_dicom uuid,
-    name text,
+    nom text,
     codifie boolean,
     PRIMARY KEY (id_dicom, name)
 );
@@ -44,6 +44,7 @@ CREATE TABLE medimage.user (
     prenom text,
     mail   text,
     date_naissance text,
+    date_creation timestamp,
     PRIMARY KEY (id_user)
 );
 

@@ -42,6 +42,8 @@ public class Dicom implements Serializable{
 	private Boolean publique;
 	@Column
 	private Date date_import;
+	@Column
+	private String file_path;
 	@Index
 	@Column
 	private String nom;
@@ -127,6 +129,14 @@ public class Dicom implements Serializable{
 
 	public void setNom_examen(String nom_examen) {
 		this.nom_examen = nom_examen;
+	}
+
+	public String getFile_path() {
+		return file_path;
+	}
+
+	public void setFile_path(String file_path) {
+		this.file_path = file_path;
 	}
 	
 }

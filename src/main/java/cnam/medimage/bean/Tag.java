@@ -1,41 +1,57 @@
 
 package cnam.medimage.bean;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.easycassandra.Index;
 
-public class Tag {
+@Entity(name = "tag") 
+public class Tag implements Serializable{
+	
+	private static final long serialVersionUID = 3L;
 	
 	@Id
+	@Column
+	private String id_dicom;
 	@Index
-	@Column(name = "id_tag")
-	private String idTag;
-
-	@Index
-	@Column(name = "nom")
+	@Column
 	private String nom;
-
-	public Tag(String idTag, String nom) {
+	@Column
+	private Boolean codifie;
+	
+	public Tag(String id_dicom, String nom, Boolean codifie) {
 		super();
-		this.idTag = idTag;
+		this.id_dicom = id_dicom;
 		this.nom = nom;
+		this.codifie = codifie;
 	}
 
-	public String getIdTag() {
-		return idTag;
+	public String getId_dicom() {
+		return id_dicom;
 	}
-	public void setIdTag(String idTag) {
-		this.idTag = idTag;
+
+	public void setId_dicom(String id_dicom) {
+		this.id_dicom = id_dicom;
 	}
+
 	public String getNom() {
 		return nom;
 	}
+
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-	
-	
+
+	public Boolean getCodifie() {
+		return codifie;
+	}
+
+	public void setCodifie(Boolean codifie) {
+		this.codifie = codifie;
+	}
 	
 }

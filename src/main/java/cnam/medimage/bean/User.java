@@ -1,60 +1,104 @@
 
 package cnam.medimage.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
-	private Long idUser;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity(name = "user") 
+public class User implements Serializable{
+	
+	private static final long serialVersionUID = 3L;
+	
+	@Id
+	@Column
+	private Long id_user;
+	@Column
 	private String nom;
+	@Column
 	private String prenom;
-	private Date creation;
-	private String entite;
+	@Column
+	private String mail;
+	@Column
+	private String date_naissance;
+	@Column
+	private Date date_creation;
 	
-	public User() {
-		// TODO Auto-generated constructor stub
-	}
+	public User(){}
 	
-	public User(Long idUser, String nom, String prenom, String entite) {
+	public User(Long id_user, String nom, String prenom, String mail,
+			String date_naissance, Date date_creation) {
 		super();
-		this.idUser = idUser;
+		this.id_user = id_user;
 		this.nom = nom;
 		this.prenom = prenom;
-		this.entite = entite;
+		this.mail = mail;
+		this.date_naissance = date_naissance;
+		this.date_creation = date_creation;
 	}
+
+
+	public Long getId_user() {
+		return id_user;
+	}
+
+
+	public void setId_user(Long id_user) {
+		this.id_user = id_user;
+	}
+
 
 	public String getNom() {
 		return nom;
 	}
+
+
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
+
+
 	public String getPrenom() {
 		return prenom;
 	}
+
+
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
-	public Date getCreation() {
-		return creation;
-	}
-	public void setCreation(Date creation) {
-		this.creation = creation;
-	}
-	public String getEntite() {
-		return entite;
-	}
-	public void setEntite(String entite) {
-		this.entite = entite;
+
+
+	public String getMail() {
+		return mail;
 	}
 
-	public Long getIdUser() {
-		return idUser;
+
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 
-	public void setIdUser(Long idUser) {
-		this.idUser = idUser;
+
+	public String getDate_naissance() {
+		return date_naissance;
 	}
-	
+
+
+	public void setDate_naissance(String date_naissance) {
+		this.date_naissance = date_naissance;
+	}
+
+
+	public Date getDate_creation() {
+		return date_creation;
+	}
+
+
+	public void setDate_creation(Date date_creation) {
+		this.date_creation = date_creation;
+	}
 	
 }
 
