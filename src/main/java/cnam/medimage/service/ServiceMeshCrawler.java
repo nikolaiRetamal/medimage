@@ -4,18 +4,12 @@
 package cnam.medimage.service;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import cnam.medimage.bean.TagMesh;
@@ -45,31 +39,29 @@ public class ServiceMeshCrawler extends Service {
 	}
 	
 
-
 	/**
 	 * Fichier Mesh ouvert
 	 */
 	private static File mesh;
 	
+	
 	/**
 	 * Chemin du fichier mesh
 	 */
-	private String meshPath;
-	
-	/**
-	 * Le VTDGen en train de parser le fichier
-	 */
-	private VTDGen vg;
+	private static String meshPath = null;
 	
 	
 	/**
 	* Méthode permettant d'accéder à l'unique instance de la classe Service
 	* 
 	* @return l'instance de la classe Service
+	 * @throws XMLStreamException 
+	 * @throws FileNotFoundException 
 	*/
-	public static ServiceMeshCrawler getInstance() {
+	public static ServiceMeshCrawler getInstance(HttpServletRequest request) throws FileNotFoundException, XMLStreamException {
 		
-			
+		init(request,false);
+		
 		return (ServiceMeshCrawler) singleton;
 	}
 
@@ -78,7 +70,7 @@ public class ServiceMeshCrawler extends Service {
 	 * Crée la Factory et lui donne le fichier MeSH 2014 à digérer
 	 * 
 	 */
-	public void init(HttpServletRequest request, boolean force) throws XMLStreamException, FileNotFoundException {
+	public static void init(HttpServletRequest request, boolean force) throws XMLStreamException, FileNotFoundException {
 				
 
 		if(!isInit() || force){		
@@ -94,10 +86,6 @@ public class ServiceMeshCrawler extends Service {
 			meshPath = meshFilePath;					
 			mesh = new File(meshFilePath);
 			
-			//Initialisation du parser
-			vg = new VTDGen();
-			vg.parseFile(meshPath, true) ;
-			
 		}
 		
 	
@@ -111,10 +99,9 @@ public class ServiceMeshCrawler extends Service {
 	 * 
 	 * @return
 	 */
-	private boolean isInit() {
+	private static boolean isInit() {
 		return mesh != null;
 	}
-	
 	
 	
 	
@@ -193,59 +180,86 @@ public class ServiceMeshCrawler extends Service {
 	 */
 	public ArrayList<TagMesh> parseThemAll() throws XPathParseException, XPathEvalException, NavException{
 		
-		 ArrayList<TagMesh> listeMesh = new ArrayList<TagMesh>();
-		 
-	     AutoPilot ap = new AutoPilot();
-	     int i;
+		ArrayList<TagMesh> listeMesh = new ArrayList<TagMesh>();
+		VTDGen vg = new VTDGen();
+	    AutoPilot ap = new AutoPilot();
+	    int i;
 	
 	    //Xpath de détection de tous les DescriptorRecord
 	    ap.selectXPath("DescriptorRecord");
-	   
-        	  
-	      VTDNav vn = vg.getNav();
-	      
-	      ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
-	      // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
-	      while((i=ap.evalXPath())!=-1){  
-	    		try{
-	          	  listeMesh.add(tagBuilder(vn,i)); 
-				}catch(Exception e){
-					System.out.println("Erreur de parsing...");
-				}  
-	    	}     
+
+        if (vg.parseFile(meshPath, true)  ){
+        	
+  	      VTDNav vn = vg.getNav();
+  	      
+  	      ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+  	      // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+  	      while((i=ap.evalXPath())!=-1){  
+  	    		try{
+  	          	  listeMesh.add(tagBuilder(vn,i)); 
+  				}catch(Exception e){
+  					System.out.println("Erreur de parsing...");
+  				}  
+  	    	}     
+        	
+        }
 		 
 		 return listeMesh;
 		
 	}
 	
 	
-	
-	public ArrayList<String> getListTagJson(String query) throws XPathParseException, XPathEvalException, NavException   {
+	/**
+	 * 
+	 * renvoie une liste de TagMesh correspondant à une saisie de mots-clés
+	 * 
+	 * @param query
+	 * @return
+	 * @throws XPathParseException
+	 * @throws XPathEvalException
+	 * @throws NavException
+	 */
+	public ArrayList<TagMesh> getListTagJson(String query) throws XPathParseException, XPathEvalException, NavException   {
 		
 		System.out.println("Entrée dans getListTagJson()");
 	
-		ArrayList<String> reponseList = new ArrayList<String> ();
+		ArrayList<TagMesh> reponseList = new ArrayList<TagMesh> ();
 		
-	    AutoPilot ap = new AutoPilot();
-	    int i,j;
+	    AutoPilot ap = new AutoPilot();		
+	    AutoPilot ap2 = new AutoPilot();
+	    int i;
 	
-	    //Xpath de détection d'un DescriptorUI précis
-	    ap.selectXPath("DescriptorRecord/DescriptorName[starts-with(String,'"+query+"')]");
-	    
-	    VTDNav vn = vg.getNav();
-        
-        ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
-        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
-        while((i=ap.evalXPath())!=-1){          
-        	
-        	System.out.println(vn.toString(i));
-        	
-        	TagMesh tag = tagBuilder(vn, i);
-        	reponseList.add(tag.getNom());
-            
-        }     
-        
+	    //Xpath de détection d'un DescriptorName correspondant
+	    ap.selectXPath("DescriptorRecord[contains(lower-case(DescriptorName/String), lower-case('"+query+"'))]");
 
+	    //Xpath de détection des synonymes correspondants
+	    ap2.selectXPath("DescriptorRecord[contains(lower-case(ConceptList/Concept/TermList/Term/String), lower-case('"+query+"'))]");
+		
+	    VTDGen vg = new VTDGen();
+        if (vg.parseFile(meshPath, true)  ){
+	    
+		    VTDNav vn = vg.getNav();
+		    
+	        ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+	        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+	        while((i=ap.evalXPath())!=-1){          
+	        	
+	            //move back to parent
+	        	reponseList.add(tagBuilder(vn, i));
+	            
+	        }     
+
+	        ap2.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+	        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+	        while((i=ap2.evalXPath())!=-1){          
+	        	
+	            //move back to parent
+	        	reponseList.add(tagBuilder(vn, i));
+	            
+	        }     
+        
+		}
+	
 		System.out.println("Sortie de getListTagJson()");
 	      
 		return reponseList;

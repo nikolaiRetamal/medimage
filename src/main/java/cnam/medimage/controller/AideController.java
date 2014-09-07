@@ -1,5 +1,7 @@
 package cnam.medimage.controller;
 
+import java.util.ArrayList;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,21 +25,20 @@ public class AideController implements Controller{
 			HttpServletResponse response) throws Exception {	
 		
 		System.out.println("Je suis dans le contrôleur de l'aide");
+										
+		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
 		
-		HttpSession session =  request.getSession(false);
-		ServletContext context = session.getServletContext();
+		ArrayList<TagMesh> reponse = serviceMeshCrawler.getListTagJson("GrIp");
 		
-		String meshFilePath = context.getInitParameter("MESH_FILEPATH");
-		meshFilePath = context.getRealPath(meshFilePath);
-						
-		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance();
-		serviceMeshCrawler.init(request, true);
-
-		TagMeshRepository meshRepo = new TagMeshRepository();
+		for(TagMesh t:reponse){
+			System.out.println(t.getNom());
+		}
 		
-		TagMesh tag = serviceMeshCrawler.getDescriptorUI("D000355");
+		reponse = serviceMeshCrawler.getListTagJson("RhUM");
 		
-		meshRepo.save(tag);
+		for(TagMesh t:reponse){
+			System.out.println(t.getNom());
+		}
 				
 		ModelAndView mav = new ModelAndView();
         mav.setViewName("aide");

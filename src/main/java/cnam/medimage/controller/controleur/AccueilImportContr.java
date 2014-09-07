@@ -53,7 +53,7 @@ public class AccueilImportContr implements Controller{
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers="Accept=application/json")
 	public @ResponseBody
 	List<UploadedFile> upload(MultipartHttpServletRequest request,
-	HttpServletResponse response) throws IOException {
+	HttpServletResponse response) throws IOException {	
 		//on enregistre le contexte pour enregistrer plus loin les fichiers
 		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
 		//on récupère les fichiers soumis pour les enregistrer
@@ -104,8 +104,7 @@ public class AccueilImportContr implements Controller{
 		System.out.println("Je suis dans le contrôleur de l'import");
 		
 		/* Initialisation de l'instance de ServiceMesh */
-		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance();
-		serviceMeshCrawler.init(request, true);
+		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
 
 		
 		System.out.println(request.getSession().getServletContext().getRealPath("/"));

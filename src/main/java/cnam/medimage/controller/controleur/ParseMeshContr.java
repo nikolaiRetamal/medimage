@@ -28,11 +28,8 @@ public class ParseMeshContr  implements Controller{
 		HttpSession session =  request.getSession(false);
 		ServletContext context = session.getServletContext();
 		
-		String meshFilePath = context.getInitParameter("MESH_FILEPATH");
-		meshFilePath = context.getRealPath(meshFilePath);
 						
-		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance();
-		serviceMeshCrawler.init(request, true);
+		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
 
 		TagMeshRepository meshRepo = new TagMeshRepository();
 		

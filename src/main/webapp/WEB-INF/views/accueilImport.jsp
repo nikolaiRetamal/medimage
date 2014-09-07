@@ -11,6 +11,17 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="resources/css/dropzone.css">
 	<link rel="stylesheet" href="resources/css/basic.css">
+	<STYLE TYPE="text/css" media="all">
+	.ui-autocomplete { 
+	    position: absolute; 
+	    cursor: default; 
+	    height: 200px; 
+	    overflow-y: scroll; 
+	    overflow-x: hidden;}
+	.ui-autocomplete-loading {
+	    background: white url("resources/images/ui-anim_basic_16x16.gif") right center no-repeat;
+	  }	
+	</STYLE>
 </head>
 <body>
 	<div id="header" class="center-block">
@@ -41,6 +52,14 @@
 					<span>Cliquez pour parcourir</span>
                 </div>
 				<div class="dropzone-previews"></div>
+				<div class="form-group">
+					<label for="tags">Mots-Clés</label>
+					<input type="text" class="form-control" id="tags" name="tags" placeholder="Entrez des mots-clés">
+				</div>
+				<div class="ui-widget" style="margin-top:2em; font-family:Arial">
+				  Tags:
+				  <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+				</div>
 			</form:form>
 		</div>
 	</div>
@@ -49,6 +68,7 @@
 <!-- Imports JS -->
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="resources/js/dropzone.js"></script>
 <script src="resources/js/import.js"></script>
 </html>
