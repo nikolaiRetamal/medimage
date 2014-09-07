@@ -26,7 +26,9 @@ public class Examen implements Serializable{
 	@Column
 	private UUID id_user;
 	@Column
-	private String nom;
+	private String nom_examen;
+	@Column
+	private String nom_usage;
 	@ElementCollection
 	@Column
 	private List<String> tags;
@@ -39,13 +41,15 @@ public class Examen implements Serializable{
 		this.metadatas = new HashMap<>();
 	}
 
-	public Examen(UUID id_examen, Date date_import, UUID id_user, String nom,
-			List<String> tags, Map<String, String> metadatas) {
+	public Examen(UUID id_examen, Date date_import, UUID id_user,
+			String nom_examen, String nom_usage, List<String> tags,
+			Map<String, String> metadatas) {
 		super();
 		this.id_examen = id_examen;
 		this.date_import = date_import;
 		this.id_user = id_user;
-		this.nom = nom;
+		this.nom_examen = nom_examen;
+		this.nom_usage = nom_usage;
 		this.tags = tags;
 		this.metadatas = metadatas;
 	}
@@ -75,14 +79,6 @@ public class Examen implements Serializable{
 		this.id_user = id_user;
 	}
 
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
 	public List<String> getTags() {
 		return tags;
 	}
@@ -98,4 +94,21 @@ public class Examen implements Serializable{
 	public void setMetadatas(Map<String, String> metadatas) {
 		this.metadatas = metadatas;
 	}
+
+	public String getNom_examen() {
+		return nom_examen;
+	}
+
+	public void setNom_examen(String nom_examen) {
+		this.nom_examen = nom_examen;
+	}
+
+	public String getNom_usage() {
+		return nom_usage;
+	}
+
+	public void setNom_usage(String nom_usage) {
+		this.nom_usage = nom_usage;
+	}
+	
 }

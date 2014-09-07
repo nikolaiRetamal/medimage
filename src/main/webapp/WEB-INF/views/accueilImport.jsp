@@ -24,9 +24,7 @@
 	</STYLE>
 </head>
 <body>
-	<div id="header" class="center-block">
-		<h1>Importation</h1>
-	</div>
+	<%@ include file="header.jsp" %>
 	<div id="contenu" style="width:100%">
 		<div class="row">
 			<form:form  id="dropzone-form" action="/medimage/upload"

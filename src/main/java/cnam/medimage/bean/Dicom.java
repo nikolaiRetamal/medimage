@@ -38,6 +38,8 @@ public class Dicom implements Serializable{
 	private UUID id_examen;
 	@Column
 	private String nom_examen;
+	@Column
+	private String nom_usage;
 	@Column(name = "public")
 	private Boolean publique;
 	@Column
