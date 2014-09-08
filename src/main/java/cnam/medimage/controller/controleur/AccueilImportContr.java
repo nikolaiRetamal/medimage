@@ -63,12 +63,10 @@ public class AccueilImportContr implements Controller{
 		id_user = UUID.randomUUID();
 		importForm.getExamen().setId_examen(UUID.randomUUID());
 		importForm.getExamen().setId_user(id_user);
-		this.usage = (String) request.getParameter("usage");
-		examen.setNom_examen((String) request.getParameter("examen"));
-		examen.setId_examen(UUID.randomUUID());
-		examen.setId_user(id_user);
+		importForm.setUsage((String) request.getParameter("usage"));
+		importForm.getExamen().setNom_examen((String) request.getParameter("examen"));
 		if(fileMap.size() > 1){
-			this.dir_name = user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom();
+			this.dir_name = user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom_examen();
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
 			if (!success) {
 				System.out.println("Erreur création dossier");
@@ -76,7 +74,7 @@ public class AccueilImportContr implements Controller{
 			}
 			this.dir_name = "/" + this.dir_name + "/";
 		}else
-			this.dir_name = "/" + user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom() + "_";
+			this.dir_name = "/" + user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom_examen() + "_";
 		
 		//Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
