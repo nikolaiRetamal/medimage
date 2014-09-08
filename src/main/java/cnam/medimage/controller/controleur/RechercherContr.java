@@ -1,5 +1,5 @@
 package cnam.medimage.controller.controleur;
 
-public class EffectuerRechercheContr {
+public class RechercherContr {
 
 }

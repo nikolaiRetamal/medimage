@@ -36,4 +36,35 @@ window.onload = function() {
 				});
 		  	}
 	});
+	
+	
+	$(function() {
+	    $( "#tags" ).autocomplete({
+	      source: function(request, response) {
+		            $.ajax({
+	              url: "/medimage/getTags",
+	  			  data:request,
+		  		   transformResult: function(response) {		  	 
+			  			return {      	
+			  			  //must convert json to javascript object before process
+			  			  suggestions: $.map($.parseJSON(response), function(item) {
+			  				  console.log(response);
+			  			      return { value: item.nom, data: item.idTag };
+			  			   })
+			  	 
+			  			 };
+		  	 
+		  	            }
+	          });
+	      },
+	      minLength: 3,
+	      select: function( event, ui ) {
+	          log( ui.item ?
+	            "Selected: " + ui.item.value + " aka " + ui.item.id :
+	            "Nothing selected, input was " + this.value );
+	        }
+	      });
+	    });
+	
+	
 }

@@ -4,21 +4,17 @@
 package cnam.medimage.service;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
+import cnam.medimage.bean.IndexMesh;
 import cnam.medimage.bean.TagMesh;
+import cnam.medimage.repository.IndexMeshRepository;
 
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
@@ -45,31 +41,34 @@ public class ServiceMeshCrawler extends Service {
 	}
 	
 
-
 	/**
 	 * Fichier Mesh ouvert
 	 */
 	private static File mesh;
 	
+	
 	/**
 	 * Chemin du fichier mesh
 	 */
-	private String meshPath;
+	private static String meshPath = null;
+	
 	
 	/**
-	 * Le VTDGen en train de parser le fichier
+	 * La liste simple des codes Mesh et des libellés correspondants
 	 */
-	private VTDGen vg;
-	
+	private static ArrayList<IndexMesh> indexMesh = null;
 	
 	/**
 	* Méthode permettant d'accéder à l'unique instance de la classe Service
 	* 
 	* @return l'instance de la classe Service
+	 * @throws XMLStreamException 
+	 * @throws FileNotFoundException 
 	*/
-	public static ServiceMeshCrawler getInstance() {
+	public static ServiceMeshCrawler getInstance(HttpServletRequest request) throws FileNotFoundException, XMLStreamException {
 		
-			
+		init(request,false);
+		
 		return (ServiceMeshCrawler) singleton;
 	}
 
@@ -78,7 +77,7 @@ public class ServiceMeshCrawler extends Service {
 	 * Crée la Factory et lui donne le fichier MeSH 2014 à digérer
 	 * 
 	 */
-	public void init(HttpServletRequest request, boolean force) throws XMLStreamException, FileNotFoundException {
+	public static void init(HttpServletRequest request, boolean force) throws XMLStreamException, FileNotFoundException {
 				
 
 		if(!isInit() || force){		
@@ -94,10 +93,6 @@ public class ServiceMeshCrawler extends Service {
 			meshPath = meshFilePath;					
 			mesh = new File(meshFilePath);
 			
-			//Initialisation du parser
-			vg = new VTDGen();
-			vg.parseFile(meshPath, true) ;
-			
 		}
 		
 	
@@ -111,10 +106,9 @@ public class ServiceMeshCrawler extends Service {
 	 * 
 	 * @return
 	 */
-	private boolean isInit() {
+	private static boolean isInit() {
 		return mesh != null;
 	}
-	
 	
 	
 	
@@ -154,26 +148,7 @@ public class ServiceMeshCrawler extends Service {
             	}     
               
           } 
-              
-              
-          if(tag != null){
-        	  System.out.println("Tag : "+tag.getIdTag()+" / "+tag.getNom());
-        	  if(tag.getSynonymes() != null){
-        		  for(String s : tag.getSynonymes())System.out.println(s);
-        	  }else{
-            	  System.out.println("Synonymes null...");        		  
-        	  } 
-        	  if(tag.getCategories() != null){
-        		  for(String s : tag.getCategories())System.out.println(s);
-        	  }else{
-            	  System.out.println("Categories null...");        		  
-        	  }
-        		  
-          }else{
-        	  System.out.println("Tag est null...");
-          }
-          
-          
+                        
   		System.out.println("Sortie du Crawler");
   		
 		return tag;        
@@ -193,65 +168,118 @@ public class ServiceMeshCrawler extends Service {
 	 */
 	public ArrayList<TagMesh> parseThemAll() throws XPathParseException, XPathEvalException, NavException{
 		
-		 ArrayList<TagMesh> listeMesh = new ArrayList<TagMesh>();
-		 
-	     AutoPilot ap = new AutoPilot();
-	     int i;
+		ArrayList<TagMesh> listeMesh = new ArrayList<TagMesh>();
+		VTDGen vg = new VTDGen();
+	    AutoPilot ap = new AutoPilot();
+	    int i;
 	
 	    //Xpath de détection de tous les DescriptorRecord
 	    ap.selectXPath("DescriptorRecord");
-	   
-        	  
-	      VTDNav vn = vg.getNav();
-	      
-	      ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
-	      // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
-	      while((i=ap.evalXPath())!=-1){  
-	    		try{
-	          	  listeMesh.add(tagBuilder(vn,i)); 
-				}catch(Exception e){
-					System.out.println("Erreur de parsing...");
-				}  
-	    	}     
+
+        if (vg.parseFile(meshPath, true)  ){
+        	
+  	      VTDNav vn = vg.getNav();
+  	      
+  	      ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+  	      // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+  	      while((i=ap.evalXPath())!=-1){  
+  	    		try{
+  	          	  listeMesh.add(tagBuilder(vn,i)); 
+  				}catch(Exception e){
+  					System.out.println("Erreur de parsing...");
+  				}  
+  	    	}     
+        	
+        }
 		 
 		 return listeMesh;
 		
 	}
 	
 	
-	
-	public ArrayList<String> getListTagJson(String query) throws XPathParseException, XPathEvalException, NavException   {
+	/**
+	 * 
+	 * renvoie une liste de TagMesh correspondant à une saisie de mots-clés
+	 * depuis le fichier XML
+	 * 
+	 * @param query
+	 * @return
+	 * @throws XPathParseException
+	 * @throws XPathEvalException
+	 * @throws NavException
+	 */
+	public ArrayList<TagMesh> getListTagJsonFromXML(String query) throws XPathParseException, XPathEvalException, NavException   {
 		
-		System.out.println("Entrée dans getListTagJson()");
+		System.out.println("Entrée dans getListTagJsonFromXML()");
 	
-		ArrayList<String> reponseList = new ArrayList<String> ();
+		ArrayList<TagMesh> reponseList = new ArrayList<TagMesh> ();
 		
-	    AutoPilot ap = new AutoPilot();
-	    int i,j;
+	    AutoPilot ap = new AutoPilot();		
+	    AutoPilot ap2 = new AutoPilot();
+	    int i;
 	
-	    //Xpath de détection d'un DescriptorUI précis
-	    ap.selectXPath("DescriptorRecord/DescriptorName[starts-with(String,'"+query+"')]");
-	    
-	    VTDNav vn = vg.getNav();
-        
-        ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
-        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
-        while((i=ap.evalXPath())!=-1){          
-        	
-        	System.out.println(vn.toString(i));
-        	
-        	TagMesh tag = tagBuilder(vn, i);
-        	reponseList.add(tag.getNom());
-            
-        }     
-        
+	    //Xpath de détection d'un DescriptorName correspondant
+	    ap.selectXPath("DescriptorRecord[contains(lower-case(DescriptorName/String), lower-case('"+query+"'))]");
 
-		System.out.println("Sortie de getListTagJson()");
+	    //Xpath de détection des synonymes correspondants
+	    ap2.selectXPath("DescriptorRecord[contains(lower-case(ConceptList/Concept/TermList/Term/String), lower-case('"+query+"'))]");
+		
+	    VTDGen vg = new VTDGen();
+        if (vg.parseFile(meshPath, true)  ){
+	    
+		    VTDNav vn = vg.getNav();
+		    
+	        ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+	        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+	        while((i=ap.evalXPath())!=-1){          
+	        	
+	            //move back to parent
+	        	reponseList.add(tagBuilder(vn, i));
+	            
+	        }     
+
+	        ap2.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
+	        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+	        while((i=ap2.evalXPath())!=-1){          
+	        	
+	            //move back to parent
+	        	reponseList.add(tagBuilder(vn, i));
+	            
+	        }     
+        
+		}
+	
+		System.out.println("Sortie de getListTagJsonFromXML()");
 	      
 		return reponseList;
 		
 		
 	}
+	
+	
+	
+	/**
+	 * 
+	 * Consulte la liste des "indexMesh" 
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public ArrayList<IndexMesh> getListTagJsonFromBase(String query)  {
+		
+		ArrayList<IndexMesh> result = new ArrayList<IndexMesh>();
+		ArrayList<IndexMesh> all = getIndexMesh();
+		
+		for(IndexMesh i:all){
+			if(i.getNom().toLowerCase().contains(query.toLowerCase())){
+				result.add(i);
+			}
+		}		
+		
+		return result;
+		
+	}
+		
 	
 	
 	/**
@@ -338,6 +366,30 @@ public class ServiceMeshCrawler extends Service {
 		
 		return tag;
 		
+	}
+
+	/**
+	 * 
+	 * Va chercher en base les index et les sauve dans le singleton
+	 * 
+	 * @return
+	 */
+	public static ArrayList<IndexMesh> getIndexMesh() {
+		
+		if(indexMesh == null){
+
+			System.out.println("Initialisation d'indexMesh");
+			IndexMeshRepository indexRepo = new IndexMeshRepository();
+			indexMesh = (ArrayList<IndexMesh>)indexRepo.getAllIndexes();
+			System.out.println("Initialisation OK");
+			
+		}
+		
+		return indexMesh;
+	}
+
+	public static void setIndexMesh(ArrayList<IndexMesh> indexMesh) {
+		ServiceMeshCrawler.indexMesh = indexMesh;
 	}
 	
 	

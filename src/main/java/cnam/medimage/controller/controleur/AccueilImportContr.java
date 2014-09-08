@@ -35,6 +35,10 @@ import cnam.medimage.bean.UploadedFile;
 import cnam.medimage.repository.DicomRepository;
 import cnam.medimage.repository.ExamenRepository;
 
+import cnam.medimage.repository.MetadataRepository;
+import cnam.medimage.repository.UsageRepository;
+import cnam.medimage.service.ServiceMeshCrawler;
+
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
 	
@@ -59,6 +63,10 @@ public class AccueilImportContr implements Controller{
 		id_user = UUID.randomUUID();
 		importForm.getExamen().setId_examen(UUID.randomUUID());
 		importForm.getExamen().setId_user(id_user);
+		this.usage = (String) request.getParameter("usage");
+		examen.setNom_examen((String) request.getParameter("examen"));
+		examen.setId_examen(UUID.randomUUID());
+		examen.setId_user(id_user);
 		if(fileMap.size() > 1){
 			this.dir_name = user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom();
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
@@ -95,6 +103,11 @@ public class AccueilImportContr implements Controller{
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		System.out.println("Je suis dans le contrôleur de l'import");
+		
+		/* Initialisation de l'instance de ServiceMesh */
+		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
+
+		
 		System.out.println(request.getSession().getServletContext().getRealPath("/"));
 		ImportForm form = new ImportForm();
 		ModelAndView mv = new ModelAndView("accueilImport");
@@ -168,9 +181,10 @@ public class AccueilImportContr implements Controller{
 		    dicom.setDate_import(new Date());
 		    dicom.setFile_path(this.dir_name + this.current_filename);
 		    dicom.setId_user(this.id_user);
+
 		    dicom.setPublique(importForm.isPublique());
 		    dicom.setId_examen(importForm.getExamen().getId_examen());
-		    dicom.setNom_examen(importForm.getExamen().getNom());
+		    dicom.setNom_examen(importForm.getExamen().getNom_examen());
 		    //récupération des métadonnées
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);
