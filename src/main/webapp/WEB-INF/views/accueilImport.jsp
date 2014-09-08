@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="resources/css/medimage.css">
 </head>
 <body>
+	<!-- Import Header -->
 	<%@ include file="header.jsp" %>
 	<div id="contenu" style="width:100%">
 		<div class="row">
