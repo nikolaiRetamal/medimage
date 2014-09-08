@@ -6,17 +6,16 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>{title}</title>
+	<title>${title}</title>
 	<!-- Imports CSS -->
 	<link href="resources/bootstrap/css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="resources/css/dropzone.css">
-	<link rel="stylesheet" href="resources/css/basic.css">
+	<link rel="stylesheet" href="resources/css/medimage.css">
 </head>
 <body>
 	<%@ include file="header.jsp" %>
 	<div class="contenu">
-		<h1 class="titreRecherche">MEDIMAGE</h1>
+		<h1 class="titreRecherche">${titrePage}</h1>
 		<div class="row">
 			<form:form  id="recherche" action="/medimage/recherche"
 			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">

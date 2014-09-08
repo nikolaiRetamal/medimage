@@ -103,7 +103,7 @@ public class AccueilImportContr implements Controller{
 		System.out.println("Je suis dans le contrôleur de l'import");
 		
 		/* Initialisation de l'instance de ServiceMesh */
-		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
+		//ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
 
 		
 		System.out.println(request.getSession().getServletContext().getRealPath("/"));

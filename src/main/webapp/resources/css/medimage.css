@@ -1,0 +1,41 @@
+#header{
+	width:100%;
+	background:#79D2FF;	
+	overflow: hidden; /*Empêche height = 0*/
+	padding:5px 0;
+}
+#header img{
+	max-height:30px;
+}
+.menu {
+	display:block;
+	margin:0;
+	padding: 0;
+}
+.menu li{
+	display:inline-block;
+	padding:0 35px;
+}
+
+.menu a{
+	font-weight:700;
+	font-size:15px;
+	outline:none;
+	text-decoration:none;
+	color: #000;
+}
+.menu li:hover > a{
+	color:#fff;
+}
+.gauche{
+	float:left;
+}
+.droite{
+	float:right;
+}
+.options ul{
+	padding:0;
+}
+li.options{
+	padding:0;
+}
