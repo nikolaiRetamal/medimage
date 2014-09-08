@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="resources/css/dropzone.css">
 	<link rel="stylesheet" href="resources/css/basic.css">
 	<link rel="stylesheet" href="resources/css/autocomplete.css">
+	<link rel="stylesheet" href="resources/css/medimage.css">
 </head>
 <body>
 	<%@ include file="header.jsp" %>
