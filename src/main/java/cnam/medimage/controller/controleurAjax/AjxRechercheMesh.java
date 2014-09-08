@@ -1,11 +1,14 @@
 package cnam.medimage.controller.controleurAjax;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLStreamException;
 
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,8 @@ import cnam.medimage.bean.IndexMesh;
 import cnam.medimage.bean.TagMesh;
 import cnam.medimage.service.ServiceMeshCrawler;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ximpleware.NavException;
 import com.ximpleware.XPathEvalException;
 import com.ximpleware.XPathParseException;
@@ -29,30 +34,41 @@ public class AjxRechercheMesh {
 	List<TagMesh> data = new ArrayList<TagMesh>();
 	 
  
-	@RequestMapping(value = "/getTags", method = RequestMethod.GET, headers="Accept=application/json", produces = "application/json" )
+	@RequestMapping(value = "/getTags", method = RequestMethod.GET )
 	public @ResponseBody
-	List<TagMesh> getTags(@RequestParam("term") String tagName) {
+	Map<String,String> getTags(@RequestParam("term") String tagName, HttpServletResponse response) throws IOException {
 		
 		System.out.println("Ajax de parse du mesh");
 		List<TagMesh> result = null;
+		HashMap<String,String> indexes = new HashMap<String, String>();
 		
 		try{
 
-			//result = searchResultFromXml(tagName);
-			result = searchResultFromBase(tagName);
+			result = searchResultFromXml(tagName);
+			//result = searchResultFromBase(tagName);
 			
 		}catch (Exception e){
 			//traiter recherche vide
 			result = new ArrayList<TagMesh>();
 		}
 		
+		//On sauve les TagMesh Structurés
+				for(TagMesh tag : result){
+					indexes.put(tag.getNom(),tag.getIdTag());
+						for(String s:tag.getSynonymes()){
+							if(s.toLowerCase().contains(tagName.toLowerCase())){
+								indexes.put(s,tag.getIdTag());								
+							}
+						}
+				
+				}		
 		
 		//On affiche les résultats par curiosité
 		for(TagMesh t:result){
 			System.out.println(t.getNom());
 		}
  
-		return result;
+		return indexes;
 	}
  
 

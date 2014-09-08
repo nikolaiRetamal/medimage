@@ -1,3 +1,7 @@
+//Liste des tags remontés
+var tagList;
+
+
 window.onload = function() {
 
 	$("#dropzone-form").dropzone({
@@ -39,32 +43,32 @@ window.onload = function() {
 	
 	
 	$(function() {
-	    $( "#tags" ).autocomplete({
-	      source: function(request, response) {
-		            $.ajax({
-	              url: "/medimage/getTags",
-	  			  data:request,
-		  		   transformResult: function(response) {		  	 
-			  			return {      	
-			  			  //must convert json to javascript object before process
-			  			  suggestions: $.map($.parseJSON(response), function(item) {
-			  				  console.log(response);
-			  			      return { value: item.nom, data: item.idTag };
-			  			   })
-			  	 
-			  			 };
-		  	 
-		  	            }
-	          });
-	      },
-	      minLength: 3,
+	    $( "#tags" ).autocomplete({source: function (request, response) {
+	        $.ajax({
+	            url: "/medimage/getTags",
+	            dataType: "json",
+	            
+	            data: {
+	            	term: request.term
+	            },
+	            success: function (data) {
+	            	tagList = data;
+	            	response($.map( data, function(value, key ) {return key;}));	            
+	            },
+	            error: function (message) {
+		  			console.log("Retour nok...");
+		  			console.log(message);
+	            }
+	        });
+	    },
+	    minLength: 3,
 	      select: function( event, ui ) {
-	          log( ui.item ?
-	            "Selected: " + ui.item.value + " aka " + ui.item.id :
-	            "Nothing selected, input was " + this.value );
+//	          log( "le User a choisi"+
+//	            "Selected: " + ui.item.value + " aka " + ui.item.id :
+//	            "Nothing selected, input was " + this.value );
 	        }
-	      });
 	    });
-	
+
+    });
 	
 }
