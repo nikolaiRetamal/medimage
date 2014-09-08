@@ -28,13 +28,13 @@ public class AideController implements Controller{
 										
 		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
 		
-		ArrayList<TagMesh> reponse = serviceMeshCrawler.getListTagJson("GrIp");
+		ArrayList<TagMesh> reponse = serviceMeshCrawler.getListTagJsonFromXML("GrIp");
 		
 		for(TagMesh t:reponse){
 			System.out.println(t.getNom());
 		}
 		
-		reponse = serviceMeshCrawler.getListTagJson("RhUM");
+		reponse = serviceMeshCrawler.getListTagJsonFromXML("RhUM");
 		
 		for(TagMesh t:reponse){
 			System.out.println(t.getNom());

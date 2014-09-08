@@ -11,17 +11,7 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="resources/css/dropzone.css">
 	<link rel="stylesheet" href="resources/css/basic.css">
-	<STYLE TYPE="text/css" media="all">
-	.ui-autocomplete { 
-	    position: absolute; 
-	    cursor: default; 
-	    height: 200px; 
-	    overflow-y: scroll; 
-	    overflow-x: hidden;}
-	.ui-autocomplete-loading {
-	    background: white url("resources/images/ui-anim_basic_16x16.gif") right center no-repeat;
-	  }	
-	</STYLE>
+	<link rel="stylesheet" href="resources/css/autocomplete.css">
 </head>
 <body>
 	<%@ include file="header.jsp" %>

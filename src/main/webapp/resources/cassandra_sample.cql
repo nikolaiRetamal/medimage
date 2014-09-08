@@ -102,3 +102,10 @@ CREATE COLUMNFAMILY medimage.tagmesh (
     PRIMARY KEY (id_tag)
 );
 
+//drop table medimage.indexmesh;
+CREATE COLUMNFAMILY medimage.indexmesh (
+    id_tag text,
+	nom text,
+    PRIMARY KEY (id_tag,nom)
+);
+

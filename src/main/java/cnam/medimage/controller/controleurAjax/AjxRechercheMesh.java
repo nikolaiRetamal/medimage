@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import cnam.medimage.bean.IndexMesh;
 import cnam.medimage.bean.TagMesh;
 import cnam.medimage.service.ServiceMeshCrawler;
 
@@ -37,7 +38,8 @@ public class AjxRechercheMesh {
 		
 		try{
 
-			result = searchResult(tagName);
+			//result = searchResultFromXml(tagName);
+			result = searchResultFromBase(tagName);
 			
 		}catch (Exception e){
 			//traiter recherche vide
@@ -66,23 +68,49 @@ public class AjxRechercheMesh {
 	 * @throws XMLStreamException 
 	 * @throws FileNotFoundException 
 	 */
-	private List<TagMesh> searchResult(String tagName) throws XPathParseException, XPathEvalException, NavException, FileNotFoundException, XMLStreamException {
+	private List<TagMesh> searchResultFromXml(String tagName) throws XPathParseException, XPathEvalException, NavException, FileNotFoundException, XMLStreamException {
 		
 		//On ne passe pas le request, l'initialisation a déjà été effectuée dans AccueilImportContr
 		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(null);
  
-		List<TagMesh> result = serviceMeshCrawler.getListTagJson(tagName);
+		data = serviceMeshCrawler.getListTagJsonFromXML(tagName);
  
-		// iterate a list and filter by tagName
-		for (TagMesh tag : data) {
-				result.add(tag);
-		}
-
-		System.out.println("Sortie de simulateSearchResult : "+tagName);
 		
-		return result;
+		System.out.println("Sortie de searchResultFromXml : "+tagName);
+		
+		return data;
 	}
 	
+	/**
+	 * 
+	 * Appelle le serviceMesh
+	 * 
+	 * @param tagName
+	 * @return
+	 * @throws XPathParseException
+	 * @throws XPathEvalException
+	 * @throws NavException
+	 * @throws XMLStreamException 
+	 * @throws FileNotFoundException 
+	 */
+	private List<TagMesh> searchResultFromBase(String tagName) throws XPathParseException, XPathEvalException, NavException, FileNotFoundException, XMLStreamException {
+		
+		data = new ArrayList<TagMesh>();
+		
+		//On ne passe pas le request, l'initialisation a déjà été effectuée dans AccueilImportContr
+		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(null);
+		 
+		List<IndexMesh> indexes = serviceMeshCrawler.getListTagJsonFromBase(tagName);
+ 
+		// iterate a list and filter by tagName
+		for (IndexMesh index : indexes) {
+				data.add(new TagMesh(index.getIdTag(), index.getNom()));
+		}
+
+		System.out.println("Sortie de searchResultFromBase : "+tagName);
+		
+		return data;
+	}
 
 
 

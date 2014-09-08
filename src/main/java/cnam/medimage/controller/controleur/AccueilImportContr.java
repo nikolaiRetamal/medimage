@@ -63,7 +63,7 @@ public class AccueilImportContr implements Controller{
 		String user = "user011";
 		id_user = UUID.randomUUID();
 		this.usage = (String) request.getParameter("usage");
-		examen.setNom((String) request.getParameter("examen"));
+		examen.setNom_examen((String) request.getParameter("examen"));
 		examen.setId_examen(UUID.randomUUID());
 		examen.setId_user(id_user);
 		if(fileMap.size() > 1){
@@ -179,7 +179,7 @@ public class AccueilImportContr implements Controller{
 		    dicom.setFile_path(this.dir_name + this.current_filename);
 		    dicom.setId_user(this.id_user);
 		    dicom.setId_examen(examen.getId_examen());
-		    dicom.setNom_examen(examen.getNom());
+		    dicom.setNom_examen(examen.getNom_examen());
 		    //récupération des métadonnées
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);

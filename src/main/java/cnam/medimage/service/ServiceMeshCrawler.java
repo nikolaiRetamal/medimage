@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.stream.XMLStreamException;
 
+import cnam.medimage.bean.IndexMesh;
 import cnam.medimage.bean.TagMesh;
+import cnam.medimage.repository.IndexMeshRepository;
 
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
@@ -50,6 +52,11 @@ public class ServiceMeshCrawler extends Service {
 	 */
 	private static String meshPath = null;
 	
+	
+	/**
+	 * La liste simple des codes Mesh et des libellés correspondants
+	 */
+	private static ArrayList<IndexMesh> indexMesh = null;
 	
 	/**
 	* Méthode permettant d'accéder à l'unique instance de la classe Service
@@ -141,26 +148,7 @@ public class ServiceMeshCrawler extends Service {
             	}     
               
           } 
-              
-              
-          if(tag != null){
-        	  System.out.println("Tag : "+tag.getIdTag()+" / "+tag.getNom());
-        	  if(tag.getSynonymes() != null){
-        		  for(String s : tag.getSynonymes())System.out.println(s);
-        	  }else{
-            	  System.out.println("Synonymes null...");        		  
-        	  } 
-        	  if(tag.getCategories() != null){
-        		  for(String s : tag.getCategories())System.out.println(s);
-        	  }else{
-            	  System.out.println("Categories null...");        		  
-        	  }
-        		  
-          }else{
-        	  System.out.println("Tag est null...");
-          }
-          
-          
+                        
   		System.out.println("Sortie du Crawler");
   		
 		return tag;        
@@ -212,6 +200,7 @@ public class ServiceMeshCrawler extends Service {
 	/**
 	 * 
 	 * renvoie une liste de TagMesh correspondant à une saisie de mots-clés
+	 * depuis le fichier XML
 	 * 
 	 * @param query
 	 * @return
@@ -219,9 +208,9 @@ public class ServiceMeshCrawler extends Service {
 	 * @throws XPathEvalException
 	 * @throws NavException
 	 */
-	public ArrayList<TagMesh> getListTagJson(String query) throws XPathParseException, XPathEvalException, NavException   {
+	public ArrayList<TagMesh> getListTagJsonFromXML(String query) throws XPathParseException, XPathEvalException, NavException   {
 		
-		System.out.println("Entrée dans getListTagJson()");
+		System.out.println("Entrée dans getListTagJsonFromXML()");
 	
 		ArrayList<TagMesh> reponseList = new ArrayList<TagMesh> ();
 		
@@ -260,12 +249,37 @@ public class ServiceMeshCrawler extends Service {
         
 		}
 	
-		System.out.println("Sortie de getListTagJson()");
+		System.out.println("Sortie de getListTagJsonFromXML()");
 	      
 		return reponseList;
 		
 		
 	}
+	
+	
+	
+	/**
+	 * 
+	 * Consulte la liste des "indexMesh" 
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public ArrayList<IndexMesh> getListTagJsonFromBase(String query)  {
+		
+		ArrayList<IndexMesh> result = new ArrayList<IndexMesh>();
+		ArrayList<IndexMesh> all = getIndexMesh();
+		
+		for(IndexMesh i:all){
+			if(i.getNom().toLowerCase().contains(query.toLowerCase())){
+				result.add(i);
+			}
+		}		
+		
+		return result;
+		
+	}
+		
 	
 	
 	/**
@@ -352,6 +366,30 @@ public class ServiceMeshCrawler extends Service {
 		
 		return tag;
 		
+	}
+
+	/**
+	 * 
+	 * Va chercher en base les index et les sauve dans le singleton
+	 * 
+	 * @return
+	 */
+	public static ArrayList<IndexMesh> getIndexMesh() {
+		
+		if(indexMesh == null){
+
+			System.out.println("Initialisation d'indexMesh");
+			IndexMeshRepository indexRepo = new IndexMeshRepository();
+			indexMesh = (ArrayList<IndexMesh>)indexRepo.getAllIndexes();
+			System.out.println("Initialisation OK");
+			
+		}
+		
+		return indexMesh;
+	}
+
+	public static void setIndexMesh(ArrayList<IndexMesh> indexMesh) {
+		ServiceMeshCrawler.indexMesh = indexMesh;
 	}
 	
 	

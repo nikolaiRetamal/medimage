@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import cnam.medimage.bean.IndexMesh;
 import cnam.medimage.bean.TagMesh;
+import cnam.medimage.repository.IndexMeshRepository;
 import cnam.medimage.repository.TagMeshRepository;
 import cnam.medimage.service.ServiceMeshCrawler;
 
@@ -32,18 +34,34 @@ public class ParseMeshContr  implements Controller{
 		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
 
 		TagMeshRepository meshRepo = new TagMeshRepository();
+		IndexMeshRepository indexRepo = new IndexMeshRepository();
 		
 		ArrayList<TagMesh> fullMesh = serviceMeshCrawler.parseThemAll();
-		
+		ArrayList<IndexMesh> indexes = new ArrayList<IndexMesh>();
+
+		//On sauve les TagMesh Structurés
 		for(TagMesh tag : fullMesh){
 			try{
-				meshRepo.save(tag);		
+				meshRepo.save(tag);	
+				indexes.add(new IndexMesh(tag.getIdTag(), tag.getNom()));
+				
+				for(String s:tag.getSynonymes()){
+					indexes.add(new IndexMesh(tag.getIdTag(), s));
+				}
+				
+				
 			}catch(Exception e){
 				System.out.println("Erreur à l'insertion CQL de : "+tag.getIdTag()+"/"+tag.getNom());
 			}
-		}
+		}		
 		
 		System.out.println("Parsing fini : "+fullMesh.size()+" Tags référencés.");
+		
+		//On sauve dans la table d'indexage des mots-clés
+		for(IndexMesh i:indexes){
+			indexRepo.save(i);
+		}
+		System.out.println(indexes.size()+" index référencés.");
 				
 		ModelAndView mav = new ModelAndView();
         mav.setViewName("parseMesh");
