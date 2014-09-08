@@ -63,9 +63,16 @@ window.onload = function() {
 	    },
 	    minLength: 3,
 	      select: function( event, ui ) {
-//	          log( "le User a choisi"+
-//	            "Selected: " + ui.item.value + " aka " + ui.item.id :
-//	            "Nothing selected, input was " + this.value );
+	    	  var choix = ui.item.value;
+	          console.log( "le User a choisi"+ choix);
+	          $('#chosenTags').val($('#chosenTags').val()+choix+'\n'); 
+	          var val = $.map( tagList, function(value, key ) { 
+	        	  if(choix==key){
+	        		  return value;
+	        	  }
+	        	});
+	          $('#chosenTagsValue').val($('#chosenTagsValue').val()+val+'\n'); 
+	          console.log( "Ce qui correspond à "+ val);
 	        }
 	    });
 

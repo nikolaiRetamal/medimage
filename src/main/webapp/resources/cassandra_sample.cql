@@ -26,7 +26,7 @@ CREATE COLUMNFAMILY medimage.tag (
     id_dicom uuid,
     nom text,
     codifie boolean,
-    PRIMARY KEY (id_dicom, name)
+    PRIMARY KEY (id_dicom, nom)
 );
 
 //DROP COLUMNFAMILY medimage.metadata;
