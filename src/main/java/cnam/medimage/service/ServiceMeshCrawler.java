@@ -54,9 +54,16 @@ public class ServiceMeshCrawler extends Service {
 	
 	
 	/**
+	 * Renvoie le nombre de branche que l'on descend dans l'arborescence MESH
+	 * Lors d'une recherche par mots-clés
+	 */
+	private static int PRECISION_RECHERCHE = 2;
+	
+	
+	/**
 	 * La liste simple des codes Mesh et des libellés correspondants
 	 */
-	private static ArrayList<IndexMesh> indexMesh = null;
+	//private static ArrayList<IndexMesh> indexMesh = null;
 	
 	/**
 	* Méthode permettant d'accéder à l'unique instance de la classe Service
@@ -242,7 +249,7 @@ public class ServiceMeshCrawler extends Service {
 	        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
 	        while((i=ap2.evalXPath())!=-1){          
 	        	
-	            //move back to parent
+	            //On ajoute le tag dans lequel on navigue
 	        	reponseList.add(tagBuilder(vn, i));
 	            
 	        }     
@@ -257,6 +264,85 @@ public class ServiceMeshCrawler extends Service {
 	}
 	
 	
+	/**
+	 * 
+	 * à partir d'un DescriptorUI on ramène tous les DescriptorUI a aller chercher en base
+	 * On se limite à descendre de PRECISION_RECHERCHE dans l'arborescence
+	 * 
+	 * @param descriptorUI
+	 * @return
+	 * @throws XPathParseException
+	 * @throws XPathEvalException
+	 * @throws NavException
+	 */
+	public ArrayList<String> getNuageRechercheFromDescriptorUI(String descriptorUI) throws XPathParseException, XPathEvalException, NavException {
+
+		System.out.println("Entrée dans getNuageRechercheFromDescriptorUI()");
+		
+		ArrayList<String> resultat = new ArrayList<String>();
+		
+		//On arrive avec un mot-clé ou plutôt son DescriptorUI et il faut retrouver toutes ses arborescences filles
+		// Pour commencer on utilise ce qu'on a déjà : 
+		TagMesh tagOriginal = getDescriptorUI(descriptorUI);
+		System.out.println("tagOriginal est créé");
+		//On oublie pas la requête d'origine
+		resultat.add(descriptorUI);
+
+	    VTDGen vg = new VTDGen();
+	    int i,j;
+	    
+	    
+        if (vg.parseFile(meshPath, true)  ){
+
+    	    VTDNav vn = vg.getNav();
+    	    
+			for(String categorie:tagOriginal.getCategories()){
+				
+				System.out.println("Itération pour : "+categorie);
+				
+			    //Xpath de détection des hierarchies inférieures correspondantes (dans la limite de : PRECISION_RECHERCHE)
+			    AutoPilot ap = new AutoPilot();
+			    ap.selectXPath("DescriptorRecord[contains(TreeNumberList/TreeNumber, '"+categorie+"')]");
+			    //Xpath de contrôle de la précision (dans la limite de : PRECISION_RECHERCHE)
+			    AutoPilot ap2 = new AutoPilot();
+			    ap.selectXPath("DescriptorRecord/TreeNumberList[starts-with(TreeNumber, '"+categorie+"')]");
+				
+			    	VTDNav vnClone = vn.cloneNav();
+		        	ap.bind(vnClone);
+		        	
+		        	// apply XPath to the VTDNav instance, you can associate ap to different vns
+			        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
+			        while((i=ap.evalXPath())!=-1){
+						System.out.println("Xpath Trouvé"); 
+			        	//On contrôle qu'on est bien à un niveau de hiérarchie exploitable	
+				        ap2.bind(vnClone);
+				        while(ap2.evalXPath()!=-1){
+				        	
+				            j = vnClone.getText();
+			                if (j != -1) System.out.println("TEST DES CATEGORIES : "+vnClone.toString(j));
+				        	
+				        }
+			        	//String hierarchie = ;
+			        	
+			        	//On crée le tag
+			        	TagMesh tag = tagBuilder(vn, i);
+			            
+			        }     
+		        
+		        	
+		        	
+		        
+			}
+		
+		
+        }
+
+		System.out.println("Sortie de getNuageRechercheFromDescriptorUI()");
+		
+		return resultat;
+		
+	}
+	
 	
 	/**
 	 * 
@@ -265,20 +351,20 @@ public class ServiceMeshCrawler extends Service {
 	 * @param query
 	 * @return
 	 */
-	public ArrayList<IndexMesh> getListTagJsonFromBase(String query)  {
-		
-		ArrayList<IndexMesh> result = new ArrayList<IndexMesh>();
-		ArrayList<IndexMesh> all = getIndexMesh();
-		
-		for(IndexMesh i:all){
-			if(i.getNom().toLowerCase().contains(query.toLowerCase())){
-				result.add(i);
-			}
-		}		
-		
-		return result;
-		
-	}
+//	public ArrayList<IndexMesh> getListTagJsonFromBase(String query)  {
+//		
+//		ArrayList<IndexMesh> result = new ArrayList<IndexMesh>();
+//		ArrayList<IndexMesh> all = getIndexMesh();
+//		
+//		for(IndexMesh i:all){
+//			if(i.getNom().toLowerCase().contains(query.toLowerCase())){
+//				result.add(i);
+//			}
+//		}		
+//		
+//		return result;
+//		
+//	}
 		
 	
 	
@@ -374,24 +460,24 @@ public class ServiceMeshCrawler extends Service {
 	 * 
 	 * @return
 	 */
-	public static ArrayList<IndexMesh> getIndexMesh() {
-		
-		if(indexMesh == null){
-
-			System.out.println("Initialisation d'indexMesh");
-			IndexMeshRepository indexRepo = new IndexMeshRepository();
-			indexMesh = (ArrayList<IndexMesh>)indexRepo.getAllIndexes();
-			System.out.println("Initialisation OK");
-			
-		}
-		
-		return indexMesh;
-	}
-
-	public static void setIndexMesh(ArrayList<IndexMesh> indexMesh) {
-		ServiceMeshCrawler.indexMesh = indexMesh;
-	}
-	
-	
+//	public static ArrayList<IndexMesh> getIndexMesh() {
+//		
+//		if(indexMesh == null){
+//
+//			System.out.println("Initialisation d'indexMesh");
+//			IndexMeshRepository indexRepo = new IndexMeshRepository();
+//			indexMesh = (ArrayList<IndexMesh>)indexRepo.getAllIndexes();
+//			System.out.println("Initialisation OK");
+//			
+//		}
+//		
+//		return indexMesh;
+//	}
+//
+//	public static void setIndexMesh(ArrayList<IndexMesh> indexMesh) {
+//		ServiceMeshCrawler.indexMesh = indexMesh;
+//	}
+//	
+//	
 
 }

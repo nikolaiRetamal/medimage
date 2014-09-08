@@ -112,24 +112,24 @@ public class AjxRechercheMesh {
 	 * @throws XMLStreamException 
 	 * @throws FileNotFoundException 
 	 */
-	private List<TagMesh> searchResultFromBase(String tagName) throws XPathParseException, XPathEvalException, NavException, FileNotFoundException, XMLStreamException {
-		
-		data = new ArrayList<TagMesh>();
-		
-		//On ne passe pas le request, l'initialisation a déjà été effectuée dans AccueilImportContr
-		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(null);
-		 
-		List<IndexMesh> indexes = serviceMeshCrawler.getListTagJsonFromBase(tagName);
- 
-		// iterate a list and filter by tagName
-		for (IndexMesh index : indexes) {
-				data.add(new TagMesh(index.getIdTag(), index.getNom()));
-		}
-
-		System.out.println("Sortie de searchResultFromBase : "+tagName);
-		
-		return data;
-	}
+//	private List<TagMesh> searchResultFromBase(String tagName) throws XPathParseException, XPathEvalException, NavException, FileNotFoundException, XMLStreamException {
+//		
+//		data = new ArrayList<TagMesh>();
+//		
+//		//On ne passe pas le request, l'initialisation a déjà été effectuée dans AccueilImportContr
+//		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(null);
+//		 
+//		List<IndexMesh> indexes = serviceMeshCrawler.getListTagJsonFromBase(tagName);
+// 
+//		// iterate a list and filter by tagName
+//		for (IndexMesh index : indexes) {
+//				data.add(new TagMesh(index.getIdTag(), index.getNom()));
+//		}
+//
+//		System.out.println("Sortie de searchResultFromBase : "+tagName);
+//		
+//		return data;
+//	}
 
 
 
