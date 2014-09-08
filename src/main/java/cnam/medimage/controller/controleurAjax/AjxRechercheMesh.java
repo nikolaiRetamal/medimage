@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLStreamException;
 
@@ -36,7 +37,9 @@ public class AjxRechercheMesh {
  
 	@RequestMapping(value = "/getTags", method = RequestMethod.GET )
 	public @ResponseBody
-	Map<String,String> getTags(@RequestParam("term") String tagName, HttpServletResponse response) throws IOException {
+	Map<String,String> getTags(@RequestParam("term") String tagName, 
+								HttpServletResponse response,
+								HttpServletRequest  request) throws IOException {
 		
 		System.out.println("Ajax de parse du mesh");
 		List<TagMesh> result = null;
@@ -44,7 +47,7 @@ public class AjxRechercheMesh {
 		
 		try{
 
-			result = searchResultFromXml(tagName);
+			result = searchResultFromXml(tagName, request);
 			//result = searchResultFromBase(tagName);
 			
 		}catch (Exception e){
@@ -84,13 +87,12 @@ public class AjxRechercheMesh {
 	 * @throws XMLStreamException 
 	 * @throws FileNotFoundException 
 	 */
-	private List<TagMesh> searchResultFromXml(String tagName) throws XPathParseException, XPathEvalException, NavException, FileNotFoundException, XMLStreamException {
+	private List<TagMesh> searchResultFromXml(String tagName, HttpServletRequest request) throws XPathParseException, XPathEvalException, NavException, FileNotFoundException, XMLStreamException {
 		
 		//On ne passe pas le request, l'initialisation a déjà été effectuée dans AccueilImportContr
-		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(null);
+		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
  
 		data = serviceMeshCrawler.getListTagJsonFromXML(tagName);
- 
 		
 		System.out.println("Sortie de searchResultFromXml : "+tagName);
 		

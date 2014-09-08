@@ -65,6 +65,11 @@ public class AccueilImportContr implements Controller{
 		importForm.getExamen().setId_user(id_user);
 		importForm.setUsage((String) request.getParameter("usage"));
 		importForm.getExamen().setNom_examen((String) request.getParameter("examen"));
+		
+		importForm.getExamen().setTags(new ArrayList<String>());
+		for(String s:  request.getParameter("chosenTagsValue").split("\n")){
+			importForm.getExamen().getTags().add(s);
+		}
 		if(fileMap.size() > 1){
 			this.dir_name = user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom_examen();
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
@@ -102,8 +107,6 @@ public class AccueilImportContr implements Controller{
 			HttpServletResponse response) throws Exception {
 		System.out.println("Je suis dans le contrôleur de l'import");
 		
-		/* Initialisation de l'instance de ServiceMesh */
-		//ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
 
 		
 		System.out.println(request.getSession().getServletContext().getRealPath("/"));
@@ -183,6 +186,7 @@ public class AccueilImportContr implements Controller{
 		    dicom.setPublique(importForm.isPublique());
 		    dicom.setId_examen(importForm.getExamen().getId_examen());
 		    dicom.setNom_examen(importForm.getExamen().getNom_examen());
+		    dicom.setTags(importForm.getExamen().getTags());
 		    //récupération des métadonnées
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);

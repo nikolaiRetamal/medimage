@@ -31,6 +31,16 @@
 					<label for="examen">Examen</label>
 					<input type="text" class="form-control" id="examen" name="examen.nom" placeholder="Entrez le nom de l'examen">
 				</div>
+				<div class="form-group">
+					<label for="tags">Mots-Clés</label>
+					<input type="text" class="form-control" id="tags" name="tags" placeholder="Entrez des mots-clés">
+				</div>				
+				 <div class="form-group">
+					<label for="chosenTags">
+				  	Mots-Clés affectés à l'examen :</label>
+					<textarea class="form-control" id="chosenTags" name="chosenTags" disabled="disabled"></textarea>
+					<textarea class="form-control" id="chosenTagsValue" name="chosenTagsValue" disabled="disabled" style="display:none;"></textarea>
+				</div>
 				<form:checkbox path="publique" /> Publique
 				<button type="submit" class="btn btn-default">Envoyer</button>
 				<div class="dz-default dz-message file-dropzone text-center well col-sm-12">
@@ -42,14 +52,7 @@
 					<span>Cliquez pour parcourir</span>
                 </div>
 				<div class="dropzone-previews"></div>
-				<div class="form-group">
-					<label for="tags">Mots-Clés</label>
-					<input type="text" class="form-control" id="tags" name="tags" placeholder="Entrez des mots-clés">
-				</div>
-				<div class="ui-widget" style="margin-top:2em; font-family:Arial">
-				  Tags:
-				  <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
-				</div>
+				
 			</form:form>
 		</div>
 	</div>
