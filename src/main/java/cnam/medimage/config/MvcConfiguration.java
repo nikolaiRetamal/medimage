@@ -1,14 +1,6 @@
 package cnam.medimage.config;
 
-import java.util.ArrayList;
 
-import javax.persistence.EntityManagerFactory;
-
-import org.easycassandra.persistence.cassandra.CassandraFactory;
-import org.easycassandra.persistence.cassandra.ClusterInformation;
-import org.easycassandra.persistence.cassandra.EasyCassandraManager;
-import org.easycassandra.persistence.cassandra.spring.CassandraFactoryAnnotation;
-import org.easycassandra.persistence.cassandra.spring.SimpleCassandraTemplateImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +12,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import cnam.medimage.bean.Dicom;
 
 @Configuration
 @ComponentScan(basePackages="cnam.medimage")

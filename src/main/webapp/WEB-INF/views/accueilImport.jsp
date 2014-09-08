@@ -18,7 +18,7 @@
 	</div>
 	<div id="contenu" style="width:100%">
 		<div class="row">
-			<form:form  id="dropzone-form" action="/medimage/upload"
+			<form:form  modelAttribute="form" id="dropzone-form" action="/medimage/upload"
 			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 				<div class="fallback">
 			    	<input name="file" type="file" multiple />
@@ -29,8 +29,9 @@
 				</div>
 				<div class="form-group">
 					<label for="examen">Examen</label>
-					<input type="text" class="form-control" id="examen" name="examen" placeholder="Entrez le nom de l'examen">
+					<input type="text" class="form-control" id="examen" name="examen.nom" placeholder="Entrez le nom de l'examen">
 				</div>
+				<form:checkbox path="publique" /> Publique
 				<button type="submit" class="btn btn-default">Envoyer</button>
 				<div class="dz-default dz-message file-dropzone text-center well col-sm-12">
 					<span class="glyphicon glyphicon-paperclip"></span> 

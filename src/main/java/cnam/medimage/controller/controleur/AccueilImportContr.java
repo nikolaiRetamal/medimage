@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,6 +20,7 @@ import org.dcm4che2.data.Tag;
 import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.util.TagUtils;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,13 +30,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import cnam.medimage.bean.Dicom;
-import cnam.medimage.bean.Examen;
-import cnam.medimage.bean.MetaData;
+import cnam.medimage.bean.ImportForm;
 import cnam.medimage.bean.UploadedFile;
 import cnam.medimage.repository.DicomRepository;
 import cnam.medimage.repository.ExamenRepository;
-import cnam.medimage.repository.MetadataRepository;
-import cnam.medimage.repository.UsageRepository;
 
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
@@ -45,28 +41,26 @@ public class AccueilImportContr implements Controller{
 	private String dest_Path;
 	private String dir_name;
 	private String current_filename;
-	private String usage;
 	private UUID id_user;
-	private Examen examen;
+	private ImportForm importForm;
+
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers="Accept=application/json")
 	public @ResponseBody
 	List<UploadedFile> upload(MultipartHttpServletRequest request,
-	HttpServletResponse response) throws IOException {
+	HttpServletResponse response, @ModelAttribute ImportForm form) throws IOException {
+		importForm = form;
 		//on enregistre le contexte pour enregistrer plus loin les fichiers
 		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
 		//on récupère les fichiers soumis pour les enregistrer
 		Map<String, MultipartFile> fileMap = request.getFileMap();
-		
-		examen = new Examen();
+		System.out.println("imagePublique : " + importForm.isPublique());
 		String user = "user011";
 		id_user = UUID.randomUUID();
-		this.usage = (String) request.getParameter("usage");
-		examen.setNom((String) request.getParameter("examen"));
-		examen.setId_examen(UUID.randomUUID());
-		examen.setId_user(id_user);
+		importForm.getExamen().setId_examen(UUID.randomUUID());
+		importForm.getExamen().setId_user(id_user);
 		if(fileMap.size() > 1){
-			this.dir_name = user + "_" + usage + "_" + examen;
+			this.dir_name = user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom();
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
 			if (!success) {
 				System.out.println("Erreur création dossier");
@@ -74,7 +68,7 @@ public class AccueilImportContr implements Controller{
 			}
 			this.dir_name = "/" + this.dir_name + "/";
 		}else
-			this.dir_name = "/" + user + "_" + usage + "_" + examen + "_";
+			this.dir_name = "/" + user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom() + "_";
 		
 		//Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
@@ -93,7 +87,7 @@ public class AccueilImportContr implements Controller{
 		}
 		
 		ExamenRepository examRepo = new ExamenRepository();
-		examRepo.save(examen);
+		examRepo.save(importForm.getExamen());
 		return uploadedFiles;
 	}
 	
@@ -102,7 +96,10 @@ public class AccueilImportContr implements Controller{
 			HttpServletResponse response) throws Exception {
 		System.out.println("Je suis dans le contrôleur de l'import");
 		System.out.println(request.getSession().getServletContext().getRealPath("/"));
-		return new ModelAndView("accueilImport");
+		ImportForm form = new ImportForm();
+		ModelAndView mv = new ModelAndView("accueilImport");
+		mv.addObject("form", form);
+		return mv;
 	}
 	
 	public void listMetaInfo(DicomObject object, Dicom dicom) {
@@ -112,7 +109,6 @@ public class AccueilImportContr implements Controller{
 	      int tag = element.tag();
 	      try {
 	         String tagAddr = TagUtils.toString(tag);
-	         System.out.println("addr = " + tagAddr);
 	         String tagVR = object.vrOf(tag).toString();
 	         if (tagVR.equals("SQ")) {
 	            if (element.hasItems()) {
@@ -172,8 +168,9 @@ public class AccueilImportContr implements Controller{
 		    dicom.setDate_import(new Date());
 		    dicom.setFile_path(this.dir_name + this.current_filename);
 		    dicom.setId_user(this.id_user);
-		    dicom.setId_examen(examen.getId_examen());
-		    dicom.setNom_examen(examen.getNom());
+		    dicom.setPublique(importForm.isPublique());
+		    dicom.setId_examen(importForm.getExamen().getId_examen());
+		    dicom.setNom_examen(importForm.getExamen().getNom());
 		    //récupération des métadonnées
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);
@@ -204,5 +201,3 @@ public class AccueilImportContr implements Controller{
 		return fileInfo;
 	}
 }
-
-	
