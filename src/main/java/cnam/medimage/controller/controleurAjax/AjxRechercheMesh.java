@@ -3,10 +3,12 @@ package cnam.medimage.controller.controleurAjax;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +46,12 @@ public class AjxRechercheMesh {
 		
 		System.out.println("Ajax de parse du mesh");
 		List<TagMesh> result = null;
-		HashMap<String,String> indexes = new HashMap<String, String>();
+		
+		TreeMap<String, String> indexes = new TreeMap<String, String>(new Comparator<String>() {
+		    public int compare(String o1, String o2) {
+		        return o1.toLowerCase().compareTo(o2.toLowerCase());
+		    }
+		});
 		
 		try{
 
@@ -68,9 +75,9 @@ public class AjxRechercheMesh {
 				}		
 		
 		//On affiche les résultats par curiosité
-		for(TagMesh t:result){
-			System.out.println(t.getNom());
-		}
+//		for(TagMesh t:result){
+//			System.out.println(t.getNom());
+//		}
  
 		return indexes;
 	}
