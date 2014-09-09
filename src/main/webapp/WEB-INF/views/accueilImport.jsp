@@ -26,11 +26,11 @@
 				</div>
 				<div class="form-group">
 					<label for="usage">Usage</label>
-					<input type="text" class="form-control" id="usage" name="usage" placeholder="Entrez un usage">
+					<input type="text" class="form-control" id="usage" name="nom_usage" placeholder="Entrez un usage">
 				</div>
 				<div class="form-group">
 					<label for="examen">Examen</label>
-					<input type="text" class="form-control" id="examen" name="examen.nom" placeholder="Entrez le nom de l'examen">
+					<input type="text" class="form-control" id="examen" name="nom_examen" placeholder="Entrez le nom de l'examen">
 				</div>
 				<div class="form-group">
 					<label for="tags">Mots-Clés</label>

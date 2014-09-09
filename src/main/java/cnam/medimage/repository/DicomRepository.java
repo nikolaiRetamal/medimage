@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.easycassandra.persistence.cassandra.Persistence;
+import org.easycassandra.persistence.cassandra.SelectBuilder;
 
 import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.MetaData;
@@ -35,7 +36,10 @@ public class DicomRepository {
 		persistence.insert(dicom);
 	}
 
-
+	public List<Dicom> findAll() {
+		SelectBuilder<Dicom> select = persistence.selectBuilder(Dicom.class);
+		return select.execute();
+	}
 	public Dicom findOne(UUID uuid) {
 		return persistence.findByKey(uuid, Dicom.class);
 	}

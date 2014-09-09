@@ -77,6 +77,30 @@ public class Dicom implements Serializable{
 		this.id_user = id_user;
 	}
 
+	public UUID getId_examen() {
+		return id_examen;
+	}
+
+	public void setId_examen(UUID id_examen) {
+		this.id_examen = id_examen;
+	}
+
+	public String getNom_examen() {
+		return nom_examen;
+	}
+
+	public void setNom_examen(String nom_examen) {
+		this.nom_examen = nom_examen;
+	}
+
+	public String getNom_usage() {
+		return nom_usage;
+	}
+
+	public void setNom_usage(String nom_usage) {
+		this.nom_usage = nom_usage;
+	}
+
 	public Boolean getPublique() {
 		return publique;
 	}
@@ -91,6 +115,14 @@ public class Dicom implements Serializable{
 
 	public void setDate_import(Date date_import) {
 		this.date_import = date_import;
+	}
+
+	public String getFile_path() {
+		return file_path;
+	}
+
+	public void setFile_path(String file_path) {
+		this.file_path = file_path;
 	}
 
 	public String getNom() {
@@ -117,28 +149,5 @@ public class Dicom implements Serializable{
 		this.metadatas = metadatas;
 	}
 
-	public UUID getId_examen() {
-		return id_examen;
-	}
-
-	public void setId_examen(UUID id_examen) {
-		this.id_examen = id_examen;
-	}
-
-	public String getNom_examen() {
-		return nom_examen;
-	}
-
-	public void setNom_examen(String nom_examen) {
-		this.nom_examen = nom_examen;
-	}
-
-	public String getFile_path() {
-		return file_path;
-	}
-
-	public void setFile_path(String file_path) {
-		this.file_path = file_path;
-	}
 	
 }

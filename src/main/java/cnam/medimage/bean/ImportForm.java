@@ -2,27 +2,21 @@ package cnam.medimage.bean;
 
 public class ImportForm {
 
-	private Examen examen;
-	private String usage;
+	private String nom_examen;
+	private String nom_usage;
 	private boolean publique;
 	
-	
-	public ImportForm() {
-		this.examen = new Examen();
-		publique = false;
-
+	public String getNom_examen() {
+		return nom_examen;
 	}
-	public Examen getExamen() {
-		return examen;
+	public void setNom_examen(String nom_examen) {
+		this.nom_examen = nom_examen;
 	}
-	public void setExamen(Examen examen) {
-		this.examen = examen;
+	public String getNom_usage() {
+		return nom_usage;
 	}
-	public String getUsage() {
-		return usage;
-	}
-	public void setUsage(String usage) {
-		this.usage = usage;
+	public void setNom_usage(String nom_usage) {
+		this.nom_usage = nom_usage;
 	}
 	public boolean isPublique() {
 		return publique;
@@ -30,6 +24,5 @@ public class ImportForm {
 	public void setPublique(boolean publique) {
 		this.publique = publique;
 	}
-	
 	
 }

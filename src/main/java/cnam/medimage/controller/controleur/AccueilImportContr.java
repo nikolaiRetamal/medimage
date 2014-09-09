@@ -30,18 +30,18 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import cnam.medimage.bean.Dicom;
+import cnam.medimage.bean.Examen;
 import cnam.medimage.bean.ImportForm;
 import cnam.medimage.bean.UploadedFile;
 import cnam.medimage.repository.DicomRepository;
 import cnam.medimage.repository.ExamenRepository;
-
 import cnam.medimage.repository.MetadataRepository;
 import cnam.medimage.repository.UsageRepository;
 import cnam.medimage.service.ServiceMeshCrawler;
 
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
-	
+	private Examen examen;
 	private String dest_Path;
 	private String dir_name;
 	private String current_filename;
@@ -54,6 +54,7 @@ public class AccueilImportContr implements Controller{
 	List<UploadedFile> upload(MultipartHttpServletRequest request,
 	HttpServletResponse response, @ModelAttribute ImportForm form) throws IOException {
 		importForm = form;
+		this.examen = new Examen();
 		//on enregistre le contexte pour enregistrer plus loin les fichiers
 		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
 		//on récupère les fichiers soumis pour les enregistrer
@@ -61,17 +62,16 @@ public class AccueilImportContr implements Controller{
 		System.out.println("imagePublique : " + importForm.isPublique());
 		String user = "user011";
 		id_user = UUID.randomUUID();
-		importForm.getExamen().setId_examen(UUID.randomUUID());
-		importForm.getExamen().setId_user(id_user);
-		importForm.setUsage((String) request.getParameter("usage"));
-		importForm.getExamen().setNom_examen((String) request.getParameter("examen"));
-		
-		importForm.getExamen().setTags(new ArrayList<String>());
+		this.examen.setId_examen(UUID.randomUUID());
+		this.examen.setId_user(id_user);
+		this.examen.setNom_examen(importForm.getNom_examen());
+		this.examen.setNom_usage(importForm.getNom_usage());
+		this.examen.setTags(new ArrayList<String>());
 		for(String s:  request.getParameter("chosenTagsValue").split("\n")){
-			importForm.getExamen().getTags().add(s);
+			this.examen.getTags().add(s);
 		}
 		if(fileMap.size() > 1){
-			this.dir_name = user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom_examen();
+			this.dir_name = user + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen();
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
 			if (!success) {
 				System.out.println("Erreur création dossier");
@@ -79,7 +79,7 @@ public class AccueilImportContr implements Controller{
 			}
 			this.dir_name = "/" + this.dir_name + "/";
 		}else
-			this.dir_name = "/" + user + "_" + importForm.getUsage() + "_" + importForm.getExamen().getNom_examen() + "_";
+			this.dir_name = "/" + user + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen() + "_";
 		
 		//Maintain a list to send back the files info. to the client side
 		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
@@ -98,7 +98,7 @@ public class AccueilImportContr implements Controller{
 		}
 		
 		ExamenRepository examRepo = new ExamenRepository();
-		examRepo.save(importForm.getExamen());
+		examRepo.save(this.examen);
 		return uploadedFiles;
 	}
 	
@@ -184,9 +184,10 @@ public class AccueilImportContr implements Controller{
 		    dicom.setId_user(this.id_user);
 
 		    dicom.setPublique(importForm.isPublique());
-		    dicom.setId_examen(importForm.getExamen().getId_examen());
-		    dicom.setNom_examen(importForm.getExamen().getNom_examen());
-		    dicom.setTags(importForm.getExamen().getTags());
+		    dicom.setId_examen(this.examen.getId_examen());
+		    dicom.setNom_examen(this.examen.getNom_examen());
+		    dicom.setNom_usage(this.examen.getNom_usage());
+		    dicom.setTags(this.examen.getTags());
 		    //récupération des métadonnées
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);

@@ -6,12 +6,13 @@ CREATE KEYSPACE medimage WITH REPLICATION = { 'class' : 'SimpleStrategy', 'repli
 CREATE COLUMNFAMILY medimage.dicom (
     id_dicom uuid,
     date_import timestamp,
-    file_path text,   
+    file_path text, 
     nom text,
     public boolean,
     id_user uuid,
     id_examen uuid,
     nom_examen text,
+    nom_usage text,
     usages map<text, text>,
     tags list<text>,
     metadatas map<text,text>,
@@ -78,8 +79,10 @@ CREATE COLUMNFAMILY medimage.usage_joint (
 CREATE TABLE medimage.examen (
     id_examen uuid,
     date_import timestamp,
-    nom text,
+    nom_examen text,
+    nom_usage text,
     id_user uuid,
+    usages map<text, text>,
     tags list<text>,
     metadatas map<text,text>,
     PRIMARY KEY (id_examen)
