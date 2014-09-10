@@ -22,6 +22,12 @@ import com.ximpleware.VTDGen;
 import com.ximpleware.VTDNav;
 import com.ximpleware.XPathEvalException;
 import com.ximpleware.XPathParseException;
+import com.ximpleware.extended.AutoPilotHuge;
+import com.ximpleware.extended.NavExceptionHuge;
+import com.ximpleware.extended.VTDGenHuge;
+import com.ximpleware.extended.VTDNavHuge;
+import com.ximpleware.extended.XPathEvalExceptionHuge;
+import com.ximpleware.extended.XPathParseExceptionHuge;
 
 /**
  * @author Jullien
@@ -94,7 +100,8 @@ public class ServiceMeshCrawler extends Service {
 
 			//On va chercher le fichier Mesh
 			String meshFilePath = context.getInitParameter("MESH_FILEPATH");
-			meshFilePath = context.getRealPath(meshFilePath);
+			//La ligne en dessous est nécessaire si le fichier Mesh est dans le WEB-INF
+			//meshFilePath = context.getRealPath(meshFilePath);
 			
 			//Sauvegarde du chemin et du fichier Mesh
 			meshPath = meshFilePath;					
@@ -128,25 +135,28 @@ public class ServiceMeshCrawler extends Service {
 	 * 
 	 * @param saisie
 	 * @return
+	 * @throws XPathParseExceptionHuge 
+	 * @throws NavExceptionHuge 
+	 * @throws XPathEvalExceptionHuge 
 	 * @throws XPathParseException
 	 * @throws XPathEvalException
 	 * @throws NavException
 	 */
-	public TagMesh getDescriptorUI(String saisie) throws XPathParseException, XPathEvalException, NavException{
+	public TagMesh getDescriptorUI(String saisie) throws XPathParseExceptionHuge, XPathEvalExceptionHuge, NavExceptionHuge, XPathParseException {
 		
 		System.out.println("Entrée dans le Crawler");
 		
 		TagMesh tag = null;
-		VTDGen vg = new VTDGen();
-	    AutoPilot ap = new AutoPilot();
+		VTDGenHuge vg = new VTDGenHuge();
+	    AutoPilotHuge ap = new AutoPilotHuge();
 	    int i;
 	
 	    //Xpath de détection d'un DescriptorUI précis
 	    ap.selectXPath("DescriptorRecord[DescriptorUI = '"+saisie+"']");
 	      
-          if (vg.parseFile(meshPath, true)  ){
+          if (vg.parseFile(meshPath, true, VTDGenHuge.MEM_MAPPED)  ){
         	  
-              VTDNav vn = vg.getNav();
+              VTDNavHuge vn = vg.getNav();
               
               ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
               // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
@@ -172,20 +182,23 @@ public class ServiceMeshCrawler extends Service {
 	 * @throws XPathParseException
 	 * @throws XPathEvalException
 	 * @throws NavException
+	 * @throws XPathParseExceptionHuge 
+	 * @throws NavExceptionHuge 
+	 * @throws XPathEvalExceptionHuge 
 	 */
-	public ArrayList<TagMesh> parseThemAll() throws XPathParseException, XPathEvalException, NavException{
+	public ArrayList<TagMesh> parseThemAll() throws XPathParseException, XPathEvalException, NavException, XPathParseExceptionHuge, XPathEvalExceptionHuge, NavExceptionHuge{
 		
 		ArrayList<TagMesh> listeMesh = new ArrayList<TagMesh>();
-		VTDGen vg = new VTDGen();
-	    AutoPilot ap = new AutoPilot();
+		VTDGenHuge vg = new VTDGenHuge();
+	    AutoPilotHuge ap = new AutoPilotHuge();
 	    int i;
 	
 	    //Xpath de détection de tous les DescriptorRecord
 	    ap.selectXPath("DescriptorRecord");
 
-        if (vg.parseFile(meshPath, true)  ){
+	    if (vg.parseFile(meshPath, true, VTDGenHuge.MEM_MAPPED)  ){
         	
-  	      VTDNav vn = vg.getNav();
+  	      VTDNavHuge vn = vg.getNav();
   	      
   	      ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
   	      // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
@@ -214,15 +227,18 @@ public class ServiceMeshCrawler extends Service {
 	 * @throws XPathParseException
 	 * @throws XPathEvalException
 	 * @throws NavException
+	 * @throws XPathParseExceptionHuge 
+	 * @throws NavExceptionHuge 
+	 * @throws XPathEvalExceptionHuge 
 	 */
-	public ArrayList<TagMesh> getListTagJsonFromXML(String query) throws XPathParseException, XPathEvalException, NavException   {
+	public ArrayList<TagMesh> getListTagJsonFromXML(String query) throws  XPathParseExceptionHuge, XPathEvalExceptionHuge, NavExceptionHuge, XPathParseException   {
 		
 		System.out.println("Entrée dans getListTagJsonFromXML()");
 	
 		ArrayList<TagMesh> reponseList = new ArrayList<TagMesh> ();
 		
-	    AutoPilot ap = new AutoPilot();		
-	    AutoPilot ap2 = new AutoPilot();
+	    AutoPilotHuge ap = new AutoPilotHuge();		
+	    AutoPilotHuge ap2 = new AutoPilotHuge();
 	    int i;
 	
 	    //Xpath de détection d'un DescriptorName correspondant
@@ -231,10 +247,10 @@ public class ServiceMeshCrawler extends Service {
 	    //Xpath de détection des synonymes correspondants
 	    ap2.selectXPath("DescriptorRecord[contains(lower-case(ConceptList/Concept/TermList/Term/String), lower-case('"+query+"'))]");
 		
-	    VTDGen vg = new VTDGen();
-        if (vg.parseFile(meshPath, true)  ){
+	    VTDGenHuge vg = new VTDGenHuge();
+	    if (vg.parseFile(meshPath, true, VTDGenHuge.MEM_MAPPED)  ){
 	    
-		    VTDNav vn = vg.getNav();
+		    VTDNavHuge vn = vg.getNav();
 		    
 	        ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
 	        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
@@ -274,8 +290,11 @@ public class ServiceMeshCrawler extends Service {
 	 * @throws XPathParseException
 	 * @throws XPathEvalException
 	 * @throws NavException
+	 * @throws XPathParseExceptionHuge 
+	 * @throws NavExceptionHuge 
+	 * @throws XPathEvalExceptionHuge 
 	 */
-	public ArrayList<String> getNuageRechercheFromDescriptorUI(String descriptorUI) throws XPathParseException, XPathEvalException, NavException {
+	public ArrayList<String> getNuageRechercheFromDescriptorUI(String descriptorUI) throws XPathParseException, XPathEvalException, NavException, XPathParseExceptionHuge, XPathEvalExceptionHuge, NavExceptionHuge  {
 
 		System.out.println("Entrée dans getNuageRechercheFromDescriptorUI()");
 		
@@ -288,26 +307,26 @@ public class ServiceMeshCrawler extends Service {
 		//On oublie pas la requête d'origine
 		resultat.add(descriptorUI);
 
-	    VTDGen vg = new VTDGen();
+	    VTDGenHuge vg = new VTDGenHuge();
 	    int i,j;
 	    
 	    
-        if (vg.parseFile(meshPath, true)  ){
+	    if (vg.parseFile(meshPath, true, VTDGenHuge.MEM_MAPPED)  ){
 
-    	    VTDNav vn = vg.getNav();
+    	    VTDNavHuge vn = vg.getNav();
     	    
 			for(String categorie:tagOriginal.getCategories()){
 				
 				System.out.println("Itération pour : "+categorie);
 				
 			    //Xpath de détection des hierarchies inférieures correspondantes (dans la limite de : PRECISION_RECHERCHE)
-			    AutoPilot ap = new AutoPilot();
+			    AutoPilotHuge ap = new AutoPilotHuge();
 			    ap.selectXPath("DescriptorRecord[contains(TreeNumberList/TreeNumber, '"+categorie+"')]");
 			    //Xpath de contrôle de la précision (dans la limite de : PRECISION_RECHERCHE)
-			    AutoPilot ap2 = new AutoPilot();
+			    AutoPilotHuge ap2 = new AutoPilotHuge();
 			    ap.selectXPath("DescriptorRecord/TreeNumberList[starts-with(TreeNumber, '"+categorie+"')]");
 				
-			    	VTDNav vnClone = vn.cloneNav();
+			    	VTDNavHuge vnClone = vn.cloneNav();
 		        	ap.bind(vnClone);
 		        	
 		        	// apply XPath to the VTDNav instance, you can associate ap to different vns
@@ -369,11 +388,15 @@ public class ServiceMeshCrawler extends Service {
 	
 	
 	/**
+	 * @throws XPathParseExceptionHuge 
+	 * @throws XPathParseException 
+	 * @throws XPathEvalExceptionHuge 
+	 * @throws NavExceptionHuge 
 	 * @throws NavException 
 	 * @throws XPathEvalException 
 	 * 
 	 */
-	private TagMesh tagBuilder(VTDNav vn,int xPathEval) throws XPathParseException, NavException, XPathEvalException {
+	private TagMesh tagBuilder(VTDNavHuge vn,int xPathEval) throws XPathParseExceptionHuge, NavExceptionHuge, XPathEvalExceptionHuge, XPathParseException  {
 		
 		TagMesh tag = new TagMesh(null,null);
 		String idTag = null;
@@ -383,19 +406,19 @@ public class ServiceMeshCrawler extends Service {
 		int i,j;
 		
 		
-		VTDNav vnClone = vn.cloneNav();		
+		VTDNavHuge vnClone = vn.cloneNav();		
 		
 		//Xpath du DescriptorUI
-	    AutoPilot ap = new AutoPilot();
+	    AutoPilotHuge ap = new AutoPilotHuge();
         ap.selectXPath("DescriptorUI");
 		//Xpath du DescriptorName
-	    AutoPilot ap2 = new AutoPilot();
+	    AutoPilotHuge ap2 = new AutoPilotHuge();
         ap2.selectXPath("DescriptorName/String");
 		//Xpath de détection de la liste des termes/synonymes
-	    AutoPilot ap3 = new AutoPilot();
+	    AutoPilotHuge ap3 = new AutoPilotHuge();
         ap3.selectXPath("ConceptList/Concept/TermList/Term/String");
 		//Xpath de détection de la liste des categories
-	    AutoPilot ap4 = new AutoPilot();
+	    AutoPilotHuge ap4 = new AutoPilotHuge();
         ap4.selectXPath("TreeNumberList/TreeNumber");
        
         //On remonte au DescriptorRecord

@@ -13,7 +13,7 @@ public class HomeController {
 
 	@RequestMapping(value="/")
 	public ModelAndView test(HttpServletResponse response) throws IOException{
-		return new ModelAndView("home");
+		return new ModelAndView("import");
 	}
 	@RequestMapping(value="/cacahouetes")
 	public String cacahouetes(HttpServletResponse response) throws IOException{

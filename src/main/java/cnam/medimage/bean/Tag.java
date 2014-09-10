@@ -2,6 +2,7 @@
 package cnam.medimage.bean;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,25 +17,25 @@ public class Tag implements Serializable{
 	
 	@Id
 	@Column
-	private String id_dicom;
+	private UUID id_dicom;
 	@Index
 	@Column
 	private String nom;
 	@Column
 	private Boolean codifie;
 	
-	public Tag(String id_dicom, String nom, Boolean codifie) {
+	public Tag(UUID id_dicom, String nom, Boolean codifie) {
 		super();
 		this.id_dicom = id_dicom;
 		this.nom = nom;
 		this.codifie = codifie;
 	}
 
-	public String getId_dicom() {
+	public UUID getId_dicom() {
 		return id_dicom;
 	}
 
-	public void setId_dicom(String id_dicom) {
+	public void setId_dicom(UUID id_dicom) {
 		this.id_dicom = id_dicom;
 	}
 

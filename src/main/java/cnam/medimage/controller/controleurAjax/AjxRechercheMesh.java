@@ -30,6 +30,9 @@ import com.google.gson.GsonBuilder;
 import com.ximpleware.NavException;
 import com.ximpleware.XPathEvalException;
 import com.ximpleware.XPathParseException;
+import com.ximpleware.extended.NavExceptionHuge;
+import com.ximpleware.extended.XPathEvalExceptionHuge;
+import com.ximpleware.extended.XPathParseExceptionHuge;
 
 @Controller
 public class AjxRechercheMesh {
@@ -94,8 +97,11 @@ public class AjxRechercheMesh {
 	 * @throws NavException
 	 * @throws XMLStreamException 
 	 * @throws FileNotFoundException 
+	 * @throws NavExceptionHuge 
+	 * @throws XPathEvalExceptionHuge 
+	 * @throws XPathParseExceptionHuge 
 	 */
-	private List<TagMesh> searchResultFromXml(String tagName, HttpServletRequest request) throws XPathParseException, XPathEvalException, NavException, FileNotFoundException, XMLStreamException {
+	private List<TagMesh> searchResultFromXml(String tagName, HttpServletRequest request) throws FileNotFoundException, XMLStreamException, XPathParseExceptionHuge, XPathEvalExceptionHuge, NavExceptionHuge, XPathParseException {
 		
 		//On ne passe pas le request, l'initialisation a déjà été effectuée dans AccueilImportContr
 		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
