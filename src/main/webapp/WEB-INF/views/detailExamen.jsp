@@ -22,7 +22,7 @@
 		<div class="descriptionExamen">
 		<h1 class="titreRecherche">${titrePage}</h1>
 		<!-- Utiliser http://fooplugins.com/plugins/footable-jquery/#/ -->
-			<table id="dicoms" class="footable">
+			<table id="dicoms" class="footable tableauFoo">
 				<thead>
 					<tr>
 					<th>
@@ -45,6 +45,13 @@
 						</tr>
 					</c:forEach>
 				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="3">
+							<div class="pagination pagination-centered hide-if-no-paging"></div>
+						</td>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 	</div>
@@ -54,6 +61,7 @@
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="resources/js/footable.js" type="text/javascript"></script>
+<script src="resources/js/footable.paginate.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
 

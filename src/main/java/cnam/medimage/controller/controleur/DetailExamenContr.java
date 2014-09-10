@@ -25,15 +25,8 @@ public class DetailExamenContr {
 		param.put("titrePage", "Detail Examen");
 		DicomRepository dicoRepo = new DicomRepository();	
 		List<Dicom> dicoms = dicoRepo.findAll();
-		for(Dicom dicom : dicoms){
-			System.out.println("UUID = " + dicom.getId_dicom());
-			System.out.println("exam = " + dicom.getNom_examen());
-			System.out.println("date = " + dicom.getDate_import());
-		}
 		param.put("dicoms", dicoms);
-		
 		ModelAndView mv = new ModelAndView("detailExamen", param);
-
 		return mv;
 	}
 }

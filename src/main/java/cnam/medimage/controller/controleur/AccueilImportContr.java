@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,12 +31,8 @@ import org.springframework.web.servlet.mvc.Controller;
 import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.Examen;
 import cnam.medimage.bean.ImportForm;
-import cnam.medimage.bean.UploadedFile;
 import cnam.medimage.repository.DicomRepository;
 import cnam.medimage.repository.ExamenRepository;
-import cnam.medimage.repository.MetadataRepository;
-import cnam.medimage.repository.UsageRepository;
-import cnam.medimage.service.ServiceMeshCrawler;
 
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
@@ -48,10 +43,20 @@ public class AccueilImportContr implements Controller{
 	private UUID id_user;
 	private ImportForm importForm;
 
+	@RequestMapping(value="/import")
+	public ModelAndView handleRequest(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		System.out.println("Je suis dans le contrôleur de l'import");
+		System.out.println(request.getSession().getServletContext().getRealPath("/"));
+		ImportForm form = new ImportForm();
+		ModelAndView mv = new ModelAndView("accueilImport");
+		mv.addObject("form", form);
+		return mv;
+	}
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers="Accept=application/json")
 	public @ResponseBody
-	List<UploadedFile> upload(MultipartHttpServletRequest request,
+	String upload(MultipartHttpServletRequest request,
 	HttpServletResponse response, @ModelAttribute ImportForm form) throws IOException {
 		importForm = form;
 		this.examen = new Examen();
@@ -81,96 +86,30 @@ public class AccueilImportContr implements Controller{
 		}else
 			this.dir_name = "/" + user + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen() + "_";
 		
-		//Maintain a list to send back the files info. to the client side
-		List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
-		
 		for (MultipartFile multipartFile : fileMap.values()) {
 			// Sauvegarde physique
 			this.current_filename = multipartFile.getOriginalFilename();
 			sauvegardeFichier(multipartFile);
-			UploadedFile fileInfo = getUploadedFileInfo(multipartFile);
 			
 			// Sauvegarde en base
 			sauvegardeEnBase();
 			
 			// adding the file info to the list
-			uploadedFiles.add(fileInfo);
 		}
 		
 		ExamenRepository examRepo = new ExamenRepository();
 		examRepo.save(this.examen);
-		return uploadedFiles;
+		return "ok";
 	}
 	
-	@RequestMapping(value="/import")
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		System.out.println("Je suis dans le contrôleur de l'import");
-		
-
-		
-		System.out.println(request.getSession().getServletContext().getRealPath("/"));
-		ImportForm form = new ImportForm();
-		ModelAndView mv = new ModelAndView("accueilImport");
-		mv.addObject("form", form);
-		return mv;
-	}
-	
-	public void listMetaInfo(DicomObject object, Dicom dicom) {
-	   Iterator<DicomElement> iter = object.fileMetaInfoIterator();
-	   while(iter.hasNext()) {
-	      DicomElement element = (DicomElement) iter.next();
-	      int tag = element.tag();
-	      try {
-	         String tagAddr = TagUtils.toString(tag);
-	         String tagVR = object.vrOf(tag).toString();
-	         if (tagVR.equals("SQ")) {
-	            if (element.hasItems()) {
-	               listMetaInfo(element.getDicomObject(), dicom);
-	               continue;
-	            }
-	         }    
-	         String tagValue = object.getString(tag);
-	         dicom.getMetadatas().put(tagAddr, tagValue);
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	      }
-	   }  
-	}
-	
-	public void listHeader(DicomObject object, Dicom dicom) {
-		   Iterator<DicomElement> iter = object.datasetIterator();
-		   while(iter.hasNext()) {
-		      DicomElement element = (DicomElement) iter.next();
-		      int tag = element.tag();
-		      //Si on a terminé de lire l'en tête en qu'on
-		      //passe à la partie binaire du fichier
-		      if(tag == Tag.PixelData)
-		    	  break;
-		      try {
-		         String tagAddr = TagUtils.toString(tag);
-		         String tagVR = object.vrOf(tag).toString();
-		         if (tagVR.equals("SQ")) {
-		            if (element.hasItems()) {
-		               listHeader(element.getDicomObject(), dicom);
-		               continue;
-		            }
-		         }       	 
-		         String tagValue = object.getString(tag);
-		         dicom.getMetadatas().put(tagAddr, tagValue);
-		      } catch (Exception e) {
-		         e.printStackTrace();
-		      }
-		   }  
-		}
-	
+	/*Sauvegarde physique d'un fichier dicom sur le serveur*/
 	private void sauvegardeFichier(MultipartFile multipartFile)
 	throws IOException, FileNotFoundException {
 		FileCopyUtils.copy(multipartFile.getBytes(), new FileOutputStream(getOutputFilename()));
 	}
 	
+	/*Sauvevarge en base de données des données d'un fichier*/
 	private void sauvegardeEnBase() {
-		
 		DicomInputStream dicomInput = null;
 		File fichierDicom = new File(getOutputFilename());
 		DicomRepository dicoRepo = new DicomRepository();		
@@ -205,16 +144,60 @@ public class AccueilImportContr implements Controller{
 		}
 	}
 	
-	private String getOutputFilename() {
-		return this.dest_Path + this.dir_name + this.current_filename;
+	/*Extrait les métadonnées du fichier dicom (DicomObject) 
+	 * et les intègre au Bean Dicom en paramètre*/
+	public void listMetaInfo(DicomObject object, Dicom dicom) {
+	   Iterator<DicomElement> iter = object.fileMetaInfoIterator();
+	   while(iter.hasNext()) {
+	      DicomElement element = (DicomElement) iter.next();
+	      int tag = element.tag();
+	      try {
+	         String tagAddr = TagUtils.toString(tag);
+	         String tagVR = object.vrOf(tag).toString();
+	         if (tagVR.equals("SQ")) {
+	            if (element.hasItems()) {
+	               listMetaInfo(element.getDicomObject(), dicom);
+	               continue;
+	            }
+	         }    
+	         String tagValue = object.getString(tag);
+	         dicom.getMetadatas().put(tagAddr, tagValue);
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+	   }  
 	}
 	
-	private UploadedFile getUploadedFileInfo(MultipartFile multipartFile)throws IOException {
-		UploadedFile fileInfo = new UploadedFile();
-		fileInfo.setName(multipartFile.getOriginalFilename());
-		fileInfo.setSize(multipartFile.getSize());
-		fileInfo.setType(multipartFile.getContentType());
-		fileInfo.setLocation(this.dest_Path);
-		return fileInfo;
+	/*Extrait les métadonnées d'en tête du fichier dicom (DicomObject) 
+	 * et les intègre au Bean Dicom en paramètre*/
+	public void listHeader(DicomObject object, Dicom dicom) {
+	   Iterator<DicomElement> iter = object.datasetIterator();
+	   while(iter.hasNext()) {
+	      DicomElement element = (DicomElement) iter.next();
+	      int tag = element.tag();
+	      //Si on a terminé de lire l'en tête en qu'on
+	      //passe à la partie binaire du fichier
+	      if(tag == Tag.PixelData)
+	    	  break;
+	      try {
+	         String tagAddr = TagUtils.toString(tag);
+	         String tagVR = object.vrOf(tag).toString();
+	         if (tagVR.equals("SQ")) {
+	            if (element.hasItems()) {
+	               listHeader(element.getDicomObject(), dicom);
+	               continue;
+	            }
+	         }       	 
+	         String tagValue = object.getString(tag);
+	         dicom.getMetadatas().put(tagAddr, tagValue);
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+	   }  
+	}
+	
+	/*Retourne l'adresse physique du fichier courant sur le serveur*/
+	private String getOutputFilename() {
+		return this.dest_Path + this.dir_name + this.current_filename;
 	}
 }

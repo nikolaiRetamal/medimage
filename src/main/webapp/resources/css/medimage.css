@@ -39,3 +39,11 @@
 li.options{
 	padding:0;
 }
+.pagination{
+	width: 100%;
+}
+
+.tableauFoo{
+	max-width:1280px;
+	margin:auto;
+}
