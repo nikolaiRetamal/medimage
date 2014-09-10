@@ -321,7 +321,7 @@ public class ServiceMeshCrawler extends Service {
 				
 			    //Xpath de détection des hierarchies inférieures correspondantes (dans la limite de : PRECISION_RECHERCHE)
 			    AutoPilotHuge ap = new AutoPilotHuge();
-			    ap.selectXPath("DescriptorRecord[contains(TreeNumberList/TreeNumber, '"+categorie+"')]");
+			    ap.selectXPath("DescriptorRecord/TreeNumberList/TreeNumber[starts-with(text(), '"+categorie+"')]");
 			    //Xpath de contrôle de la précision (dans la limite de : PRECISION_RECHERCHE)
 			    AutoPilotHuge ap2 = new AutoPilotHuge();
 			    ap.selectXPath("DescriptorRecord/TreeNumberList[starts-with(TreeNumber, '"+categorie+"')]");

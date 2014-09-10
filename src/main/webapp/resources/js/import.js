@@ -76,7 +76,7 @@ window.onload = function() {
 	    autoFill: true,
 	    mustMatch: true,
 	    selectFirst: true,
-	    minLength: 3,
+	    minLength: 4,
 	      select: function( event, ui ) {
 	    	  var choix = ui.item.value;
 	          console.log( "le User a choisi"+ choix);

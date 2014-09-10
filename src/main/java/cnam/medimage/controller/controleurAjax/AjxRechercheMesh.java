@@ -50,6 +50,7 @@ public class AjxRechercheMesh {
 		System.out.println("Ajax de parse du mesh");
 		List<TagMesh> result = null;
 		
+		//On renvoie une TreeMap pour classer alphabétiquement les réponses
 		TreeMap<String, String> indexes = new TreeMap<String, String>(new Comparator<String>() {
 		    public int compare(String o1, String o2) {
 		        return o1.toLowerCase().compareTo(o2.toLowerCase());
@@ -57,7 +58,6 @@ public class AjxRechercheMesh {
 		});
 		
 		try{
-
 			result = searchResultFromXml(tagName, request);
 			//result = searchResultFromBase(tagName);
 			

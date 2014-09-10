@@ -12,8 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeController {
 
 	@RequestMapping(value="/")
-	public ModelAndView test(HttpServletResponse response) throws IOException{
-		return new ModelAndView("import");
+	public String test(HttpServletResponse response) throws IOException{
+		return "redirect:/import";
 	}
 	@RequestMapping(value="/cacahouetes")
 	public String cacahouetes(HttpServletResponse response) throws IOException{
