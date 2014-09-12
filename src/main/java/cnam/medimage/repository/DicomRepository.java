@@ -1,5 +1,7 @@
 package cnam.medimage.repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -62,5 +64,43 @@ public class DicomRepository {
 	}
 	public Dicom findOne(UUID uuid) {
 		return persistence.findByKey(uuid, Dicom.class);
+	}
+
+	
+	public List<Dicom> findDicomByTagNom(String tagNom) {
+		
+		//On va chercher les Dicom UUID dans la table de jointure tag
+		TagRepository tagRepo = new TagRepository();
+		List<Tag> tags = tagRepo.findByNom(tagNom);
+		
+		System.out.println(" Combien de tags ? "+tags.size());
+		
+		ArrayList<UUID> list_id_dicom = new ArrayList<UUID>();
+		
+		for(Tag t:tags){
+			System.out.println("Le tag est null ? "+(t == null  ? "OUI":t));
+			System.out.println(" UUID ? "+t.getId().getId_dicom());
+			list_id_dicom.add(t.getId().getId_dicom());
+		}
+//		
+//		//On traite les résultats avec une map pour éviter les doublons
+//		HashMap<UUID,Dicom> resultat = new HashMap<UUID,Dicom>();
+//		
+//		//On itère pour chaque Dicom Remontés
+//		for(Tag t:tags){
+//			
+//			//Si le résultat ne contient pas encore le Dicom
+//			if(!resultat.containsKey(t.getId_dicom())){
+//				resultat.put(t.getId_dicom(), findOne(t.getId_dicom()));
+//			}
+//						
+//		}
+//		
+//		return (List<Dicom>)resultat.values();
+//		
+
+		SelectBuilder<Dicom> select = persistence.selectBuilder(Dicom.class);
+		select.in("id_dicom", list_id_dicom.get(0), list_id_dicom.get(1));
+		return select.execute();
 	}
 }

@@ -5,46 +5,37 @@ import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-
-import org.easycassandra.Index;
 
 @Entity(name = "tag") 
 public class Tag implements Serializable{
 	
 	private static final long serialVersionUID = 3L;
 	
-	@Id
-	@Column
-	private UUID id_dicom;
-	@Index
-	@Column
-	private String nom;
+	@EmbeddedId
+	private IdTag id;
+	
 	@Column
 	private Boolean codifie;
 	
-	public Tag(UUID id_dicom, String nom, Boolean codifie) {
-		super();
-		this.id_dicom = id_dicom;
-		this.nom = nom;
+	public Tag (UUID id_dicom, String nom, Boolean codifie){
+		this.id = new IdTag(id_dicom, nom);
 		this.codifie = codifie;
 	}
 
-	public UUID getId_dicom() {
-		return id_dicom;
+	public Tag(IdTag id, Boolean codifie) {
+		super();
+		this.id = id;
+		this.codifie = codifie;
 	}
 
-	public void setId_dicom(UUID id_dicom) {
-		this.id_dicom = id_dicom;
+	public IdTag getId() {
+		return id;
 	}
 
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
+	public void setId(IdTag id) {
+		this.id = id;
 	}
 
 	public Boolean getCodifie() {

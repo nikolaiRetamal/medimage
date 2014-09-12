@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.easycassandra.persistence.cassandra.Persistence;
 
+import cnam.medimage.bean.MetaData;
 import cnam.medimage.bean.Tag;
 
 public class TagRepository {
@@ -12,20 +13,28 @@ public class TagRepository {
 	private Persistence persistence;
 	
 	public List<Tag> findByNom(String nom) {
-		return persistence.findByIndex("nom", nom, Tag.class);
+		return persistence.findByIndex( nom, Tag.class);
 	}
 
+	public List<Tag> find(String nom) {
+		return persistence.selectBuilder(Tag.class).eq("nom", nom).execute();
+	}
 	
 	{
 		this.persistence = CassandraManager.INSTANCE.getPersistence();
 	}
 
 
-	public void save(Tag user) {
-		persistence.insert(user);
+	public void save(Tag tag) {
+		persistence.insert(tag);
 	}
 
 	public Tag findByDicomId(UUID uuid) {
 		return persistence.findByKey(uuid, Tag.class);
 	}
+	
+	public List<Tag> findAll(){
+		return persistence.findAll(Tag.class);
+	}
+	
 }

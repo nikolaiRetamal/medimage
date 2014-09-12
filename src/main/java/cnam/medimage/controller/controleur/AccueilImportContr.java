@@ -73,7 +73,7 @@ public class AccueilImportContr implements Controller{
 		this.examen.setNom_usage(importForm.getNom_usage());
 		this.examen.setTags(new ArrayList<String>());
 		for(String s:  request.getParameter("chosenTagsValue").split("\n")){
-			this.examen.getTags().add(s);
+			this.examen.getTags().add(s.trim());
 		}
 		if(fileMap.size() > 1){
 			this.dir_name = user + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen();

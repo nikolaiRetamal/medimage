@@ -303,7 +303,7 @@ public class ServiceMeshCrawler extends Service {
 		//On arrive avec un mot-clé ou plutôt son DescriptorUI et il faut retrouver toutes ses arborescences filles
 		// Pour commencer on utilise ce qu'on a déjà : 
 		TagMesh tagOriginal = getDescriptorUI(descriptorUI);
-		System.out.println("tagOriginal est créé");
+
 		//On oublie pas la requête d'origine
 		resultat.add(descriptorUI);
 
@@ -316,15 +316,16 @@ public class ServiceMeshCrawler extends Service {
     	    VTDNavHuge vn = vg.getNav();
     	    
 			for(String categorie:tagOriginal.getCategories()){
-				
-				System.out.println("Itération pour : "+categorie);
-				
+
+				//On vérifie la profondeur du Descriptor dans l'arbre du Mesh
+				//La position dans l'arbre est définie par le(s) TreeNumber du Descriptor
+				//Ils sont sous la forme A01.123.456.789 le plus de chiffres, le plus profond
+				//On limite la recherche à PRECISION_RECHERCHE de profondeurs après le terme souhaité
+			    int precision = categorie.split("\\.").length;				
+
 			    //Xpath de détection des hierarchies inférieures correspondantes (dans la limite de : PRECISION_RECHERCHE)
-			    AutoPilotHuge ap = new AutoPilotHuge();
-			    ap.selectXPath("DescriptorRecord/TreeNumberList/TreeNumber[starts-with(text(), '"+categorie+"')]");
-			    //Xpath de contrôle de la précision (dans la limite de : PRECISION_RECHERCHE)
-			    AutoPilotHuge ap2 = new AutoPilotHuge();
-			    ap.selectXPath("DescriptorRecord/TreeNumberList[starts-with(TreeNumber, '"+categorie+"')]");
+				AutoPilotHuge ap = new AutoPilotHuge();
+			    ap.selectXPath("DescriptorRecord[starts-with(TreeNumberList/TreeNumber, '"+categorie+"')]");
 				
 			    	VTDNavHuge vnClone = vn.cloneNav();
 		        	ap.bind(vnClone);
@@ -332,28 +333,31 @@ public class ServiceMeshCrawler extends Service {
 		        	// apply XPath to the VTDNav instance, you can associate ap to different vns
 			        // AutoPilot moves the cursor for you, as it returns the index value of the evaluated node
 			        while((i=ap.evalXPath())!=-1){
-						System.out.println("Xpath Trouvé"); 
-			        	//On contrôle qu'on est bien à un niveau de hiérarchie exploitable	
-				        ap2.bind(vnClone);
-				        while(ap2.evalXPath()!=-1){
-				        	
-				            j = vnClone.getText();
-			                if (j != -1) System.out.println("TEST DES CATEGORIES : "+vnClone.toString(j));
-				        	
-				        }
-			        	//String hierarchie = ;
 			        	
-			        	//On crée le tag
-			        	TagMesh tag = tagBuilder(vn, i);
+			        	 //On a trouvé une branche sous la catégorie cherché
+			        	//On crée le tag équivalent
+		        		 TagMesh tag = tagBuilder(vnClone, i);
+		        		 
+		        		 for(String cat:tag.getCategories()){
+		        			 
+		        			// precision + PRECISION_RECHERCHE < à la profondeur	 
+		        			//On filtre le tag, s'il est trop profond on ne le traite pas
+		        			 if(	 (cat.startsWith(categorie) &&
+		        					 (precision+PRECISION_RECHERCHE)>=cat.split("\\.").length) 		        					 
+		        					 && !resultat.contains(tag.getIdTag()) ){
+		        				 
+		        				 resultat.add(tag.getIdTag());
+		        				 break;
+		        				 
+		        			 }
+		        				 
+		                 }
+		            	
 			            
-			        }     
-		        
-		        	
-		        	
-		        
+			        } 
+			        
 			}
-		
-		
+		        		
         }
 
 		System.out.println("Sortie de getNuageRechercheFromDescriptorUI()");

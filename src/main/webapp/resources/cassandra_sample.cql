@@ -29,6 +29,7 @@ CREATE COLUMNFAMILY medimage.tag (
     codifie boolean,
     PRIMARY KEY (id_dicom, nom)
 );
+CREATE INDEX ON medimage.tag (nom);
 
 //DROP COLUMNFAMILY medimage.metadata;
 CREATE COLUMNFAMILY medimage.metadata (

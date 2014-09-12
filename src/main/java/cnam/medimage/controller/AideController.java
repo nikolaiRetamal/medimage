@@ -1,6 +1,7 @@
 package cnam.medimage.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -11,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import cnam.medimage.bean.Dicom;
+import cnam.medimage.bean.Tag;
 import cnam.medimage.bean.TagMesh;
 import cnam.medimage.repository.DicomRepository;
 import cnam.medimage.repository.TagMeshRepository;
+import cnam.medimage.repository.TagRepository;
+import cnam.medimage.repository.TagRepository;
 import cnam.medimage.service.ServiceMeshCrawler;
 
 @org.springframework.stereotype.Controller
@@ -26,13 +31,22 @@ public class AideController implements Controller{
 		
 		System.out.println("Je suis dans le contrôleur de l'aide");
 										
-		ServiceMeshCrawler serviceMeshCrawler = ServiceMeshCrawler.getInstance(request);
+		DicomRepository dicomRepo = new DicomRepository();
+		TagRepository tagRepo = new TagRepository();
 		
-		ArrayList<String> reponse = serviceMeshCrawler.getNuageRechercheFromDescriptorUI("D001990");
+		List<Tag> tags = tagRepo.find("D007251");
 		
-		for(String s:reponse){
-			System.out.println(s);
+		System.out.println("Combien de tags ? "+tags.size());
+		
+		for(Tag t:tags){
+			System.out.println("Tag null ? "+(t==null?"OUI":"NON"));
 		}
+		
+//		ArrayList<Dicom> reponse = (ArrayList<Dicom>)dicomRepo.findDicomByTagNom("D007251");
+//		
+//		for(Dicom d:reponse){
+//			System.out.println(d.getNom());
+//		}
 				
 		ModelAndView mav = new ModelAndView();
         mav.setViewName("aide");
