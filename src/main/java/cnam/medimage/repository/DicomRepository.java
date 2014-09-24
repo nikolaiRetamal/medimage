@@ -36,12 +36,12 @@ public class DicomRepository {
 	    Iterator it = dicom.getMetadatas().entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry metadata = (Map.Entry)it.next();
-	        metaRepo.save(new MetaData(dicom.getId_dicom(),
+	        metaRepo.save(new MetaData(UUID.randomUUID(), dicom.getId_dicom(),
 	        		(String) metadata.getKey(),(String) metadata.getValue()));
 	    }
 	    //Sauvegarde des tags dans la table medimage.tag
-	    for(String tag:dicom.getTags()) {
-	    	Tag monTag = new Tag(dicom.getId_dicom(),tag,Boolean.TRUE);
+	    for(String tag : dicom.getTags()) {
+	    	Tag monTag = new Tag(UUID.randomUUID() ,dicom.getId_dicom(),tag,Boolean.TRUE);
 	    	
 	    	//Détection des tags codifiés des non-codifiés
 	    	//On split le tag sur le caractère "D" et on tente de faire un Integer avec la deuxième partie
@@ -79,8 +79,8 @@ public class DicomRepository {
 		
 		for(Tag t:tags){
 			System.out.println("Le tag est null ? "+(t == null  ? "OUI":t));
-			System.out.println(" UUID ? "+t.getId().getId_dicom());
-			list_id_dicom.add(t.getId().getId_dicom());
+			System.out.println(" UUID ? "+t.getId_dicom());
+			list_id_dicom.add(t.getId_dicom());
 		}
 //		
 //		//On traite les résultats avec une map pour éviter les doublons

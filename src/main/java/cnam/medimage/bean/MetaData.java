@@ -13,6 +13,9 @@ public class MetaData implements Serializable{
 	private static final long serialVersionUID = 3L;
 	@Id
 	@Column
+	private UUID id_metadata;
+	
+	@Column
 	private UUID id_dicom;
 	@Id
 	@Column
@@ -21,8 +24,9 @@ public class MetaData implements Serializable{
 	@Column
 	private String value;
 	
-	public MetaData(UUID id_dicom, String key, String value) {
+	public MetaData(UUID id_metadata, UUID id_dicom, String key, String value) {
 		super();
+		this.id_metadata = id_metadata;
 		this.id_dicom = id_dicom;
 		this.key = key;
 		this.value = value;
@@ -46,9 +50,13 @@ public class MetaData implements Serializable{
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
-	
-	
-	
-	
+
+	public UUID getId_metadata() {
+		return id_metadata;
+	}
+
+	public void setId_metadata(UUID id_metadata) {
+		this.id_metadata = id_metadata;
+	}
+		
 }

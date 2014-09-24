@@ -6,8 +6,6 @@ import java.util.UUID;
 import org.easycassandra.persistence.cassandra.Persistence;
 
 import cnam.medimage.bean.Examen;
-import cnam.medimage.bean.MetaData;
-import cnam.medimage.bean.Usage;
 
 public class ExamenRepository {
 

@@ -34,12 +34,12 @@ public class AideController implements Controller{
 		DicomRepository dicomRepo = new DicomRepository();
 		TagRepository tagRepo = new TagRepository();
 		
-		List<Tag> tags = tagRepo.find("D007251");
+		List<Tag> tags = tagRepo.findByNom("D007251");
 		
 		System.out.println("Combien de tags ? "+tags.size());
 		
 		for(Tag t:tags){
-			System.out.println("Tag null ? "+(t==null?"OUI":"NON"));
+			System.out.println("Tag null ? "+(t == null?"OUI":"NON"));
 		}
 		
 //		ArrayList<Dicom> reponse = (ArrayList<Dicom>)dicomRepo.findDicomByTagNom("D007251");

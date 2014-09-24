@@ -15,10 +15,6 @@ public class TagRepository {
 	public List<Tag> findByNom(String nom) {
 		return persistence.findByIndex( nom, Tag.class);
 	}
-
-	public List<Tag> find(String nom) {
-		return persistence.selectBuilder(Tag.class).eq("nom", nom).execute();
-	}
 	
 	{
 		this.persistence = CassandraManager.INSTANCE.getPersistence();

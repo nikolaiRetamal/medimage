@@ -19,25 +19,29 @@ CREATE COLUMNFAMILY medimage.dicom (
     PRIMARY KEY (id_dicom)
 );
 
-INSERT INTO medimage.dicom (id_dicom, date_import, nom, id_user, tags, metadatas)
-VALUES(51eea361-2db2-11e4-8c21-0800200c9a66, 1409120421, 'Baggins', 51ee7c50-2db2-11e4-8c21-0800200c9a66,['pied', 'jambe'], {'calcul':'renal', 'tumeur':'sein'});
-
 //DROP COLUMNFAMILY medimage.tag;
 CREATE COLUMNFAMILY medimage.tag (
+	id_tag uuid,
     id_dicom uuid,
     nom text,
     codifie boolean,
-    PRIMARY KEY (id_dicom, nom)
+    PRIMARY KEY (id_tag)
 );
 CREATE INDEX ON medimage.tag (nom);
+CREATE INDEX ON medimage.tag (id_dicom);
+CREATE INDEX ON medimage.tag (codifie);
 
 //DROP COLUMNFAMILY medimage.metadata;
 CREATE COLUMNFAMILY medimage.metadata (
+	id_metadata uuid,
     id_dicom uuid,
 	key text,
 	value text,
-    PRIMARY KEY (id_dicom, key, value)
+    PRIMARY KEY (id_metadata)
 );
+CREATE INDEX ON medimage.metadata (key);
+CREATE INDEX ON medimage.metadata (value);
+CREATE INDEX ON medimage.metadata (id_dicom);
 
 //DROP TABLE medimage.user;
 CREATE TABLE medimage.user (
@@ -68,13 +72,17 @@ CREATE COLUMNFAMILY medimage.usage (
     PRIMARY KEY (id_usage)
 );
 
-//DROP COLUMNFAMILY medimage.usage_joint;
-CREATE COLUMNFAMILY medimage.usage_joint (
+//DROP COLUMNFAMILY medimage.usage_dicom_user;
+CREATE COLUMNFAMILY medimage.usage_dicom_user(
+    id_usage_dicom_user uuid,
     id_usage uuid,
     id_dicom uuid,
     id_user  uuid,
-    PRIMARY KEY (id_usage, id_dicom, id_user)
+    PRIMARY KEY (id_usage_dicom_user)
 );
+CREATE INDEX ON medimage.usage_dicom_user (id_usage);
+CREATE INDEX ON medimage.usage_dicom_user (id_user);
+CREATE INDEX ON medimage.usage_dicom_user (id_dicom);
 
 //DROP TABLE medimage.examen;
 CREATE TABLE medimage.examen (
@@ -89,13 +97,15 @@ CREATE TABLE medimage.examen (
     PRIMARY KEY (id_examen)
 );
 
-//DROP TABLE medimage.examen;
-CREATE TABLE medimage.examen_joint (
+//DROP TABLE medimage.examen_dicom;
+CREATE TABLE medimage.examen_dicom (
+	id_examen_dicom uuid,
     id_examen uuid,
     id_dicom uuid,
-    PRIMARY KEY (id_examen, id_dicom)
+    PRIMARY KEY (id_examen_dicom)
 );
-
+CREATE INDEX ON medimage.examen_dicom (id_examen);
+CREATE INDEX ON medimage.examen_dicom (id_dicom);
 
 //drop table medimage.tagmesh;
 CREATE COLUMNFAMILY medimage.tagmesh (
