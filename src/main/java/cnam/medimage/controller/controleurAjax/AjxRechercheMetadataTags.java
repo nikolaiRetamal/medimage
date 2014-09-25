@@ -1,6 +1,7 @@
 package cnam.medimage.controller.controleurAjax;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +17,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cnam.medimage.repository.UsageRepository;
+import cnam.medimage.service.ServiceDicoDicomCrawler;
+import cnam.medimage.bean.MetaDataDico;
+import cnam.medimage.bean.TagMesh;
 import cnam.medimage.bean.Usage;
 
 @Controller
-public class AjxRechercheUsage {
-	@RequestMapping(value = "/getUsages", method = RequestMethod.GET )
-	public @ResponseBody Map<String,String> getUsages(@RequestParam("term") String usageSaisi, 
+public class AjxRechercheMetadataTags {
+	@RequestMapping(value = "/getMetadataTags", method = RequestMethod.GET )
+	public @ResponseBody Map<String,String> getUsages(@RequestParam("term") String tagSaisi, 
 			HttpServletResponse response,
 			HttpServletRequest  request) throws IOException {
 		//On renvoie une TreeMap pour classer alphabétiquement les réponses
@@ -30,12 +34,17 @@ public class AjxRechercheUsage {
 		        return o1.toLowerCase().compareTo(o2.toLowerCase());
 		    }
 		});
-			
+		try{
+			ServiceDicoDicomCrawler serviceDicoDicom = ServiceDicoDicomCrawler.getInstance(request);
+			indexes = serviceDicoDicom.findTags(tagSaisi);
+		}catch (Exception e){
+			//traiter recherche vide
+		}
 		UsageRepository usageRepo = new UsageRepository();
 		List<Usage> usagesTrouve = usageRepo.findAll();
 		
 		for(Usage usage : usagesTrouve){
-			if(usage.getNom().toLowerCase().contains(usageSaisi.toLowerCase())){
+			if(usage.getNom().toLowerCase().contains(tagSaisi.toLowerCase())){
 				indexes.put(usage.getNom(),usage.getId_usage().toString());
 			}
 		}

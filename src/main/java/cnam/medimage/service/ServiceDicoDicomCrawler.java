@@ -5,7 +5,10 @@ package cnam.medimage.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -180,11 +183,28 @@ public class ServiceDicoDicomCrawler extends Service {
         	
         }
 		
-
+	    
 		System.out.println("sortie de la génération du dictionnaire");
 	    
 		 return liste;
 		
+	}
+	
+	public TreeMap<String, String> findTags(String tagSaisi) throws IOException, XPathParseException, XPathEvalException, NavException {
+		
+		TreeMap<String, String> indexes = new TreeMap<String, String>(new Comparator<String>() {
+		    public int compare(String o1, String o2) {
+		        return o1.toLowerCase().compareTo(o2.toLowerCase());
+		    }
+		});
+		this.getDictionnaire();
+		for(MetaDataDico metadata :listeElementDico){
+			if(metadata.getNom().toLowerCase().contains(tagSaisi.toLowerCase())){
+				indexes.put(metadata.getNom(),metadata.getId());
+			}
+		}
+		
+		return indexes;
 	}
 	
 	/**
