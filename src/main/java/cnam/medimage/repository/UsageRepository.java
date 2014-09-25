@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.easycassandra.persistence.cassandra.Persistence;
+import org.easycassandra.persistence.cassandra.SelectBuilder;
 
-import cnam.medimage.bean.MetaData;
 import cnam.medimage.bean.Usage;
 
 public class UsageRepository {
@@ -18,6 +18,11 @@ public class UsageRepository {
 	
 	public List<Usage> findById(UUID id_usage) {
 		return persistence.findByIndex("id_usage", id_usage, Usage.class);
+	}
+	
+	public List<Usage> findAll() {
+		SelectBuilder<Usage> select = persistence.selectBuilder(Usage.class);
+		return select.execute();
 	}
 	
 	{

@@ -67,15 +67,15 @@ public class AjxRechercheMesh {
 		}
 		
 		//On sauve les TagMesh Structurés
-				for(TagMesh tag : result){
-					indexes.put(tag.getNom(),tag.getIdTag());
-						for(String s:tag.getSynonymes()){
-							if(s.toLowerCase().contains(tagName.toLowerCase())){
-								indexes.put(s,tag.getIdTag());								
-							}
-						}
-				
-				}		
+		for(TagMesh tag : result){
+			indexes.put(tag.getNom(),tag.getIdTag());
+				for(String s:tag.getSynonymes()){
+					if(s.toLowerCase().contains(tagName.toLowerCase())){
+						indexes.put(s,tag.getIdTag());								
+					}
+				}
+		
+		}		
 		
 		//On affiche les résultats par curiosité
 //		for(TagMesh t:result){

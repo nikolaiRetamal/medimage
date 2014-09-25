@@ -10,6 +10,7 @@
 	<!-- Imports CSS -->
 	<link href="resources/bootstrap/css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="resources/css/autocomplete.css">
 	<link rel="stylesheet" href="resources/css/medimage.css">
 </head>
 <body>
@@ -24,25 +25,36 @@
 					<input type="text" class="form-control" id="usage" name="usage" placeholder="Entrez un usage">
 				</div>
 				<div class="form-group">
-					<label for="metas">Mots-Clés</label>
-					<!-- SELECT SUR LISTE de META -->
-					<input type="text" class="form-control" id="metas" name="metas" placeholder="Entrez des métadonnées">
+					<label for="metaKey">Métadonnée</label>
+					<input type="text" class="form-control" id="metaKey" name="metaKey" 
+					placeholder="Entrez un nom de métadonnée">
+					<label for="metaValue">Valeur</label>
+					<input type="text" class="form-control" id="metaValue" name="metaValue" 
+					placeholder="Entrez une valeur pour la métadonnée">
+					<button type="button" class="btn btn-default" id="ajoutMeta">Ajouter Metadonnée</button>
 				</div>
-				<div class="ui-widget" style="margin-top:2em; font-family:Arial">
-				  	Métadonnées:
-				  	<div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+				<div class="form-group">
+					<label>Métadonnées</label>
+				  	<div id="listeMetadatas" >
+				  	</div>
 				</div>
 				<div class="form-group">
 					<label for="tags">Mots-Clés</label>
 					<input type="text" class="form-control" id="tags" name="tags" placeholder="Entrez des mots-clés">
-				</div>
-				<div class="ui-widget" style="margin-top:2em; font-family:Arial">
-				  	Mots-Clés:
-				  	<div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+				</div>				
+				 <div class="form-group">
+					<label>Mots-Clés</label>
+					<div id="chosenTags"></div>
+					<div id="chosenTagsValue" name="chosenTagsValue" style="display:none;"></div>
 				</div>
 				<button type="submit" class="btn btn-default">Envoyer</button>
 			</form:form>
 		</div>
 	</div>
 </body>
+<!-- Imports JS -->
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="resources/bootstrap/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="resources/js/accueil.js"></script>
 </html>

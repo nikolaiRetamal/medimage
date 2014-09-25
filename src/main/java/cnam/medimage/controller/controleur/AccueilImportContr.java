@@ -31,14 +31,17 @@ import org.springframework.web.servlet.mvc.Controller;
 import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.Examen;
 import cnam.medimage.bean.ImportForm;
+import cnam.medimage.bean.Usage;
 import cnam.medimage.repository.DicomRepository;
 import cnam.medimage.repository.ExamenRepository;
+import cnam.medimage.repository.UsageRepository;
 
 @org.springframework.stereotype.Controller
 public class AccueilImportContr implements Controller{
 	private Examen examen;
 	private String dest_Path;
 	private String dir_name;
+	private Usage usage;
 	private String current_filename;
 	private UUID id_user;
 	private ImportForm importForm;
@@ -60,6 +63,10 @@ public class AccueilImportContr implements Controller{
 	HttpServletResponse response, @ModelAttribute ImportForm form) throws IOException {
 		importForm = form;
 		this.examen = new Examen();
+		this.usage = new Usage();
+		this.usage.setDate_creat(new Date());
+		this.usage.setId_usage(UUID.randomUUID());
+		this.usage.setNom(importForm.getNom_usage());
 		//on enregistre le contexte pour enregistrer plus loin les fichiers
 		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
 		//on récupère les fichiers soumis pour les enregistrer
@@ -99,6 +106,8 @@ public class AccueilImportContr implements Controller{
 		
 		ExamenRepository examRepo = new ExamenRepository();
 		examRepo.save(this.examen);
+		UsageRepository usageRepo = new UsageRepository();
+		usageRepo.save(this.usage);
 		return "ok";
 	}
 	
@@ -131,6 +140,7 @@ public class AccueilImportContr implements Controller{
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);
 		    dicoRepo.save(dicom);
+		    this.usage.getDicoms().add(dicom.getId_dicom());
 		}
 		catch (IOException e) {
 		    e.printStackTrace();
