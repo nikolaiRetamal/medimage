@@ -18,6 +18,13 @@
 		<param-value>C:\mesh\fredesc2014.xml</param-value>
 	</context-param>
 	
+	<context-param>
+		<param-name>DICOM_DICO_FILEPATH</param-name>
+		<param-value>mesh/dictionary.xml</param-value>
+	</context-param>
+	
+	
+	
 	<!-- Fichier de context XML
 		contient : 
 			- Connecteurs CASSANDRA -->

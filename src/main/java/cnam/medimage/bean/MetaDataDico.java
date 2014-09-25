@@ -21,6 +21,13 @@ public class MetaDataDico implements Serializable{
 
 	private String nom;
 	
+	
+	
+	public MetaDataDico() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public MetaDataDico(String id, String keyword, String vr, String nom) {
 		super();
 		this.id = id;
