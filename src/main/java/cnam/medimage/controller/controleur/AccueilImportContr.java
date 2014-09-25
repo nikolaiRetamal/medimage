@@ -190,6 +190,7 @@ public class AccueilImportContr implements Controller{
 	      if(tag == Tag.PixelData)
 	    	  break;
 	      try {
+	    	 
 	         String tagAddr = TagUtils.toString(tag);
 	         String tagVR = object.vrOf(tag).toString();
 	         if (tagVR.equals("SQ")) {
