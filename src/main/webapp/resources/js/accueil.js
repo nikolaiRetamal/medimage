@@ -1,8 +1,8 @@
 var metas = new Array();
 var currentMetaKey ;
-var usage;
 var tagList;
 var metaList;
+var usageList;
 window.onload = function() {
 	
 	$('#ajoutMeta').on('click', function(){
@@ -14,6 +14,7 @@ window.onload = function() {
 		$('#metaValue').val('');
 		$('#listeMetadatas').append(metadataHtml);
 		metas.push(metadata);
+		$('#metadatas').val(JSON.stringify(metas));
 	});
 	
     $( "#tags" ).autocomplete({source: function (request, response) {
@@ -59,16 +60,18 @@ window.onload = function() {
           console.log( "le User a choisi"+ choix);
           $('#chosenTags').append(choix);
           //Par défaut on sauvera la valeur saisie : Saisie libre
-          var val = choix;	          
+          var val = ui.item.value;	          
           if(!jQuery.isEmptyObject(tagList)){
         	 //Si tagList n'est pas vide on sauvera le DescriptorUI
     	    val = $.map( tagList, function(value, key ) { 
-        	  if(choix==key){
+        	  if(val==key){
         		  return value;
         	  }
         	}); 
           } 
-          $('#chosenTagsValue').val($('#chosenTagsValue').val()+val+'\n'); 
+          $('input[name="chosenTagsValue"]').val(
+        		  $('input[name="chosenTagsValue"]').val()
+        		  + val + '\n'); 
           console.log( "Ce qui correspond à "+ val);
         }
     });
@@ -82,7 +85,7 @@ window.onload = function() {
             success: function (data) {
             	//L'ajax renvoie une map<String,String> contenant les 
             	//descriptor ou synonym contenant la chaîne associés à leur DescriptorUI
-            	tagList = data;
+            	usageList = data;
             	//On sauve la liste puisqu'il faudra retrouver les DescriptorUI
 	  			console.log("Retour de recherche : "+data.length+" "+data);
             	if(jQuery.isEmptyObject(data)){
@@ -109,6 +112,9 @@ window.onload = function() {
     messages: {
         noResults: '',
         results: function() {}
+    },
+    select: function( event, ui ) {	          
+    	$('#usageConnu').val(usageList[ui.item.value]);
     }
     });
     $("#metaKey").autocomplete({source: function (request, response) {

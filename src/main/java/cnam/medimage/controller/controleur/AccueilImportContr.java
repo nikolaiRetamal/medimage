@@ -18,6 +18,7 @@ import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.Tag;
 import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.util.TagUtils;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.Examen;
@@ -36,8 +36,8 @@ import cnam.medimage.repository.DicomRepository;
 import cnam.medimage.repository.ExamenRepository;
 import cnam.medimage.repository.UsageRepository;
 
-@org.springframework.stereotype.Controller
-public class AccueilImportContr implements Controller{
+@Controller
+public class AccueilImportContr {
 	private Examen examen;
 	private String dest_Path;
 	private String dir_name;
@@ -105,7 +105,7 @@ public class AccueilImportContr implements Controller{
 		}
 		
 		ExamenRepository examRepo = new ExamenRepository();
-		examRepo.save(this.examen);
+		examRepo.save(this.examen, this.usage.getId_usage());
 		UsageRepository usageRepo = new UsageRepository();
 		usageRepo.save(this.usage);
 		return "ok";

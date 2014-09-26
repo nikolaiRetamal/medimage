@@ -6,6 +6,9 @@ import java.util.UUID;
 import org.easycassandra.persistence.cassandra.Persistence;
 
 import cnam.medimage.bean.Examen;
+import cnam.medimage.bean.Tag;
+import cnam.medimage.bean.TagExamen;
+import cnam.medimage.bean.UsageExamen;
 
 public class ExamenRepository {
 
@@ -23,7 +26,13 @@ public class ExamenRepository {
 		this.persistence = CassandraManager.INSTANCE.getPersistence();
 	}
 
-	public void save(Examen examen) {
+	public void save(Examen examen, UUID id_usage) {
+		UsageExamenRepository usageExamRepo = new UsageExamenRepository();
+		TagExamenRepository tagExamRepo = new TagExamenRepository();
+		usageExamRepo.save(new UsageExamen(UUID.randomUUID(), id_usage, examen.getId_examen()));
+		for(String tag : examen.getTags()) {
+			tagExamRepo.save(new TagExamen(UUID.randomUUID(), tag, examen.getId_examen()));
+	    }
 		persistence.insert(examen);
 	}
 

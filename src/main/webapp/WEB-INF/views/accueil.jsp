@@ -23,6 +23,7 @@
 				<div class="form-group">
 					<label for="usage">Usage</label>
 					<input type="text" class="form-control" id="usage" name="usage" placeholder="Entrez un usage">
+					<input type="hidden" id="usageConnu" name="usageConnu">
 				</div>
 				<div class="form-group">
 					<label for="metaKey">Métadonnée</label>
@@ -34,18 +35,20 @@
 					<button type="button" class="btn btn-default" id="ajoutMeta">Ajouter Metadonnée</button>
 				</div>
 				<div class="form-group">
-					<label>Métadonnées</label>
+					<label>Métadonnées choisies</label>
 				  	<div id="listeMetadatas" >
 				  	</div>
+				  	<input type="hidden" id="metadatas" name="metadatas">
 				</div>
 				<div class="form-group">
 					<label for="tags">Mots-Clés</label>
 					<input type="text" class="form-control" id="tags" name="tags" placeholder="Entrez des mots-clés">
 				</div>				
 				 <div class="form-group">
-					<label>Mots-Clés</label>
+					<label>Mots-Clés choisis</label>
 					<div id="chosenTags"></div>
-					<div id="chosenTagsValue" name="chosenTagsValue" style="display:none;"></div>
+					<div id="chosenTagsValue" style="display:none;"></div>
+					<input type="hidden" name="chosenTagsValue">
 				</div>
 				<button type="submit" class="btn btn-default">Envoyer</button>
 			</form:form>
