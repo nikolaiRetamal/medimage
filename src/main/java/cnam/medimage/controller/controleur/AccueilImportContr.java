@@ -93,21 +93,25 @@ public class AccueilImportContr {
 		}else
 			this.dir_name = "/" + user + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen() + "_";
 		
+		boolean estPremierFichier = true;
 		for (MultipartFile multipartFile : fileMap.values()) {
+			
 			// Sauvegarde physique
 			this.current_filename = multipartFile.getOriginalFilename();
 			sauvegardeFichier(multipartFile);
 			
 			// Sauvegarde en base
-			sauvegardeEnBase();
+			sauvegardeEnBase(estPremierFichier);
 			
-			// adding the file info to the list
+			estPremierFichier = false;
 		}
-		
+		//sauvegarde en base de l'examen
 		ExamenRepository examRepo = new ExamenRepository();
 		examRepo.save(this.examen, this.usage.getId_usage());
+		//sauvegarde en base de l'usage
 		UsageRepository usageRepo = new UsageRepository();
 		usageRepo.save(this.usage);
+		
 		return "ok";
 	}
 	
@@ -118,7 +122,7 @@ public class AccueilImportContr {
 	}
 	
 	/*Sauvevarge en base de données des données d'un fichier*/
-	private void sauvegardeEnBase() {
+	private void sauvegardeEnBase(boolean estPremierFichier) {
 		DicomInputStream dicomInput = null;
 		File fichierDicom = new File(getOutputFilename());
 		DicomRepository dicoRepo = new DicomRepository();		
@@ -130,7 +134,7 @@ public class AccueilImportContr {
 		    dicom.setDate_import(new Date());
 		    dicom.setFile_path(this.dir_name + this.current_filename);
 		    dicom.setId_user(this.id_user);
-
+		    dicom.setNom(this.current_filename);
 		    dicom.setPublique(importForm.isPublique());
 		    dicom.setId_examen(this.examen.getId_examen());
 		    dicom.setNom_examen(this.examen.getNom_examen());
@@ -141,6 +145,10 @@ public class AccueilImportContr {
 		    listHeader(dicomInput.readDicomObject(), dicom);
 		    dicoRepo.save(dicom);
 		    this.usage.getDicoms().add(dicom.getId_dicom());
+		    //Si c'est le premier DICOM de l'examen, alors on enregistre
+		    //les métadonnées du DICOM pour l'examen
+		    if(estPremierFichier)
+		    	this.examen.setMetadatas(dicom.getMetadatas());
 		}
 		catch (IOException e) {
 		    e.printStackTrace();

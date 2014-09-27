@@ -3,8 +3,10 @@ package cnam.medimage.bean;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
+@Entity(name = "tag_examen") 
 public class TagExamen {
 	@Id
 	@Column

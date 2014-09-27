@@ -106,6 +106,8 @@ public class ServiceMeshCrawler extends Service {
 			//Sauvegarde du chemin et du fichier Mesh
 			meshPath = meshFilePath;					
 			mesh = new File(meshFilePath);
+			System.out.println("Création du mesh");
+			System.out.println("mesh = " + mesh);
 			
 		}
 		
@@ -248,8 +250,9 @@ public class ServiceMeshCrawler extends Service {
 	    ap2.selectXPath("DescriptorRecord[contains(lower-case(ConceptList/Concept/TermList/Term/String), lower-case('"+query+"'))]");
 		
 	    VTDGenHuge vg = new VTDGenHuge();
+	    System.out.println("je vais rentrer dans le fichier : " + meshPath);
 	    if (vg.parseFile(meshPath, true, VTDGenHuge.MEM_MAPPED)  ){
-	    
+	    	System.out.println("je rentre dans le fichier : " + meshPath);
 		    VTDNavHuge vn = vg.getNav();
 		    
 	        ap.bind(vn); // apply XPath to the VTDNav instance, you can associate ap to different vns
