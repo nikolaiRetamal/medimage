@@ -1,6 +1,6 @@
 //Liste des tags remontés
 var tagList;
-
+var usageList;
 
 window.onload = function() {
 
@@ -97,5 +97,46 @@ window.onload = function() {
 	    });
 
     });
-	
+    $("#usage").autocomplete({source: function (request, response) {
+        $.ajax({
+            url: "/medimage/getUsages",
+            dataType: "json",	            
+            data: {
+            	term: request.term
+            },
+            success: function (data) {
+            	//L'ajax renvoie une map<String,String> contenant les 
+            	//descriptor ou synonym contenant la chaîne associés à leur DescriptorUI
+            	usageList = data;
+            	//On sauve la liste puisqu'il faudra retrouver les DescriptorUI
+	  			console.log("Retour de recherche : "+data.length+" "+data);
+            	if(jQuery.isEmptyObject(data)){
+            		//En cas de retour vide, on considère que c'est une saisie libre
+            		//on propose la saisie de l'utilisateur
+		  			console.log("Recherche vide");
+		  			response([request.term]);
+            	}else{
+            		//On renvoie une liste ne comprenant que les noms
+		  			console.log("Recherche réussie !");
+	            	response($.map( data, function(value, key ) {return key;}));	            		
+            	}	            
+            },
+            error: function (message) {
+	  			console.log("Retour nok...");
+	  			console.log(message);
+            }
+        });
+    },
+    autoFill: true,
+    mustMatch: true,
+    selectFirst: true,
+    minLength: 4, 
+    messages: {
+        noResults: '',
+        results: function() {}
+    },
+    select: function( event, ui ) {	          
+    	$('#usageConnu').val(usageList[ui.item.value]);
+    }
+    });
 }

@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.easycassandra.persistence.cassandra.Persistence;
 import org.easycassandra.persistence.cassandra.SelectBuilder;
 
+import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.Usage;
 
 public class UsageRepository {
@@ -32,5 +33,4 @@ public class UsageRepository {
 	public void save(Usage usage) {
 		persistence.insert(usage);
 	}
-
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.easycassandra.persistence.cassandra.Persistence;
+import org.easycassandra.persistence.cassandra.SelectBuilder;
 
 import cnam.medimage.bean.TagExamen;
 
@@ -25,5 +26,12 @@ public class TagExamenRepository {
 
 	public void save(TagExamen tagExamen) {
 		persistence.insert(tagExamen);
+	}
+	public List<TagExamen> findAll() {
+		SelectBuilder<TagExamen> select = persistence.selectBuilder(TagExamen.class);
+		return select.execute();
+	}
+	public TagExamen findOne(UUID uuid) {
+		return persistence.findByKey(uuid, TagExamen.class);
 	}
 }

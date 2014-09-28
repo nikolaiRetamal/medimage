@@ -75,6 +75,4 @@ public class Tag implements Serializable{
 		this.codifie = codifie;
 	}
 	
-	
-	
 }

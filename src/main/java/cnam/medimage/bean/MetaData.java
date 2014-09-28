@@ -24,6 +24,12 @@ public class MetaData implements Serializable{
 	@Column
 	private String value;
 	
+	
+	public MetaData() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public MetaData(UUID id_metadata, UUID id_dicom, String key, String value) {
 		super();
 		this.id_metadata = id_metadata;

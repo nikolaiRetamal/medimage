@@ -65,7 +65,10 @@ public class AccueilImportContr {
 		this.examen = new Examen();
 		this.usage = new Usage();
 		this.usage.setDate_creat(new Date());
-		this.usage.setId_usage(UUID.randomUUID());
+		if(!"".equals(importForm.getUsageConnu()))
+			this.usage.setId_usage(UUID.fromString(importForm.getUsageConnu()));
+		else
+			this.usage.setId_usage(UUID.randomUUID());
 		this.usage.setNom(importForm.getNom_usage());
 		//on enregistre le contexte pour enregistrer plus loin les fichiers
 		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
@@ -108,9 +111,12 @@ public class AccueilImportContr {
 		//sauvegarde en base de l'examen
 		ExamenRepository examRepo = new ExamenRepository();
 		examRepo.save(this.examen, this.usage.getId_usage());
+		
 		//sauvegarde en base de l'usage
-		UsageRepository usageRepo = new UsageRepository();
-		usageRepo.save(this.usage);
+		if("".equals(importForm.getUsageConnu())){
+			UsageRepository usageRepo = new UsageRepository();
+			usageRepo.save(this.usage);
+		}
 		
 		return "ok";
 	}

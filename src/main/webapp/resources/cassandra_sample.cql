@@ -33,10 +33,10 @@ CREATE INDEX ON medimage.tag (codifie);
 
 //DROP COLUMNFAMILY medimage.tag_examen;
 CREATE COLUMNFAMILY medimage.tag_examen(
-	id_tag_examen uuid,
+	id uuid,
     id_examen uuid,
     nom text,
-    PRIMARY KEY (id_tag)
+    PRIMARY KEY (id)
 );
 CREATE INDEX ON medimage.tag_examen(id_examen);
 CREATE INDEX ON medimage.tag_examen(nom);
@@ -55,11 +55,11 @@ CREATE INDEX ON medimage.metadata (id_dicom);
 
 //DROP COLUMNFAMILY medimage.metadata_examen;
 CREATE COLUMNFAMILY medimage.metadata_examen (
-	id_metadata_examen uuid,
+	id uuid,
 	id_examen uuid,
 	key text,
 	value text,
-    PRIMARY KEY (id_metadata_examen)
+    PRIMARY KEY (id)
 );
 CREATE INDEX ON medimage.metadata_examen(id_examen);
 CREATE INDEX ON medimage.metadata_examen(key);
@@ -96,11 +96,11 @@ CREATE COLUMNFAMILY medimage.usage (
 
 //DROP COLUMNFAMILY medimage.usage_dicom_user;
 CREATE COLUMNFAMILY medimage.usage_dicom_user(
-    id_usage_dicom_user uuid,
+    id uuid,
     id_usage uuid,
     id_dicom uuid,
     id_user  uuid,
-    PRIMARY KEY (id_usage_dicom_user)
+    PRIMARY KEY (id)
 );
 CREATE INDEX ON medimage.usage_dicom_user (id_usage);
 CREATE INDEX ON medimage.usage_dicom_user (id_user);
@@ -108,10 +108,10 @@ CREATE INDEX ON medimage.usage_dicom_user (id_dicom);
 
 //DROP COLUMNFAMILY medimage.usage_examen;
 CREATE COLUMNFAMILY medimage.usage_examen(
-    id_usage_examen uuid,
+    id uuid,
     id_usage uuid,
     id_examen uuid,
-    PRIMARY KEY (id_usage_examen)
+    PRIMARY KEY (id)
 );
 CREATE INDEX ON medimage.usage_examen (id_usage);
 CREATE INDEX ON medimage.usage_examen (id_examen);
@@ -131,10 +131,10 @@ CREATE TABLE medimage.examen (
 
 //DROP TABLE medimage.examen_dicom;
 CREATE TABLE medimage.examen_dicom (
-	id_examen_dicom uuid,
+	id uuid,
     id_examen uuid,
     id_dicom uuid,
-    PRIMARY KEY (id_examen_dicom)
+    PRIMARY KEY (id)
 );
 CREATE INDEX ON medimage.examen_dicom (id_examen);
 CREATE INDEX ON medimage.examen_dicom (id_dicom);

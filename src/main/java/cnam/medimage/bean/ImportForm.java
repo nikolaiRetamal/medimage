@@ -5,6 +5,7 @@ public class ImportForm {
 	private String nom_examen;
 	private String nom_usage;
 	private boolean publique;
+	private String usageConnu;
 	
 	public String getNom_examen() {
 		return nom_examen;
@@ -23,6 +24,12 @@ public class ImportForm {
 	}
 	public void setPublique(boolean publique) {
 		this.publique = publique;
+	}
+	public String getUsageConnu() {
+		return usageConnu;
+	}
+	public void setUsageConnu(String usageConnu) {
+		this.usageConnu = usageConnu;
 	}
 	
 }

@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.easycassandra.persistence.cassandra.Persistence;
+import org.easycassandra.persistence.cassandra.SelectBuilder;
 
+import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.UsageExamen;
 
 public class UsageExamenRepository {
@@ -22,7 +24,12 @@ public class UsageExamenRepository {
 	{
 		this.persistence = CassandraManager.INSTANCE.getPersistence();
 	}
-
+	
+	public List<UsageExamen> findAll() {
+		SelectBuilder<UsageExamen> select = persistence.selectBuilder(UsageExamen.class);
+		return select.execute();
+	}
+	
 	public void save(UsageExamen examen) {
 		persistence.insert(examen);
 	}

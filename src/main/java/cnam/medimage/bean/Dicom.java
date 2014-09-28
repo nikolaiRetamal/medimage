@@ -1,20 +1,12 @@
 package cnam.medimage.bean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-
-
-
-
-
-
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -34,6 +26,7 @@ public class Dicom implements Serializable{
 	private UUID id_dicom;
 	@Column
 	private UUID id_user;
+	@Index
 	@Column
 	private UUID id_examen;
 	@Column

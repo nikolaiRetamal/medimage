@@ -4,8 +4,6 @@ import org.easycassandra.persistence.cassandra.ClusterInformation;
 import org.easycassandra.persistence.cassandra.EasyCassandraManager;
 import org.easycassandra.persistence.cassandra.Persistence;
 
-import cnam.medimage.bean.Dicom;
-
 public enum CassandraManager {
 	INSTANCE;
 	private EasyCassandraManager easyCassandraManager;

@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.easycassandra.persistence.cassandra.Persistence;
 import org.easycassandra.persistence.cassandra.SelectBuilder;
 
+import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.MetaDataExamen;
 
 public class MetaDataExamenRepository {
@@ -27,5 +28,9 @@ public class MetaDataExamenRepository {
 
 	public void save(MetaDataExamen metadataExamen) {
 		persistence.insert(metadataExamen);
+	}
+	public List<MetaDataExamen> findAll() {
+		SelectBuilder<MetaDataExamen> select = persistence.selectBuilder(MetaDataExamen.class);
+		return select.execute();
 	}
 }

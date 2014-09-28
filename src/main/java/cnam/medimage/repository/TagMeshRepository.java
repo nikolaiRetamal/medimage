@@ -3,7 +3,9 @@ package cnam.medimage.repository;
 import java.util.List;
 
 import org.easycassandra.persistence.cassandra.Persistence;
+import org.easycassandra.persistence.cassandra.SelectBuilder;
 
+import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.TagMesh;
 
 public class TagMeshRepository {
@@ -24,5 +26,9 @@ public class TagMeshRepository {
 
 	public TagMesh findOne(String idTag) {
 		return persistence.findByKey(idTag, TagMesh.class);
+	}
+	public List<TagMesh> findAll() {
+		SelectBuilder<TagMesh> select = persistence.selectBuilder(TagMesh.class);
+		return select.execute();
 	}
 }

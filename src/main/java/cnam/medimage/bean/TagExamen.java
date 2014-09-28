@@ -1,36 +1,46 @@
 package cnam.medimage.bean;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.easycassandra.Index;
+
 @Entity(name = "tag_examen") 
-public class TagExamen {
+public class TagExamen implements Serializable{
+	
+	private static final long serialVersionUID = 3L;
+	
 	@Id
 	@Column
-	private UUID id_tag_examen;
-	
+	private UUID id;
+	@Index
 	@Column
 	private String nom;
-	
+	@Index
 	@Column
 	private UUID id_examen;
 	
-	public TagExamen(UUID id_tag_examen, String nom, UUID id_examen) {
+	public TagExamen() {
 		super();
-		this.id_tag_examen = id_tag_examen;
+	}
+
+	public TagExamen(UUID id, String nom, UUID id_examen) {
+		super();
+		this.id = id;
 		this.nom = nom;
 		this.id_examen = id_examen;
 	}
 
-	public UUID getId_tag_examen() {
-		return id_tag_examen;
+	public UUID getId() {
+		return id;
 	}
 
-	public void setId_tag_examen(UUID id_tag_examen) {
-		this.id_tag_examen = id_tag_examen;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public String getNom() {
@@ -48,6 +58,8 @@ public class TagExamen {
 	public void setId_examen(UUID id_examen) {
 		this.id_examen = id_examen;
 	}
+
+	
 	
 	
 }

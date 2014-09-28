@@ -27,6 +27,7 @@
 				<div class="form-group">
 					<label for="usage">Usage</label>
 					<input type="text" class="form-control" id="usage" name="nom_usage" placeholder="Entrez un usage">
+					<input type="hidden" id="usageConnu" name="usageConnu">
 				</div>
 				<div class="form-group">
 					<label for="examen">Examen</label>
