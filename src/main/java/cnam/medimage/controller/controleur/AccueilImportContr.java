@@ -79,6 +79,7 @@ public class AccueilImportContr {
 		id_user = UUID.randomUUID();
 		this.examen.setId_examen(UUID.randomUUID());
 		this.examen.setId_user(id_user);
+		this.examen.setDate_import(new Date());
 		this.examen.setNom_examen(importForm.getNom_examen());
 		this.examen.setNom_usage(importForm.getNom_usage());
 		this.examen.setTags(new ArrayList<String>());

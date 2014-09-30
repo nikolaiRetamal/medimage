@@ -261,7 +261,10 @@ public class ServiceDicoDicomCrawler extends Service {
         
 		
 		return metaData;
-		
+	}
+	
+	public String formaterTag(String source){
+		return '(' + source.substring(0, 4)+ ',' + source.substring(4) +')';
 	}
 	
 }

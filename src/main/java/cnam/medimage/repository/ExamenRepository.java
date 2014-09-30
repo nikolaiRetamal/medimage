@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.easycassandra.persistence.cassandra.Persistence;
 import org.easycassandra.persistence.cassandra.SelectBuilder;
 
-import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.Examen;
 import cnam.medimage.bean.MetaDataExamen;
 import cnam.medimage.bean.TagExamen;
@@ -32,6 +31,10 @@ public class ExamenRepository {
 	public List<Examen> findAll() {
 		SelectBuilder<Examen> select = persistence.selectBuilder(Examen.class);
 		return select.execute();
+	}
+	
+	public Examen findOne(UUID uuid) {
+		return persistence.findByKey(uuid, Examen.class);
 	}
 	
 	public void save(Examen examen, UUID id_usage) {

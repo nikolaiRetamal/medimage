@@ -104,14 +104,12 @@ public class ServiceMeshCrawler extends Service {
 			//meshFilePath = context.getRealPath(meshFilePath);
 			
 			//Sauvegarde du chemin et du fichier Mesh
-			meshPath = meshFilePath;					
+			meshPath = context.getRealPath(meshFilePath);					
 			mesh = new File(meshFilePath);
 			System.out.println("Création du mesh");
 			System.out.println("mesh = " + mesh);
 			
 		}
-		
-	
 		
 	}
 	
@@ -125,11 +123,6 @@ public class ServiceMeshCrawler extends Service {
 	private static boolean isInit() {
 		return mesh != null;
 	}
-	
-	
-	
-	
-	
 	
 	/**
 	 * 

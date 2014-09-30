@@ -1,5 +1,6 @@
 package cnam.medimage.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,4 +35,14 @@ public class TagExamenRepository {
 	public TagExamen findOne(UUID uuid) {
 		return persistence.findByKey(uuid, TagExamen.class);
 	}
+	
+	public List<UUID> getListeExamens(String nom) {
+		List<TagExamen> tagExams = persistence.findByIndex("nom", nom, TagExamen.class);
+		List<UUID> listeExams = new ArrayList<>();
+		for(TagExamen tagExam : tagExams){
+			listeExams.add(tagExam.getId_examen());
+		}
+		return listeExams;
+	}
+	
 }
