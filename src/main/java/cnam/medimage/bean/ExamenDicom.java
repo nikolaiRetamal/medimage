@@ -27,6 +27,12 @@ public class ExamenDicom implements Serializable{
 	@Column
 	private UUID id_examen;
 	
+	
+	public ExamenDicom() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public ExamenDicom(UUID id, UUID id_dicom, UUID id_examen) {
 		super();
 		this.id = id;

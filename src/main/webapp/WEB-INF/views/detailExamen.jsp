@@ -21,27 +21,47 @@
 	
 		<div class="descriptionExamen">
 		<h1 class="titreRecherche">${titrePage}</h1>
+		<div id="presentationExamen">
+			<div class="blocPresentation">
+				<hr>
+				<div class="colonnePresentation">
+					<span id="libelle">Nom</span><br>
+					<span class="attribut">${examen.nom_examen}</span>
+				</div>
+				<div class="colonnePresentation">
+					<span id="libelle">Date de création</span><br>
+					<span class="attribut">${examen.date_import}</span>
+				</div>
+			</div>
+			<div class="blocPresentation">
+				<hr>
+				<div class="colonnePresentation">
+					<span id="libelle">Usages</span><br>
+					<span class="attribut">
+						${examen.nom_usage}
+					</span>
+				</div>
+				<div class="colonnePresentation">
+					<span id="libelle">Nombre d'images</span><br>
+					<span class="attribut">${examen.nom_examen}</span>
+				</div>
+			</div>
+		</div>
+		<h2>${examen.nom_examen}</h2>
 		<!-- Utiliser http://fooplugins.com/plugins/footable-jquery/#/ -->
 			<table id="dicoms" class="footable tableauFoo">
 				<thead>
 					<tr>
-					<th>
-				    	Examen
-					</th>
-					<th>
-						UUID
-					</th>
-					<th>
-						Date
-					</th>
+						<th>
+					    	Examen
+						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="dicom" items="${dicoms}">
-						<tr>
-							<td>${dicom.nom_examen}</td>
-							<td>${dicom.id_dicom}</td>
-							<td>${dicom.date_import}</td>
+						<tr onclick=
+						"document.location = '/medimage/detailImage?id_examen=${dicom.id_dicom}';">
+							<td>${dicom.nom}</td>
 						</tr>
 					</c:forEach>
 				</tbody>

@@ -41,7 +41,8 @@
 				</thead>
 				<tbody>
 					<c:forEach var="examen" items="${examens}">
-						<tr>
+						<tr onclick=
+						"document.location = '/medimage/detailExamen?id_examen=${examen.id_examen}';">
 							<td>${examen.nom_examen}</td>
 							<td>${examen.nom_usage}</td>
 							<td>${examen.date_import}</td>
