@@ -26,12 +26,11 @@ public class DetailImageContr {
 		//On trouve l'examen avec l'id_examen reçu en paramètre
 		DicomRepository dicomRepo = new DicomRepository();
 		Dicom dicom = dicomRepo.findOne(UUID.fromString(id_dicom));
-		Map<String,String> metadonnees = new HashMap<>();
 		Map<String, Object> param = new HashMap<>();
 		param.put("title", "Image");
 		param.put("titrePage", "Detail Image");
 		param.put("dicom", dicom);
-		ModelAndView mv = new ModelAndView("detailExamen", param);
+		ModelAndView mv = new ModelAndView("detailImage", param);
 		return mv;
 	}
 

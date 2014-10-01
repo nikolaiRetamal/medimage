@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -45,6 +46,7 @@ public class AccueilImportContr {
 	private String current_filename;
 	private UUID id_user;
 	private ImportForm importForm;
+	private List<String> tags;
 
 	@RequestMapping(value="/import")
 	public ModelAndView handleRequest(HttpServletRequest request,
@@ -80,11 +82,16 @@ public class AccueilImportContr {
 		this.examen.setId_examen(UUID.randomUUID());
 		this.examen.setId_user(id_user);
 		this.examen.setDate_import(new Date());
+		System.out.println("date = " + this.examen.getDate_import());
 		this.examen.setNom_examen(importForm.getNom_examen());
 		this.examen.setNom_usage(importForm.getNom_usage());
 		this.examen.setTags(new ArrayList<String>());
 		for(String s:  request.getParameter("chosenTagsValue").split("\n")){
 			this.examen.getTags().add(s.trim());
+		}
+		this.tags = new ArrayList<>();
+		for(String s:  request.getParameter("chosenTagsValueForDicom").split("\n")){
+			this.tags.add(s.trim());
 		}
 		if(fileMap.size() > 1){
 			this.dir_name = user + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen();
@@ -146,7 +153,8 @@ public class AccueilImportContr {
 		    dicom.setId_examen(this.examen.getId_examen());
 		    dicom.setNom_examen(this.examen.getNom_examen());
 		    dicom.setNom_usage(this.examen.getNom_usage());
-		    dicom.setTags(this.examen.getTags());
+		    dicom.setTagsId(this.examen.getTags());
+		    dicom.setTags(this.tags);
 		    //récupération des métadonnées
 		    listMetaInfo(dicomInput.readFileMetaInformation(), dicom);
 		    listHeader(dicomInput.readDicomObject(), dicom);
@@ -177,6 +185,7 @@ public class AccueilImportContr {
 	      DicomElement element = (DicomElement) iter.next();
 	      int tag = element.tag();
 	      try {
+	    	 String tagName = object.nameOf(tag);
 	         String tagAddr = TagUtils.toString(tag);
 	         String tagVR = object.vrOf(tag).toString();
 	         if (tagVR.equals("SQ")) {
@@ -186,7 +195,8 @@ public class AccueilImportContr {
 	            }
 	         }    
 	         String tagValue = object.getString(tag);
-	         dicom.getMetadatas().put(tagAddr, tagValue);
+			dicom.getMetadatas().put(tagName, tagValue);
+			dicom.getMetadataIds().put(tagAddr, tagValue);
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
@@ -205,19 +215,20 @@ public class AccueilImportContr {
 	      if(tag == Tag.PixelData)
 	    	  break;
 	      try {
-	    	 
-	         String tagAddr = TagUtils.toString(tag);
-	         String tagVR = object.vrOf(tag).toString();
-	         if (tagVR.equals("SQ")) {
-	            if (element.hasItems()) {
-	               listHeader(element.getDicomObject(), dicom);
-	               continue;
-	            }
-	         }       	 
-	         String tagValue = object.getString(tag);
-	         dicom.getMetadatas().put(tagAddr, tagValue);
+			String tagName = object.nameOf(tag);
+			String tagAddr = TagUtils.toString(tag);
+			String tagVR = object.vrOf(tag).toString();
+			if (tagVR.equals("SQ")) {
+			   if (element.hasItems()) {
+			      listHeader(element.getDicomObject(), dicom);
+			      continue;
+			   }
+			}       	 
+			String tagValue = object.getString(tag);
+			dicom.getMetadatas().put(tagName, tagValue);
+			dicom.getMetadataIds().put(tagAddr, tagValue);
 	      } catch (Exception e) {
-	         e.printStackTrace();
+			e.printStackTrace();
 	      }
 	   }  
 	}

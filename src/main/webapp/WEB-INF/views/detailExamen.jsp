@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 
 <html>
@@ -30,15 +31,18 @@
 				</div>
 				<div class="colonnePresentation">
 					<span id="libelle">Date de création</span><br>
-					<span class="attribut">${examen.date_import}</span>
+					<span class="attribut">
+						<fmt:formatDate value="${examen.date_import}" 
+												pattern="dd-MM-yyyy HH:mm:ss" />
+					</span>
 				</div>
 			</div>
 			<div class="blocPresentation">
 				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Usages</span><br>
+					<span id="libelle">Usage</span><br>
 					<span class="attribut">
-						${examen.nom_usage}
+						${nbImages}
 					</span>
 				</div>
 				<div class="colonnePresentation">
@@ -60,7 +64,7 @@
 				<tbody>
 					<c:forEach var="dicom" items="${dicoms}">
 						<tr onclick=
-						"document.location = '/medimage/detailImage?id_examen=${dicom.id_dicom}';">
+						"document.location = '/medimage/detailImage?id_dicom=${dicom.id_dicom}';">
 							<td>${dicom.nom}</td>
 						</tr>
 					</c:forEach>
@@ -84,9 +88,7 @@
 <script src="resources/js/footable.paginate.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
-
     $('.footable').footable();
-
 });
 </script>
 </html>

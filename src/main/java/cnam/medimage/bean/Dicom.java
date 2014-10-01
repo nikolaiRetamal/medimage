@@ -45,13 +45,21 @@ public class Dicom implements Serializable{
 	@ElementCollection
 	@Column
 	private List<String> tags;
+	//Non présent en base, sert à stocker temporairement
+	//les id tag pour les enregistrer dans les tables d'association
+	private List<String> tagsId;
 	@ElementCollection
 	@Column
 	private Map<String, String> metadatas;
+	//Non présent en base, sert à stocker temporairement
+	//les id metadata pour les enregistrer dans les tables d'association
+	private Map<String, String> metadataIds;
 	
 	public Dicom() {
 		this.tags = new LinkedList<>();
+		this.tagsId = new LinkedList<>();
 		this.metadatas = new HashMap<>();
+		this.metadataIds = new HashMap<>();
 	}
 
 	public UUID getId_dicom() {
@@ -140,6 +148,22 @@ public class Dicom implements Serializable{
 
 	public void setMetadatas(Map<String, String> metadatas) {
 		this.metadatas = metadatas;
+	}
+
+	public Map<String, String> getMetadataIds() {
+		return metadataIds;
+	}
+
+	public void setMetadataIds(Map<String, String> metadataIds) {
+		this.metadataIds = metadataIds;
+	}
+
+	public List<String> getTagsId() {
+		return tagsId;
+	}
+
+	public void setTagsId(List<String> tagsId) {
+		this.tagsId = tagsId;
 	}
 
 	

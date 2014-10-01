@@ -36,14 +36,14 @@ public class DicomRepository {
 		TagRepository tagRepo = new TagRepository();
 		
 		//Sauvegarde des MetaDatas dans la table medimage.metadata
-	    Iterator it = dicom.getMetadatas().entrySet().iterator();
+	    Iterator it = dicom.getMetadataIds().entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry metadata = (Map.Entry)it.next();
 	        metaRepo.save(new MetaData(UUID.randomUUID(), dicom.getId_dicom(),
 	        		(String) metadata.getKey(),(String) metadata.getValue()));
 	    }
 	    //Sauvegarde des tags dans la table medimage.tag
-	    for(String tag : dicom.getTags()) {
+	    for(String tag : dicom.getTagsId()) {
 	    	Tag monTag = new Tag(UUID.randomUUID() ,dicom.getId_dicom(),tag,Boolean.TRUE);
 	    	
 	    	//Détection des tags codifiés des non-codifiés

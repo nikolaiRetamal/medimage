@@ -42,6 +42,7 @@
 				  	Mots-Clés affectés à l'examen :</label>
 					<textarea class="form-control" id="chosenTags" name="chosenTags" disabled="disabled"></textarea>
 					<textarea class="form-control" id="chosenTagsValue" name="chosenTagsValue" disabled="disabled" style="display:none;"></textarea>
+					<input type="hidden" id="chosenTagsValueForDicom" name="chosenTagsValueForDicom">
 				</div>
 				<form:checkbox path="publique" /> Publique
 				<button type="submit" class="btn btn-default">Envoyer</button>

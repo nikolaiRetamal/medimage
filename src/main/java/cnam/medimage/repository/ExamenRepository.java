@@ -53,7 +53,7 @@ public class ExamenRepository {
 		for (Map.Entry<String, String> entry : examen.getMetadatas().entrySet()){
 			metadataExamenRepo.save(new MetaDataExamen(UUID.randomUUID(), examen.getId_examen(), entry.getKey(), entry.getValue()));
 		}
-
+		System.out.println("date avant enregistrement = " + examen.getDate_import());
 		//Sauvegarde en base de l'examen
 		persistence.insert(examen);
 	}

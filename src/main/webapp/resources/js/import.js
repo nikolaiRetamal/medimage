@@ -1,5 +1,6 @@
 //Liste des tags remontés
 var tagList;
+var tagListId;
 var usageList;
 
 window.onload = function() {
@@ -84,13 +85,14 @@ window.onload = function() {
 	          //Par défaut on sauvera la valeur saisie : Saisie libre
 	          var val = choix;	          
 	          if(!jQuery.isEmptyObject(tagList)){
-	        	 //Si tagList n'est pas vide on sauvera le DescriptorUI
+	        	//Si tagList n'est pas vide on sauvera le DescriptorUI
         	    val = $.map( tagList, function(value, key ) { 
 	        	  if(choix==key){
 	        		  return value;
 	        	  }
 	        	}); 
-	          } 
+	          }
+	          $('#chosenTagsValueForDicom').val($('#chosenTagsValueForDicom').val()+choix+'\n');
 	          $('#chosenTagsValue').val($('#chosenTagsValue').val()+val+'\n'); 
 	          console.log( "Ce qui correspond à "+ val);
 	        }

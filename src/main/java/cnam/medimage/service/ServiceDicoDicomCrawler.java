@@ -207,6 +207,15 @@ public class ServiceDicoDicomCrawler extends Service {
 		return indexes;
 	}
 	
+	public String findLibelle(String id_tag) throws IOException, XPathParseException, XPathEvalException, NavException {
+		this.getDictionnaire();
+		for(MetaDataDico metadata :listeElementDico){
+			if(metadata.getId().equals(id_tag))
+				return metadata.getNom();
+		}
+		return "";
+	}
+	
 	/**
 	 * @throws PilotException 
 	 * @throws XPathParseExceptionHuge 

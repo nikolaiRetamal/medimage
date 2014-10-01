@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 
 <html>
@@ -25,54 +26,74 @@
 			<div class="blocPresentation">
 				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Nom</span><br>
-					<span class="attribut">${examen.nom_examen}</span>
+					<span id="libelle">Examen</span>
+					<span class="attribut">${dicom.nom_examen}</span>
 				</div>
 				<div class="colonnePresentation">
-					<span id="libelle">Date de création</span><br>
-					<span class="attribut">${examen.date_import}</span>
+					<span id="libelle">Date de création</span>
+					<span class="attribut">
+						<fmt:formatDate value="${dicom.date_import}" 
+						pattern="dd-MM-yyyy HH:mm:ss" />
+					</span>
 				</div>
 			</div>
 			<div class="blocPresentation">
 				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Usages</span><br>
+					<span id="libelle">Usage</span>
 					<span class="attribut">
-						${examen.nom_usage}
+						${dicom.nom_usage}
+					</span>
+					<span id="libelle">Nom de l'image</span>
+					<span class="attribut">
+						${dicom.nom}
 					</span>
 				</div>
+			</div>
+			<div class="blocPresentation">
+				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Nombre d'images</span><br>
-					<span class="attribut">${examen.nom_examen}</span>
+					<span id="libelle">Tags</span>
+					<span class="attribut">
+						<c:forEach var="tag" items="${dicom.tags}" varStatus="status">
+							${tag}
+							<c:if test="${not status.last}">
+							, 
+							</c:if>
+						</c:forEach>
+					</span>
 				</div>
 			</div>
 		</div>
-		<h2>${examen.nom_examen}</h2>
+			
 		<!-- Utiliser http://fooplugins.com/plugins/footable-jquery/#/ -->
-			<table id="dicoms" class="footable tableauFoo">
-				<thead>
+		<table id="metadonnees" class="footable tableauFoo" data-page-size="20">
+			<thead>
+				<tr>
+					<th>
+				    	Nom Métadonnée
+					</th>
+					<th>
+				    	Valeur
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="metadata" items="${dicom.metadatas}">
 					<tr>
-						<th>
-					    	Examen
-						</th>
+						<td>${metadata.key}</td>
+						<td>${metadata.value}</td>
 					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="dicom" items="${dicoms}">
-						<tr onclick=
-						"document.location = '/medimage/detailImage?id_examen=${dicom.id_dicom}';">
-							<td>${dicom.nom}</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="3">
-							<div class="pagination pagination-centered hide-if-no-paging"></div>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
+				</c:forEach>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="3">
+						<div class="pagination pagination-centered hide-if-no-paging"></div>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
 		</div>
 	</div>
 </body>
