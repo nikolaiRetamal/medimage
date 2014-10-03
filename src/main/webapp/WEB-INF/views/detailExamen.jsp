@@ -26,11 +26,11 @@
 			<div class="blocPresentation">
 				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Nom</span><br>
+					<span class="libelle">Nom</span><br>
 					<span class="attribut">${examen.nom_examen}</span>
 				</div>
 				<div class="colonnePresentation">
-					<span id="libelle">Date de création</span><br>
+					<span class="libelle">Date de création</span><br>
 					<span class="attribut">
 						<fmt:formatDate value="${examen.date_import}" 
 												pattern="dd-MM-yyyy HH:mm:ss" />
@@ -40,24 +40,23 @@
 			<div class="blocPresentation">
 				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Usage</span><br>
+					<span class="libelle">Usage</span><br>
 					<span class="attribut">
 						${nbImages}
 					</span>
 				</div>
 				<div class="colonnePresentation">
-					<span id="libelle">Nombre d'images</span><br>
+					<span class="libelle">Nombre d'images</span><br>
 					<span class="attribut">${examen.nom_examen}</span>
 				</div>
 			</div>
 		</div>
-		<h2>${examen.nom_examen}</h2>
 		<!-- Utiliser http://fooplugins.com/plugins/footable-jquery/#/ -->
 			<table id="dicoms" class="footable tableauFoo">
 				<thead>
 					<tr>
 						<th>
-					    	Examen
+					    	Images
 						</th>
 					</tr>
 				</thead>

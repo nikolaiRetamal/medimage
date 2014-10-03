@@ -28,7 +28,7 @@ public class DetailImageContr {
 		Dicom dicom = dicomRepo.findOne(UUID.fromString(id_dicom));
 		Map<String, Object> param = new HashMap<>();
 		param.put("title", "Image");
-		param.put("titrePage", "Detail Image");
+		param.put("titrePage", "Detail de l'image");
 		param.put("dicom", dicom);
 		ModelAndView mv = new ModelAndView("detailImage", param);
 		return mv;

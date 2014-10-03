@@ -1,7 +1,10 @@
+html{
+	font-size: 12px;
+}
 #header{
 	width:100%;
 	background:#79D2FF;	
-	overflow: hidden; /*Empêche height = 0*/
+	overflow: hidden; /*EmpÃªche height = 0*/
 	padding:5px 0;
 }
 #header img{
@@ -77,4 +80,25 @@ li.options{
 	margin-right: 7px;
 	background: #777;
 	overflow: auto;
+}
+#presentationExamen{
+	max-width:1280px;
+	margin:0 auto 30px auto;
+	margin:
+}
+.blocPresentation{
+	overflow:auto;
+	width:100%;
+	clear:both;
+}
+.colonnePresentation{
+	float:left;
+	margin-right:150px;
+}
+.libelle{
+	font-weight:bold;
+	font-size:16px;
+}
+table{
+	margin-top:20px;
 }

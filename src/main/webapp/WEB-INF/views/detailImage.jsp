@@ -26,11 +26,11 @@
 			<div class="blocPresentation">
 				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Examen</span>
+					<span class="libelle">Examen</span><br>
 					<span class="attribut">${dicom.nom_examen}</span>
 				</div>
 				<div class="colonnePresentation">
-					<span id="libelle">Date de création</span>
+					<span class="libelle">Date de création</span><br>
 					<span class="attribut">
 						<fmt:formatDate value="${dicom.date_import}" 
 						pattern="dd-MM-yyyy HH:mm:ss" />
@@ -40,11 +40,13 @@
 			<div class="blocPresentation">
 				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Usage</span>
+					<span class="libelle">Usage</span><br>
 					<span class="attribut">
 						${dicom.nom_usage}
 					</span>
-					<span id="libelle">Nom de l'image</span>
+				</div>
+				<div class="colonnePresentation">
+					<span class="libelle">Nom de l'image</span><br>
 					<span class="attribut">
 						${dicom.nom}
 					</span>
@@ -53,7 +55,7 @@
 			<div class="blocPresentation">
 				<hr>
 				<div class="colonnePresentation">
-					<span id="libelle">Tags</span>
+					<span class="libelle">Tags</span><br>
 					<span class="attribut">
 						<c:forEach var="tag" items="${dicom.tags}" varStatus="status">
 							${tag}
@@ -105,9 +107,7 @@
 <script src="resources/js/footable.paginate.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
-
     $('.footable').footable();
-
 });
 </script>
 </html>

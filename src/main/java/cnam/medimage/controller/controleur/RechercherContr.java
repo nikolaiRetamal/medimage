@@ -99,6 +99,7 @@ public class RechercherContr {
 				tag = s.trim();
 				tagsExams = tagExamRepo.getListeExamens(tag);
 				for(UUID tagExam : tagsExams){
+					System.out.println("exam_tag = " + tagExam);
 					id_exam_tags.add(tagExam);
 				}
 			}
@@ -106,6 +107,7 @@ public class RechercherContr {
 		}
 		
 		Set<UUID> triIntermediaire = new HashSet<>();
+		
 		//Intersection des id_exam_usages et id_exam_metas
 		if(id_exam_usages.isEmpty() || id_exam_metas.isEmpty()){
 			triIntermediaire = id_exam_usages.isEmpty() ? id_exam_metas : id_exam_usages;
@@ -113,14 +115,14 @@ public class RechercherContr {
 			if(id_exam_usages.size()>=id_exam_metas.size()){
 				for(UUID id_exam_usage : id_exam_usages){
 					for(UUID id_exam_meta : id_exam_metas){
-						if(id_exam_usage == id_exam_meta)
+						if(id_exam_usage.compareTo(id_exam_meta) == 0)
 							triIntermediaire.add(id_exam_usage);
 					}
 				}
 			}else{
 				for(UUID id_exam_meta : id_exam_metas){
 					for(UUID id_exam_usage : id_exam_usages){
-						if(id_exam_usage == id_exam_meta)
+						if(id_exam_usage.compareTo(id_exam_meta) == 0)
 							triIntermediaire.add(id_exam_usage);
 					}
 				}
@@ -129,20 +131,22 @@ public class RechercherContr {
 		System.out.println("apres premier tri : "+ triIntermediaire.size());
 		//Intersection avec les tags
 		if(triIntermediaire.isEmpty() || id_exam_tags.isEmpty()){
-			id_examens = triIntermediaire.isEmpty() ? id_exam_tags : triIntermediaire;
+			id_examens = triIntermediaire.isEmpty() ? triIntermediaire : id_exam_tags;
 		}else{
 			if(triIntermediaire.size()>=id_exam_tags.size()){
-				for(UUID id_exam_inter : id_exam_usages){
-					for(UUID id_exam_tag : id_exam_tags){
-						if(id_exam_inter == id_exam_tag)
-							triIntermediaire.add(id_exam_inter);
+				System.out.println("je suis ici");
+				for(UUID id_exam_inter : triIntermediaire){
+					for(UUID id_exam_tag : id_exam_tags ){
+						System.out.println("id_exam_inter = " + id_exam_inter +  " <-> " + id_exam_tag);
+						if(id_exam_inter.compareTo(id_exam_tag) == 0)
+							id_examens.add(id_exam_inter);
 					}
 				}
 			}else{
 				for(UUID id_exam_tag : id_exam_tags){
 					for(UUID id_exam_inter : triIntermediaire){
-						if(id_exam_inter == id_exam_tag)
-							triIntermediaire.add(id_exam_inter);
+						if(id_exam_inter.compareTo(id_exam_tag) == 0)
+							id_examens.add(id_exam_inter);
 					}
 				}
 			}

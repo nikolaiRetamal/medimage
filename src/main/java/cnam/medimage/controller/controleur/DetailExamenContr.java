@@ -36,7 +36,7 @@ public class DetailExamenContr {
 		System.out.println("date = " + examen.getDate_import());
 		Map<String, Object> param = new HashMap<>();
 		param.put("title", "Examen");
-		param.put("titrePage", "Detail Examen");
+		param.put("titrePage", "Detail de l'examen");
 		param.put("nbImages", dicoms.size());
 		param.put("examen", examen);
 		param.put("dicoms", dicoms);
