@@ -66,6 +66,15 @@
 					</span>
 				</div>
 			</div>
+			<div class="blocPresentation">
+				<hr>
+				<div class="colonnePresentation">
+					<span class="libelle" onclick=
+						"document.location = '/medimage/telecharger?id_dicom=${dicom.id_dicom}';">
+						Telecharger
+					</span><br>
+				</div>
+			</div>
 		</div>
 			
 		<!-- Utiliser http://fooplugins.com/plugins/footable-jquery/#/ -->

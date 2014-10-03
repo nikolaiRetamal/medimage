@@ -131,7 +131,7 @@ public class RechercherContr {
 		System.out.println("apres premier tri : "+ triIntermediaire.size());
 		//Intersection avec les tags
 		if(triIntermediaire.isEmpty() || id_exam_tags.isEmpty()){
-			id_examens = triIntermediaire.isEmpty() ? triIntermediaire : id_exam_tags;
+			id_examens = triIntermediaire.isEmpty() ? id_exam_tags : triIntermediaire;
 		}else{
 			if(triIntermediaire.size()>=id_exam_tags.size()){
 				System.out.println("je suis ici");
