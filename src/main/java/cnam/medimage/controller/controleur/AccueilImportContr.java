@@ -126,7 +126,7 @@ public class AccueilImportContr {
 			usageRepo.save(this.usage);
 		}
 		
-		return "ok";
+		return "{\"id_examen\" : \""+ this.examen.getId_examen().toString()+"\"}";
 	}
 	
 	/*Sauvegarde physique d'un fichier dicom sur le serveur*/

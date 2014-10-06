@@ -33,7 +33,6 @@ public class DetailExamenContr {
 		//On récupère la liste de dicoms associés à l'examen
 		ExamenDicomRepository examDicomRepo = new ExamenDicomRepository();
 		List<Dicom> dicoms = examDicomRepo.getListeDicoms(UUID.fromString(id_examen));
-		System.out.println("date = " + examen.getDate_import());
 		Map<String, Object> param = new HashMap<>();
 		param.put("title", "Examen");
 		param.put("titrePage", "Detail de l'examen");

@@ -19,6 +19,7 @@ window.onload = function() {
 		  	init: function() {
 			    var myDropzone = this;
 			    console.log("hello");
+			    console.log("Coucou");
 				// First change the button to actually tell Dropzone to process the queue.
 				$("button[type=submit]").on('click',function(e) {
 				// Make sure that the form isn't actually being sent.
@@ -35,13 +36,16 @@ window.onload = function() {
 				});
 				this.on("successmultiple", function(files, response) {
 					console.log("successmultiple");
+					console.log("réponse" + response.id_examen);
+					console.log("réponse" + files);
+					// similar behavior as an HTTP redirect
+					window.location.replace("/medimage/resultat_import?id_examen="+response.id_examen);
 				});
 				this.on("errormultiple", function(files, response) {
 					console.log("error");
 				});
 		  	}
 	});
-	
 	
 	$(function() {
 	    $( "#tags" ).autocomplete({source: function (request, response) {
@@ -99,6 +103,7 @@ window.onload = function() {
 	    });
 
     });
+	
     $("#usage").autocomplete({source: function (request, response) {
         $.ajax({
             url: "/medimage/getUsages",
@@ -128,17 +133,17 @@ window.onload = function() {
 	  			console.log(message);
             }
         });
-    },
-    autoFill: true,
-    mustMatch: true,
-    selectFirst: true,
-    minLength: 4, 
-    messages: {
-        noResults: '',
-        results: function() {}
-    },
-    select: function( event, ui ) {	          
-    	$('#usageConnu').val(usageList[ui.item.value]);
-    }
+	    },
+	    autoFill: true,
+	    mustMatch: true,
+	    selectFirst: true,
+	    minLength: 4, 
+	    messages: {
+	        noResults: '',
+	        results: function() {}
+	    },
+	    select: function( event, ui ) {	          
+	    	$('#usageConnu').val(usageList[ui.item.value]);
+	    }
     });
 }

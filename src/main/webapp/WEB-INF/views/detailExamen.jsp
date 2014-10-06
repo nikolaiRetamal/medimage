@@ -42,12 +42,12 @@
 				<div class="colonnePresentation">
 					<span class="libelle">Usage</span><br>
 					<span class="attribut">
-						${nbImages}
+						${examen.nom_examen}
 					</span>
 				</div>
 				<div class="colonnePresentation">
 					<span class="libelle">Nombre d'images</span><br>
-					<span class="attribut">${examen.nom_examen}</span>
+					<span class="attribut">${nbImages}</span>
 				</div>
 			</div>
 		</div>
