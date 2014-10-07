@@ -82,6 +82,10 @@ window.onload = function() {
 	    mustMatch: true,
 	    selectFirst: true,
 	    minLength: 4,
+	    messages: {
+	    	noResults:"Pas de résultats.",
+	    	results:function(e){return e+(e>1?" mots-clés référencés.":" mot-clé correspondant.")}
+	    },
 	      select: function( event, ui ) {
 	    	  var choix = ui.item.value;
 	          console.log( "le User a choisi"+ choix);

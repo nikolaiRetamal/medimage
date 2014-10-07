@@ -51,8 +51,8 @@ window.onload = function() {
     mustMatch: true,
     selectFirst: true,
     messages: {
-        noResults: '',
-        results: function() {}
+    	noResults:"Pas de résultats.",
+    	results:function(e){return e+(e>1?" mots-clés référencés.":" mot-clé correspondant.")}
     },
     minLength: 4,
       select: function( event, ui ) {
