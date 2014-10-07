@@ -99,13 +99,12 @@ public class ServiceMeshCrawler extends Service {
 			ServletContext context = session.getServletContext();
 
 			//On va chercher le fichier Mesh
-			String meshFilePath = context.getInitParameter("MESH_FILEPATH");
+			meshPath = context.getInitParameter("MESH_FILEPATH");
 			//La ligne en dessous est nécessaire si le fichier Mesh est dans le WEB-INF
-			//meshFilePath = context.getRealPath(meshFilePath);
+			//meshPath = context.getRealPath(meshFilePath);
 			
-			//Sauvegarde du chemin et du fichier Mesh
-			meshPath = context.getRealPath(meshFilePath);					
-			mesh = new File(meshFilePath);
+			//Sauvegarde du chemin et du fichier Mesh			
+			mesh = new File(meshPath);
 			System.out.println("Création du mesh");
 			System.out.println("mesh = " + mesh);
 			

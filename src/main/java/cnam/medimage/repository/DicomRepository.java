@@ -11,9 +11,11 @@ import org.easycassandra.persistence.cassandra.Persistence;
 import org.easycassandra.persistence.cassandra.SelectBuilder;
 
 import cnam.medimage.bean.Dicom;
+import cnam.medimage.bean.DicomUser;
 import cnam.medimage.bean.ExamenDicom;
 import cnam.medimage.bean.MetaData;
 import cnam.medimage.bean.Tag;
+import cnam.medimage.bean.UsageUser;
 
 public class DicomRepository {
 
@@ -58,6 +60,14 @@ public class DicomRepository {
 	    	
 	        tagRepo.save(monTag);
 	    }
+	    //Sauvegarde de l'association DICOM-USER dans la table DICOM_USER
+	    DicomUserRepository dicomUserRepo = new DicomUserRepository();
+	    dicomUserRepo.save(new DicomUser(UUID.randomUUID(), dicom.getId_dicom(), dicom.getId_user()));
+	    
+	    //Sauvegarde de l'association USAGE-USER dans la table USAGE_USER
+	    UsageUserRepository usageUserRepo = new UsageUserRepository();
+	    usageUserRepo.save(new UsageUser(UUID.randomUUID(), dicom.getId_usage(), dicom.getId_user()));
+	    
 	    //Sauvegarde de l'association DICOM-EXAMEN dans la table EXAMEN_DICOM
 	    ExamenDicomRepository examDicomRepo = new ExamenDicomRepository();
 	    examDicomRepo.save(new ExamenDicom(UUID.randomUUID(), dicom.getId_dicom(), dicom.getId_examen()));

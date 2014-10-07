@@ -3,7 +3,7 @@
 			<ul class="menu">
 				<li class="nomUser">
 					<img alt="user" src="resources/images/user.png">
-					<span>${user.name}</span>
+					<span>${user.nom}</span>
 				</li> 
 				<li class="options">
 					<ul>

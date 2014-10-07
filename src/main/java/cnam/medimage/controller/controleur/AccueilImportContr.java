@@ -13,12 +13,14 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.dcm4che2.data.DicomElement;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.Tag;
 import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.util.TagUtils;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,18 +35,21 @@ import cnam.medimage.bean.Dicom;
 import cnam.medimage.bean.Examen;
 import cnam.medimage.bean.ImportForm;
 import cnam.medimage.bean.Usage;
+import cnam.medimage.bean.User;
 import cnam.medimage.repository.DicomRepository;
 import cnam.medimage.repository.ExamenRepository;
 import cnam.medimage.repository.UsageRepository;
+import cnam.medimage.repository.UserRepository;
 
 @Controller
+@Scope("session")
 public class AccueilImportContr {
 	private Examen examen;
 	private String dest_Path;
 	private String dir_name;
 	private Usage usage;
+	private User user;
 	private String current_filename;
-	private UUID id_user;
 	private ImportForm importForm;
 	private List<String> tags;
 
@@ -61,8 +66,14 @@ public class AccueilImportContr {
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers="Accept=application/json")
 	public @ResponseBody
-	String upload(MultipartHttpServletRequest request,
+	String upload(MultipartHttpServletRequest request, HttpSession session,
 	HttpServletResponse response, @ModelAttribute ImportForm form) throws IOException {
+		//récupération de l'user
+		if(session.getAttribute("id_user") !=null){
+			System.out.println("USER = " + session.getAttribute("id_user").toString());
+			UserRepository userRepo = new UserRepository();
+			user = userRepo.findOne(UUID.fromString(session.getAttribute("id_user").toString()));
+		}
 		importForm = form;
 		this.examen = new Examen();
 		this.usage = new Usage();
@@ -77,10 +88,8 @@ public class AccueilImportContr {
 		//on récupère les fichiers soumis pour les enregistrer
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		System.out.println("imagePublique : " + importForm.isPublique());
-		String user = "user011";
-		id_user = UUID.randomUUID();
 		this.examen.setId_examen(UUID.randomUUID());
-		this.examen.setId_user(id_user);
+		this.examen.setId_user(this.user.getId_user());
 		this.examen.setDate_import(new Date());
 		System.out.println("date = " + this.examen.getDate_import());
 		this.examen.setNom_examen(importForm.getNom_examen());
@@ -94,7 +103,7 @@ public class AccueilImportContr {
 			this.tags.add(s.trim());
 		}
 		if(fileMap.size() > 1){
-			this.dir_name = user + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen();
+			this.dir_name = user.getNom() + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen();
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
 			if (!success) {
 				System.out.println("Erreur création dossier");
@@ -102,7 +111,7 @@ public class AccueilImportContr {
 			}
 			this.dir_name = "/" + this.dir_name + "/";
 		}else
-			this.dir_name = "/" + user + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen() + "_";
+			this.dir_name = "/" + user.getNom() + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen() + "_";
 		
 		boolean estPremierFichier = true;
 		for (MultipartFile multipartFile : fileMap.values()) {
@@ -147,12 +156,13 @@ public class AccueilImportContr {
 		    dicom.setId_dicom(UUID.randomUUID());
 		    dicom.setDate_import(new Date());
 		    dicom.setFile_path(this.dir_name + this.current_filename);
-		    dicom.setId_user(this.id_user);
+		    dicom.setId_user(this.user.getId_user());
 		    dicom.setNom(this.current_filename);
 		    dicom.setPublique(importForm.isPublique());
 		    dicom.setId_examen(this.examen.getId_examen());
 		    dicom.setNom_examen(this.examen.getNom_examen());
 		    dicom.setNom_usage(this.examen.getNom_usage());
+		    dicom.setId_usage(this.usage.getId_usage());
 		    dicom.setTagsId(this.examen.getTags());
 		    dicom.setTags(this.tags);
 		    //récupération des métadonnées

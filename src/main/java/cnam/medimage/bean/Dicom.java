@@ -29,6 +29,9 @@ public class Dicom implements Serializable{
 	@Index
 	@Column
 	private UUID id_examen;
+	@Index
+	@Column
+	private UUID id_usage;
 	@Column
 	private String nom_examen;
 	@Column
@@ -164,6 +167,14 @@ public class Dicom implements Serializable{
 
 	public void setTagsId(List<String> tagsId) {
 		this.tagsId = tagsId;
+	}
+
+	public UUID getId_usage() {
+		return id_usage;
+	}
+
+	public void setId_usage(UUID id_usage) {
+		this.id_usage = id_usage;
 	}
 
 	

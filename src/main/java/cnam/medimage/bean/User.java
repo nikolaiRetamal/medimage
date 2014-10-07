@@ -3,10 +3,13 @@ package cnam.medimage.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
+import org.easycassandra.Index;
 
 @Entity(name = "user") 
 public class User implements Serializable{
@@ -15,7 +18,8 @@ public class User implements Serializable{
 	
 	@Id
 	@Column
-	private Long id_user;
+	private UUID id_user;
+	@Index
 	@Column
 	private String nom;
 	@Column
@@ -29,7 +33,7 @@ public class User implements Serializable{
 	
 	public User(){}
 	
-	public User(Long id_user, String nom, String prenom, String mail,
+	public User(UUID id_user, String nom, String prenom, String mail,
 			String date_naissance, Date date_creation) {
 		super();
 		this.id_user = id_user;
@@ -39,17 +43,6 @@ public class User implements Serializable{
 		this.date_naissance = date_naissance;
 		this.date_creation = date_creation;
 	}
-
-
-	public Long getId_user() {
-		return id_user;
-	}
-
-
-	public void setId_user(Long id_user) {
-		this.id_user = id_user;
-	}
-
 
 	public String getNom() {
 		return nom;
@@ -98,6 +91,14 @@ public class User implements Serializable{
 
 	public void setDate_creation(Date date_creation) {
 		this.date_creation = date_creation;
+	}
+
+	public UUID getId_user() {
+		return id_user;
+	}
+
+	public void setId_user(UUID id_user) {
+		this.id_user = id_user;
 	}
 	
 }

@@ -14,17 +14,14 @@ public class UserRepository {
 	public List<User> findByNom(String nom) {
 		return persistence.findByIndex("nom", nom, User.class);
 	}
-
 	
 	{
 		this.persistence = CassandraManager.INSTANCE.getPersistence();
 	}
 
-
 	public void save(User user) {
 		persistence.insert(user);
 	}
-
 
 	public User findOne(UUID uuid) {
 		return persistence.findByKey(uuid, User.class);

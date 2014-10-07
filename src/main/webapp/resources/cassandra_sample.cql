@@ -11,6 +11,7 @@ CREATE COLUMNFAMILY medimage.dicom (
     public boolean,
     id_user uuid,
     id_examen uuid,
+    id_usage uuid,
     nom_examen text,
     nom_usage text,
     usages map<text, text>,
@@ -75,6 +76,7 @@ CREATE TABLE medimage.user (
     date_creation timestamp,
     PRIMARY KEY (id_user)
 );
+CREATE INDEX ON medimage.user(nom);
 
 //DROP TABLE medimage.connexion;
 CREATE TABLE medimage.connexion (
@@ -94,17 +96,25 @@ CREATE COLUMNFAMILY medimage.usage (
     PRIMARY KEY (id_usage)
 );
 
-//DROP COLUMNFAMILY medimage.usage_dicom_user;
-CREATE COLUMNFAMILY medimage.usage_dicom_user(
+//DROP COLUMNFAMILY medimage.dicom_user;
+CREATE COLUMNFAMILY medimage.dicom_user(
     id uuid,
-    id_usage uuid,
     id_dicom uuid,
     id_user  uuid,
     PRIMARY KEY (id)
 );
-CREATE INDEX ON medimage.usage_dicom_user (id_usage);
-CREATE INDEX ON medimage.usage_dicom_user (id_user);
-CREATE INDEX ON medimage.usage_dicom_user (id_dicom);
+CREATE INDEX ON medimage.dicom_user (id_user);
+CREATE INDEX ON medimage.dicom_user (id_dicom);
+
+//DROP COLUMNFAMILY medimage.usage_user;
+CREATE COLUMNFAMILY medimage.usage_user(
+    id uuid,
+    id_usage uuid,
+    id_user  uuid,
+    PRIMARY KEY (id)
+);
+CREATE INDEX ON medimage.usage_user (id_user);
+CREATE INDEX ON medimage.usage_user (id_usage);
 
 //DROP COLUMNFAMILY medimage.usage_examen;
 CREATE COLUMNFAMILY medimage.usage_examen(
@@ -154,4 +164,3 @@ CREATE COLUMNFAMILY medimage.indexmesh (
 	nom text,
     PRIMARY KEY (id_tag,nom)
 );
-
