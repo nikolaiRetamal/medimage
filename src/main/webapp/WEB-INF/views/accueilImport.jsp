@@ -17,7 +17,7 @@
 </head>
 <body>
 	<!-- Import Header -->
-	<%@ include file="header.jsp" %>
+	<%@ include file="headerImport.jsp" %>
 	<div id="contenu" style="width:100%">
 		<div class="row">
 			<form:form  modelAttribute="form" id="dropzone-form" action="/medimage/upload"

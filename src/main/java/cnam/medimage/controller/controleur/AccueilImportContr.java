@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -54,11 +55,20 @@ public class AccueilImportContr {
 	private List<String> tags;
 
 	@RequestMapping(value="/import")
-	public ModelAndView handleRequest(HttpServletRequest request,
+	public ModelAndView handleRequest(HttpServletRequest request, HttpSession session,
 			HttpServletResponse response) throws Exception {
 		System.out.println("Je suis dans le contrôleur de l'import");
 		System.out.println(request.getSession().getServletContext().getRealPath("/"));
+		String id_user = "";
+		User user;
 		ImportForm form = new ImportForm();
+		if(session.getAttribute("id_user") != null){
+			id_user = session.getAttribute("id_user").toString();
+			System.out.println("USER = " + id_user);
+			UserRepository userRepo = new UserRepository();
+			user = userRepo.findOne(UUID.fromString(id_user));
+			form.setUser(user);
+		}
 		ModelAndView mv = new ModelAndView("accueilImport");
 		mv.addObject("form", form);
 		return mv;
@@ -87,7 +97,7 @@ public class AccueilImportContr {
 		dest_Path = request.getSession().getServletContext().getRealPath("/") +  "fichiers/";
 		//on récupère les fichiers soumis pour les enregistrer
 		Map<String, MultipartFile> fileMap = request.getFileMap();
-		System.out.println("imagePublique : " + importForm.isPublique());
+		System.out.println("imagePublique : " + importForm.getPublique());
 		this.examen.setId_examen(UUID.randomUUID());
 		this.examen.setId_user(this.user.getId_user());
 		this.examen.setDate_import(new Date());
@@ -158,7 +168,7 @@ public class AccueilImportContr {
 		    dicom.setFile_path(this.dir_name + this.current_filename);
 		    dicom.setId_user(this.user.getId_user());
 		    dicom.setNom(this.current_filename);
-		    dicom.setPublique(importForm.isPublique());
+		    dicom.setPublique(importForm.getPublique());
 		    dicom.setId_examen(this.examen.getId_examen());
 		    dicom.setNom_examen(this.examen.getNom_examen());
 		    dicom.setNom_usage(this.examen.getNom_usage());

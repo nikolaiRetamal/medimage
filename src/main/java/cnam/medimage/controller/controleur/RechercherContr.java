@@ -11,8 +11,9 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.dcm4che2.util.TagUtils;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,20 +26,21 @@ import com.google.gson.GsonBuilder;
 
 import cnam.medimage.bean.AccueilForm;
 import cnam.medimage.bean.Examen;
-import cnam.medimage.bean.MetaDataExamen;
-import cnam.medimage.bean.TagExamen;
 import cnam.medimage.bean.UsageExamen;
+import cnam.medimage.bean.User;
 import cnam.medimage.repository.ExamenRepository;
 import cnam.medimage.repository.MetaDataExamenRepository;
 import cnam.medimage.repository.TagExamenRepository;
 import cnam.medimage.repository.UsageExamenRepository;
+import cnam.medimage.repository.UserRepository;
 import cnam.medimage.service.ServiceDicoDicomCrawler;
 
 @Controller
+@Scope("session")
 public class RechercherContr {
 
 	@RequestMapping(value = "/recherche", method = RequestMethod.POST)
-	public ModelAndView effectuerRecherche(HttpServletRequest request,
+	public ModelAndView effectuerRecherche(HttpServletRequest request, HttpSession session,
 	HttpServletResponse response, @ModelAttribute AccueilForm form) throws IOException {
 		
 		AccueilForm monForm = form;
@@ -158,8 +160,17 @@ public class RechercherContr {
 		for(UUID id_examen : id_examens){
 			examens.add(examRepo.findOne(id_examen));
 		}
-		System.out.println("examens trouvés finaux : "+ examens.size());
 		Map<String, Object> param = new HashMap<>();
+		String id_user = "";
+		User user;
+		if(session.getAttribute("id_user") != null){
+			id_user = session.getAttribute("id_user").toString();
+			System.out.println("USER = " + id_user);
+			UserRepository userRepo = new UserRepository();
+			user = userRepo.findOne(UUID.fromString(id_user));
+			param.put("user", user);
+		}
+		System.out.println("examens trouvés finaux : "+ examens.size());
 		param.put("title", "Résultat");
 		param.put("titrePage", "Résultat recherche");
 		param.put("examens", examens);

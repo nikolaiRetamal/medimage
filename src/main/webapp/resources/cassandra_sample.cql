@@ -116,6 +116,16 @@ CREATE COLUMNFAMILY medimage.usage_user(
 CREATE INDEX ON medimage.usage_user (id_user);
 CREATE INDEX ON medimage.usage_user (id_usage);
 
+//DROP COLUMNFAMILY medimage.examen_user;
+CREATE COLUMNFAMILY medimage.examen_user(
+    id uuid,
+    id_examen uuid,
+    id_user  uuid,
+    PRIMARY KEY (id)
+);
+CREATE INDEX ON medimage.examen_user (id_user);
+CREATE INDEX ON medimage.examen_user (id_examen);
+
 //DROP COLUMNFAMILY medimage.usage_examen;
 CREATE COLUMNFAMILY medimage.usage_examen(
     id uuid,

@@ -18,7 +18,6 @@
 	<%@ include file="header.jsp" %>
 	<div class="contenu">
 		<h1 class="titreRecherche">${titrePage}</h1>
-		<h1 class="titreRecherche">${user.id_user}</h1>
 		<div class="row">
 			<form:form  id="recherche" action="/medimage/recherche"
 			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">

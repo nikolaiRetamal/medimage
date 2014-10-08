@@ -8,6 +8,7 @@ import org.easycassandra.persistence.cassandra.Persistence;
 import org.easycassandra.persistence.cassandra.SelectBuilder;
 
 import cnam.medimage.bean.Examen;
+import cnam.medimage.bean.ExamenUser;
 import cnam.medimage.bean.MetaDataExamen;
 import cnam.medimage.bean.TagExamen;
 import cnam.medimage.bean.UsageExamen;
@@ -41,6 +42,10 @@ public class ExamenRepository {
 		//Sauvergarde en base de l'association usage-exam dans la table USAGE_EXAMEN
 		UsageExamenRepository usageExamRepo = new UsageExamenRepository();
 		usageExamRepo.save(new UsageExamen(UUID.randomUUID(), id_usage, examen.getId_examen()));
+		
+		//Sauvergarde en base de l'association usage-exam dans la table EXAMEN_USER
+		ExamenUserRepository examUserRepo = new ExamenUserRepository();
+		examUserRepo.save(new ExamenUser(UUID.randomUUID(), examen.getId_examen(), examen.getId_user()));
 		
 		//Sauvegarde des tags dans la table TAG_EXAMEN
 		TagExamenRepository tagExamRepo = new TagExamenRepository();

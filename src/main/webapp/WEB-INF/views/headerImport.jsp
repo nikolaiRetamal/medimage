@@ -1,10 +1,10 @@
 	<div id="header" class="">
 		<div class="gauche">
 			<ul class="menu">
-				<c:if test="${not empty user}">
+				<c:if test="${not empty form.user}">
 					<li class="nomUser">
 						<img alt="user" src="resources/images/user.png">
-							<span>${user.nom}</span>
+							<span>${form.user.nom}</span>
 					</li> 
 					<li class="options">
 						<ul>
@@ -35,7 +35,7 @@
 			<ul class="menu">
 				<li class="etatConnexion">
 					<c:choose>
-						<c:when test="${empty user}">
+						<c:when test="${empty form.user}">
 							<span class="connexion">
 								<a href="connexion">
 									<img alt="connexion" src="resources/images/connexion.png">

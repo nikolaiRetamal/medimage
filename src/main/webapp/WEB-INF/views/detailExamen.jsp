@@ -42,7 +42,7 @@
 				<div class="colonnePresentation">
 					<span class="libelle">Usage</span><br>
 					<span class="attribut">
-						${examen.nom_examen}
+						${examen.nom_usage}
 					</span>
 				</div>
 				<div class="colonnePresentation">
