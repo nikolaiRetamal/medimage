@@ -50,6 +50,15 @@
 					<span class="attribut">${nbImages}</span>
 				</div>
 			</div>
+			<div class="blocPresentation">
+				<hr>
+				<div class="colonnePresentation">
+					<span class="libelle" onclick=
+						"document.location = '/medimage/telechargerExamen?id_examen=${examen.id_examen}';">
+						Telecharger
+					</span><br>
+				</div>
+			</div>
 		</div>
 		<!-- Utiliser http://fooplugins.com/plugins/footable-jquery/#/ -->
 			<table id="dicoms" class="footable tableauFoo">

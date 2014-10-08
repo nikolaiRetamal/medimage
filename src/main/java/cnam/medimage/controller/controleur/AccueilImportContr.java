@@ -113,7 +113,7 @@ public class AccueilImportContr {
 			this.tags.add(s.trim());
 		}
 		if(fileMap.size() > 1){
-			this.dir_name = user.getNom() + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen();
+			this.dir_name = user.getNom() + "_" + importForm.getNom_usage().replace(" ", "-") + "_" + importForm.getNom_examen().replace(" ", "-");
 			boolean success = (new File(this.dest_Path + this.dir_name)).mkdirs();
 			if (!success) {
 				System.out.println("Erreur création dossier");
@@ -121,7 +121,7 @@ public class AccueilImportContr {
 			}
 			this.dir_name = "/" + this.dir_name + "/";
 		}else
-			this.dir_name = "/" + user.getNom() + "_" + importForm.getNom_usage() + "_" + importForm.getNom_examen() + "_";
+			this.dir_name = "/" + user.getNom() + "_" + importForm.getNom_usage().replace(" ", "-") + "_" + importForm.getNom_examen().replace(" ", "-") + "_";
 		
 		boolean estPremierFichier = true;
 		for (MultipartFile multipartFile : fileMap.values()) {

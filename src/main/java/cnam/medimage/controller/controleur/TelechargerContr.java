@@ -35,6 +35,7 @@ public class TelechargerContr {
 	      // copy it to response's OutputStream
 	      org.apache.commons.io.IOUtils.copy(fis, response.getOutputStream());
 	      response.flushBuffer();
+	      fis.close();
 	    } catch (IOException ex) {
 	      throw new RuntimeException("IOError writing file to output stream");
 	    }
