@@ -95,6 +95,7 @@ CREATE COLUMNFAMILY medimage.usage (
     users  map<uuid, text>,
     PRIMARY KEY (id_usage)
 );
+CREATE INDEX ON medimage.usage (id_user_crea);
 
 //DROP COLUMNFAMILY medimage.dicom_user;
 CREATE COLUMNFAMILY medimage.dicom_user(

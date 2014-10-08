@@ -14,6 +14,8 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.easycassandra.Index;
+
 @Entity(name = "usage") 
 public class Usage implements Serializable{
 
@@ -23,6 +25,7 @@ public class Usage implements Serializable{
 	@Column
 	private UUID id_usage;
 	@Column
+	@Index
 	private Date date_creat;
 	@Column
 	private String nom;

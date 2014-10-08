@@ -12,6 +12,7 @@ import cnam.medimage.bean.ExamenUser;
 import cnam.medimage.bean.MetaDataExamen;
 import cnam.medimage.bean.TagExamen;
 import cnam.medimage.bean.UsageExamen;
+import cnam.medimage.bean.UsageUser;
 
 public class ExamenRepository {
 
@@ -52,7 +53,15 @@ public class ExamenRepository {
 		for(String tag : examen.getTags()) {
 			tagExamRepo.save(new TagExamen(UUID.randomUUID(), tag, examen.getId_examen()));
 	    }
-
+		
+	    //Sauvegarde de l'association USAGE-USER dans la table USAGE_USER
+	    UsageUserRepository usageUserRepo = new UsageUserRepository();
+	    UsageRepository usageRepo = new UsageRepository();
+	    System.out.println("Réponse  = " + usageRepo.findOne(id_usage));
+	    System.out.println("Taille  = " + (boolean) (usageRepo.findOne(id_usage) != null));
+	    if(usageRepo.findOne(id_usage) == null)
+	    	usageUserRepo.save(new UsageUser(UUID.randomUUID(), id_usage, examen.getId_user()));
+	    
 		//Sauvegarde des metadonnées dans la table METADATA_EXAMEN
 		MetaDataExamenRepository metadataExamenRepo = new MetaDataExamenRepository();
 		for (Map.Entry<String, String> entry : examen.getMetadatas().entrySet()){

@@ -64,10 +64,6 @@ public class DicomRepository {
 	    DicomUserRepository dicomUserRepo = new DicomUserRepository();
 	    dicomUserRepo.save(new DicomUser(UUID.randomUUID(), dicom.getId_dicom(), dicom.getId_user()));
 	    
-	    //Sauvegarde de l'association USAGE-USER dans la table USAGE_USER
-	    UsageUserRepository usageUserRepo = new UsageUserRepository();
-	    usageUserRepo.save(new UsageUser(UUID.randomUUID(), dicom.getId_usage(), dicom.getId_user()));
-	    
 	    //Sauvegarde de l'association DICOM-EXAMEN dans la table EXAMEN_DICOM
 	    ExamenDicomRepository examDicomRepo = new ExamenDicomRepository();
 	    examDicomRepo.save(new ExamenDicom(UUID.randomUUID(), dicom.getId_dicom(), dicom.getId_examen()));

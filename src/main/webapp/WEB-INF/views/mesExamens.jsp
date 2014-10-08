@@ -3,8 +3,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!doctype html>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<!doctype html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -38,7 +39,10 @@
 						<tr onclick=
 							"document.location = '/medimage/detailExamen?id_examen=${examen.id_examen}';">
 							<td>${examen.nom_examen}</td>
-							<td>${examen.date_import}</td>
+							<td>
+								<fmt:formatDate value="${examen.date_import}" 
+												pattern="dd-MM-yyyy HH:mm:ss" />
+							</td>
 						</tr>
 					</c:forEach>
 				</tbody>

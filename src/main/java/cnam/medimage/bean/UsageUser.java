@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.easycassandra.Index;
+
 @Entity(name = "usage_user")
 public class UsageUser implements Serializable{
 	/**
@@ -19,6 +21,7 @@ public class UsageUser implements Serializable{
 	@Column
 	private UUID id_usage;
 	@Column
+	@Index
 	private UUID id_user;
 		
 	public UsageUser() {

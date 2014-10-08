@@ -25,7 +25,6 @@ import cnam.medimage.repository.UserRepository;
 @Controller
 @Scope("session")
 public class MesExamensContr {
-	
 	@RequestMapping(value="/mesExamens")
 	public ModelAndView handleRequest(HttpServletRequest request, HttpSession session,
 			HttpServletResponse response) throws Exception {
