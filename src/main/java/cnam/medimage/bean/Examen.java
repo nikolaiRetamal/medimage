@@ -25,6 +25,7 @@ public class Examen implements Serializable{
 	private Date date_import;
 	@Column
 	private UUID id_user;
+	private String nom_user;
 	@Column
 	private String nom_examen;
 	@Column
@@ -132,6 +133,14 @@ public class Examen implements Serializable{
 
 	public void setMetadataIds(Map<String, String> metadataIds) {
 		this.metadataIds = metadataIds;
+	}
+
+	public String getNom_user() {
+		return nom_user;
+	}
+
+	public void setNom_user(String nom_user) {
+		this.nom_user = nom_user;
 	}
 	
 }

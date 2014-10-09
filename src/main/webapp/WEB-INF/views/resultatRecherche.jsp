@@ -46,13 +46,13 @@
 							<td>${examen.nom_examen}</td>
 							<td>${examen.nom_usage}</td>
 							<td>${examen.date_import}</td>
-							<td>${examen.id_user}</td>
+							<td>${examen.nom_user}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="3">
+						<td colspan="4">
 							<div class="pagination pagination-centered hide-if-no-paging"></div>
 						</td>
 					</tr>

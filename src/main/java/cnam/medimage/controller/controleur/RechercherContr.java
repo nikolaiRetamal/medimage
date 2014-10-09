@@ -171,6 +171,11 @@ public class RechercherContr {
 			user = userRepo.findOne(UUID.fromString(id_user));
 			param.put("user", user);
 		}
+		for(Examen exam : examens){
+			UserRepository userRepo = new UserRepository();
+			User userBean = userRepo.findOne(exam.getId_user());
+			exam.setNom_user(userBean.getNom());
+		}
 		System.out.println("examens trouvés finaux : "+ examens.size());
 		param.put("title", "Résultat");
 		param.put("titrePage", "Résultat recherche");

@@ -43,6 +43,13 @@
 						</tr>
 					</c:forEach>
 				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2">
+							<div class="pagination pagination-centered hide-if-no-paging"></div>
+						</td>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 	</div>

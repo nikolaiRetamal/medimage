@@ -82,7 +82,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="3">
+						<td colspan="1">
 							<div class="pagination pagination-centered hide-if-no-paging"></div>
 						</td>
 					</tr>
