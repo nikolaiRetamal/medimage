@@ -16,8 +16,12 @@
 </head>
 <body>
 	<%@ include file="header.jsp" %>
+	<div class="conteneurContenu">
 	<div class="contenu">
-		<h1 class="titreRecherche">${titrePage}</h1>
+		<h1 class="titreRecherche">
+			<img alt="dicom_logo" src="resources/images/dicom_official.jpg" id="dicomLogo">
+			${titrePage}
+		</h1>
 		<div class="row">
 			<form:form  id="recherche" action="/medimage/recherche"
 			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
@@ -51,9 +55,10 @@
 					<div id="chosenTagsValue" style="display:none;"></div>
 					<input type="hidden" name="chosenTagsValue">
 				</div>
-				<button type="submit" class="btn btn-default">Envoyer</button>
+				<button type="submit" class="btn btn-default">Rechercher</button>
 			</form:form>
 		</div>
+	</div>
 	</div>
 </body>
 <!-- Imports JS -->

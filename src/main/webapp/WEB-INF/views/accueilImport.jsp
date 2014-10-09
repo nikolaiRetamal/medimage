@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Importation</title>
+	<title>Import</title>
 	<!-- Imports CSS -->
 	<link href="resources/bootstrap/css/bootstrap.css" type="text/css" rel="stylesheet" />
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
@@ -18,7 +18,12 @@
 <body>
 	<!-- Import Header -->
 	<%@ include file="headerImport.jsp" %>
-	<div id="contenu" style="width:100%">
+	<div class="conteneurContenu">
+	<div class="contenu">
+		<h1 class="titreRecherche">
+			<img alt="dicom_logo" src="resources/images/dicom_official.jpg" id="dicomLogo">
+			Import d'images
+		</h1>
 		<div class="row">
 			<form:form  modelAttribute="form" id="dropzone-form" action="/medimage/upload"
 			class="col-sm-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
@@ -60,7 +65,7 @@
 			</form:form>
 		</div>
 	</div>
-
+	</div>
 </body>
 <!-- Imports JS -->
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

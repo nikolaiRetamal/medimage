@@ -18,10 +18,13 @@
 </head>
 <body>
 	<%@ include file="header.jsp" %>
+	<div class="conteneurContenu">
 	<div class="contenu">
-	
+		<h1 class="titreRecherche">
+			<img alt="dicom_logo" src="resources/images/dicom_official.jpg" id="dicomLogo">
+			${titrePage}
+		</h1>
 		<div class="descriptionExamen">
-		<h1 class="titreRecherche">${titrePage}</h1>
 		<div id="presentationExamen">
 			<div class="blocPresentation">
 				<hr>
@@ -106,6 +109,7 @@
 			</tfoot>
 		</table>
 		</div>
+	</div>
 	</div>
 </body>
 <!-- Imports JS -->
