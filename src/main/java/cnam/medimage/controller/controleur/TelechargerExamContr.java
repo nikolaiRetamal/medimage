@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -26,14 +27,14 @@ import cnam.medimage.repository.ExamenDicomRepository;
 @Controller
 public class TelechargerExamContr {
 
-	private ArrayList<String> listeFichiers;
+	private HashMap<String,String> listeFichiers;
 	private String pathFichierSortie;
 	private String nomFichierSortie;
 	private String dossier;
 	private String realPath;
 	
 	TelechargerExamContr(){
-		listeFichiers = new ArrayList<String>();
+		listeFichiers = new HashMap<String, String>();
     }
 	
 	@RequestMapping(value = "/telechargerExamen", method = RequestMethod.GET)
@@ -57,7 +58,7 @@ public class TelechargerExamContr {
 	        	
 	        	String pathFichierDicom = realPath + dicom.getFile_path();
 	        	pathFichierDicom = pathFichierDicom.replace("/", "\\");
-	        	listeFichiers.add(pathFichierDicom);
+	        	listeFichiers.put(dicom.getNom(), pathFichierDicom);
 	        	System.out.println("pathFichierDicom = " + pathFichierDicom);
 	        }
 	        this.compresser(pathFichierSortie);
@@ -69,75 +70,48 @@ public class TelechargerExamContr {
 			org.apache.commons.io.IOUtils.copy(fis, response.getOutputStream());
 			response.flushBuffer();
 			fis.close();
-			if(fichier.delete()){
-    			System.out.println(fichier.getName() + " a été effacé");
-    		}else{
-    			System.out.println("echec de la suppression de " + nomFichierSortie);
-    		}
+//			if(fichier.delete()){
+//    			System.out.println(fichier.getName() + " a été effacé");
+//    		}else{
+//    			System.out.println("echec de la suppression de " + nomFichierSortie);
+//    		}
 		} catch (Exception ex) {
 			throw new RuntimeException("IOError writing file to output stream");
 		}
 	}
 	
-	/**
-	 * Zip it
-	 * @param zipFile output ZIP file location
-	 */
-	public void compresser(String zipFile){
- 
-    	byte[] buffer = new byte[1024];
- 
-    	try{
-    		/*FileOutputStream fos = new FileOutputStream(zipFile);
-    		ZipOutputStream zos = new ZipOutputStream(fos);
- 
-    		System.out.println("Output to Zip : " + zipFile);
- 
-    		for(String file : this.listeFichiers){
-    			System.out.println("File Added : " + file);
-    			ZipEntry ze= new ZipEntry(file);
-    			zos.putNextEntry(ze);
-    			FileInputStream fis = 
-    					new FileInputStream(file);
-    			int len;
-    			while ((len = fis.read(buffer)) > 0) {
-    				zos.write(buffer, 0, len);
-    			}
-    			zos.closeEntry();
-    			fis.close();
-    		}*/
-	         BufferedInputStream origin = null;
-	         FileOutputStream dest = new 
-	           FileOutputStream(zipFile);
-	         ZipOutputStream out = new ZipOutputStream(new 
-	           BufferedOutputStream(dest));
-	         //out.setMethod(ZipOutputStream.DEFLATED);
-	         // get a list of files from current directory
-	         String files[] = new String[listeFichiers.size()];
-	         files = listeFichiers.toArray(files);
-	         for (int i=0; i<files.length; i++) {
-	            System.out.println("Adding: "+files[i]);
-	            FileInputStream fi = new 
-	              FileInputStream(files[i]);
-	            origin = new 
-	              BufferedInputStream(fi, 1024);
-	            ZipEntry entry = new ZipEntry(files[i]);
-	            out.putNextEntry(entry);
-	            int count;
-	            while((count = origin.read(buffer, 0, 1024)) != -1) {
-	               out.write(buffer, 0, count);
-	            }
-	            out.closeEntry();
-	            origin.close();
-	            
-	         }
-	        out.close();
-    		//remember close it
-    		//zos.close();
-    		//fos.close();
-    		System.out.println("Done");
-    	}catch(IOException ex){
-    		ex.printStackTrace();   
-    	}
-	}
+	 /**
+     * This method zips the directory
+     * @param dir
+     * @param zipDirName
+     */
+    private void compresser(String zipName) {
+        try {
+            //now zip files one by one
+            //create ZipOutputStream to write to the zip file
+            FileOutputStream fos = new FileOutputStream(zipName);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+            for(String fileName : listeFichiers.keySet()){
+                System.out.println("Zipping "+fileName);
+                //for ZipEntry we need to keep only relative file path, so we used substring on absolute path
+                ZipEntry ze = new ZipEntry(fileName);
+                zos.putNextEntry(ze);
+                //read the file and write to ZipOutputStream
+                FileInputStream fis = new FileInputStream(listeFichiers.get(fileName));
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = fis.read(buffer)) > 0) {
+                    zos.write(buffer, 0, len);
+                }
+                zos.closeEntry();
+                fis.close();
+            }
+            zos.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	
 }
