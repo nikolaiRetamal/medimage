@@ -50,7 +50,7 @@ public class ExamenRepository {
 		
 		//Sauvegarde des tags dans la table TAG_EXAMEN
 		TagExamenRepository tagExamRepo = new TagExamenRepository();
-		for(String tag : examen.getTags()) {
+		for(String tag : examen.getTagsId()) {
 			tagExamRepo.save(new TagExamen(UUID.randomUUID(), tag, examen.getId_examen()));
 	    }
 		
@@ -64,7 +64,7 @@ public class ExamenRepository {
 	    
 		//Sauvegarde des metadonnées dans la table METADATA_EXAMEN
 		MetaDataExamenRepository metadataExamenRepo = new MetaDataExamenRepository();
-		for (Map.Entry<String, String> entry : examen.getMetadatas().entrySet()){
+		for (Map.Entry<String, String> entry : examen.getMetadataIds().entrySet()){
 			metadataExamenRepo.save(new MetaDataExamen(UUID.randomUUID(), examen.getId_examen(), entry.getKey(), entry.getValue()));
 		}
 		System.out.println("date avant enregistrement = " + examen.getDate_import());

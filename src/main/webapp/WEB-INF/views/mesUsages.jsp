@@ -37,7 +37,9 @@
 					<c:forEach var="usage" items="${usages}">
 						<tr>
 							<td>${usage.nom}</td>
-							<td>${usage.date_creat}</td>
+							
+							<td><fmt:formatDate value="${usage.date_creat}" 
+												pattern="dd-MM-yyyy HH:mm:ss" /></td>
 						</tr>
 					</c:forEach>
 				</tbody>

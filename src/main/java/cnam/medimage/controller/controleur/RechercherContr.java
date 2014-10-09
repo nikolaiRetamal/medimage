@@ -78,8 +78,9 @@ public class RechercherContr {
 	        //Pour chaque métadonnée
 	        for(metadataJSON meta : metaList){
 	        	ServiceDicoDicomCrawler serviceDico = new ServiceDicoDicomCrawler();
-	        	String keyMeta = serviceDico.formaterTag(meta.getKey());
+	        	String keyMeta = serviceDico.formaterTag(meta.getKey());	
 	        	String valueMeta = meta.getValue();
+	        	System.out.println("keyMeta = " + keyMeta + ", valueMeta = " + valueMeta);
 	        	//on trouve la liste de id_examen associés
 	        	metasExams = metaExamRepo.getListeExamens(keyMeta, valueMeta);
 	        	//qu'on stocke dans le set 

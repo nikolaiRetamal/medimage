@@ -32,13 +32,21 @@ public class Examen implements Serializable{
 	@ElementCollection
 	@Column
 	private List<String> tags;
+	//Non présent en base, sert à stocker temporairement
+	//les id tag pour les enregistrer dans les tables d'association
+	private List<String> tagsId;
 	@ElementCollection
 	@Column
 	private Map<String, String> metadatas;
+	//Non présent en base, sert à stocker temporairement
+	//les id metadata pour les enregistrer dans les tables d'association
+	private Map<String, String> metadataIds;
 	
 	public Examen() {
 		this.tags = new LinkedList<>();
 		this.metadatas = new HashMap<>();
+		this.tagsId = new LinkedList<>();
+		this.metadataIds = new HashMap<>();
 	}
 
 	public Examen(UUID id_examen, Date date_import, UUID id_user,
@@ -109,6 +117,21 @@ public class Examen implements Serializable{
 
 	public void setNom_usage(String nom_usage) {
 		this.nom_usage = nom_usage;
+	}
+	public List<String> getTagsId() {
+		return tagsId;
+	}
+
+	public void setTagsId(List<String> tagsId) {
+		this.tagsId = tagsId;
+	}
+
+	public Map<String, String> getMetadataIds() {
+		return metadataIds;
+	}
+
+	public void setMetadataIds(Map<String, String> metadataIds) {
+		this.metadataIds = metadataIds;
 	}
 	
 }

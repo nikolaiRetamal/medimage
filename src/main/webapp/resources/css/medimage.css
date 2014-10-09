@@ -1,5 +1,6 @@
-html{
+html, body{
 	font-size: 12px;
+	background:#C0C0C0;
 }
 #header{
 	width:100%;
@@ -54,19 +55,21 @@ li.options{
 }
 .conteneurContenu{
 	overflow:auto;
-	background:#ccc;
+	background:#C0C0C0;
 	width:100%;
 }
 .contenu{
-	display:block;
-	max-width:1280px;
-	margin: 0 20px;
-	background:#fff;
-	overflow: auto;
+display: block;
+max-width: 1280px;
+margin: auto;
+background: #fff;
+overflow: auto;
+padding-bottom: 100px;
 }
 .tableauFoo{
-	max-width:1280px;
-	margin: 0 20px;
+max-width: 1280px;
+margin: 0 auto;
+width: 95%;
 }
 #ajoutMeta{
 	margin-top:10px;
@@ -80,7 +83,7 @@ li.options{
 	color: #555;
 	background-color: #fff;
 	background-image: none;
-	border: 1px solid #ccc;
+	border: 1px solid #C0C0C0;
 	padding: 6px 12px;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
@@ -98,9 +101,8 @@ li.options{
 	overflow: auto;
 }
 #presentationExamen{
-	max-width:1280px;
-	margin:0 auto 30px auto;
-	margin:
+	margin: 0 auto 30px auto;
+	width: 95%;
 }
 .blocPresentation{
 	overflow:auto;
@@ -117,4 +119,7 @@ li.options{
 }
 table{
 	margin-top:20px;
+}
+.row{
+	margin:0;
 }

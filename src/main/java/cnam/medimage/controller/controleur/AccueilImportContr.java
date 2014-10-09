@@ -182,8 +182,11 @@ public class AccueilImportContr {
 		    this.usage.getDicoms().add(dicom.getId_dicom());
 		    //Si c'est le premier DICOM de l'examen, alors on enregistre
 		    //les métadonnées du DICOM pour l'examen
-		    if(estPremierFichier)
+		    if(estPremierFichier){
 		    	this.examen.setMetadatas(dicom.getMetadatas());
+		    	this.examen.setMetadataIds(dicom.getMetadataIds());
+		    	this.examen.setTagsId(dicom.getTagsId());
+		    }
 		}
 		catch (IOException e) {
 		    e.printStackTrace();
