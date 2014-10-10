@@ -208,7 +208,6 @@
 			<name>SpringSource Milestones Proxy</name>
 			<url>https://oss.sonatype.org/content/repositories/springsource-milestones</url>
 		</repository>-->
-    <!--other repositories if any-->
     	<repository>
 	        <id>project.local</id>
 	        <name>project</name>
