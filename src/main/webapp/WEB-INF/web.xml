@@ -14,8 +14,8 @@
 	<!-- Paramètres applicatifs -->
 	<context-param>
 		<param-name>MESH_FILEPATH</param-name>
-		<!-- <param-value>mesh/fredesc2014.xml</param-value>-->
-		<param-value>C:\mesh\fredesc2014.xml</param-value>
+		<param-value>mesh/fredesc2014.xml</param-value>
+		<!-- <param-value>C:\mesh\fredesc2014.xml</param-value>-->
 	</context-param>
 	
 	<context-param>
